@@ -1,0 +1,24 @@
+Versão 0.0.11 - 2014.02.24
+* O site beta passou a ser o site utilizado por defeito.
+
+Versão 0.0.8 - 2014.01.25
+* Passa a ser possível listar Apenas Vídeos, Apenas Noticias de Texto ou Ambos. - Configurável nas Definições.
+Versão 0.0.7 - 2014.01.24
+* Secções sem video, quando abertas identificam que não tem video.
+Versão 0.0.6 - 2014.01.24
+* Correcções a listagens de videos
+Versão 0.0.5 - 2014.01.23
+* Correcções a listagens de videos
+Versão 0.0.4 - 2014.01.23
+* Correcção a referencia errada no addon
+Versão 0.0.3 - 2014.01.23
+* Compatível com ambos os sites - http://sicnoticias.sapo.pt e http://beta.sicnoticias.pt - Configurável nas Definições.
+* Correcções Mínimas
+Versão 0.0.2 - 2014.01.22
+* "Programas" fully supported
+* Indexing pages
+* Better layout
+* Minor Corrections
+Versão 0.0.1
+* First addon release
+* Work to do in "Programas"

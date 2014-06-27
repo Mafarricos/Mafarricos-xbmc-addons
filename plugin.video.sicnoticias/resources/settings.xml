@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<settings>
+   <category label="Definicoes gerais">
+      <setting label="[B][COLOR green]Site Base:[/B][/COLOR]" type="lsep" />
+	  <setting id="site-view" type="enum" label="Site" values="http://sicnoticias.sapo.pt" default="0"/>
+      <setting label="[B][COLOR green]Listagem:[/B][/COLOR]" type="lsep" />
+	  <setting id="list-view" type="enum" label="Listagem" values="Tudo(Vídeos e Texto)|Apenas Vídeos|Apenas Texto" default="0"/>
+	  
+   </category>
+</settings>

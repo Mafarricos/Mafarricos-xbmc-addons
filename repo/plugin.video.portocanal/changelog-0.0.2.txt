@@ -1,0 +1,5 @@
+Versão 0.0.2
+* Actualização das imagens
+
+Version 0.0.1
+* First addon release

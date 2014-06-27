@@ -1,0 +1,9 @@
+Version 0.0.4
+* Correcções relativas ao site.
+
+Version 0.0.3
+* Minor correction
+Version 0.0.2
+* Minor correction
+Version 0.0.1
+* First addon release

@@ -1,0 +1,8 @@
+Versão 0.0.4
+* Correcções mínimas
+
+Versão 0.0.2
+* Correcções mínimas
+
+Version 0.0.1
+* First addon release
