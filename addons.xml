@@ -122,7 +122,7 @@
 </addon>
 
 <addon id="service.autosubs"
-    name="AutoSubs" version="1.0.0" provider-name="amet,schumi2004,Mafarricos">
+    name="AutoSubs" version="1.0.1" provider-name="amet,schumi2004,Mafarricos">
   <requires>
     <import addon="xbmc.python" version="2.1.0"/>
   </requires>
