@@ -2,7 +2,6 @@
 # -*- coding: UTF-8 -*-
 # by Mafarricos
 # email: MafaStudios@gmail.com
-##############BIBLIOTECAS A IMPORTAR E DEFINICOES####################
 
 import urllib,urllib2,re,xbmcplugin,xbmcgui,xbmc,sys,xbmcaddon
 import socket
@@ -63,13 +62,13 @@ def listar_videos(url,siteurl):
 	match = re.compile('<img src="(.+?)"  class="linkimage" alt="(.+?)" title=".+?" />\s+<div class="overlay"> </div>\s+<div class="post-info2">\s+<center>\s+</br>\s+<a href="(.+?)" title=".+?"><img src=".+?" style="margin: 0px 0px 0px 0px; border: none;" alt="Ver video Agora" /></a>').findall(codigo_fonte)
 	for img,titulo,url in match:
 		titulo = subststring(titulo)
-		titulo,url = encontrar_tipo_da_fonte(url,titulo)	
-		addDir(titulo,url,2,img,False)
+		titulo,url = encontrar_tipo_da_fonte(url,titulo)
+		if titulo <> '-': addDir(titulo,url,2,img,False)
 	match = re.compile('<img src="(.+?)"  class="linkimage" alt="(.+?)" title=".+?" />\s+<div class="overlay"> </div>\s+<div class="post-info2">\s+<center>\s+<a href="(.+?)" title=".+?"><img src=".+?" style="margin: 0px 0px 0px 0px; border: none;" alt="Ver video Agora" /></a>').findall(codigo_fonte)
 	for img,titulo,url in match:
 		titulo = subststring(titulo)
-		titulo,url = encontrar_tipo_da_fonte(url,titulo)		
-		addDir(titulo,url,2,img,False)
+		titulo,url = encontrar_tipo_da_fonte(url,titulo)
+		if titulo <> '-': addDir(titulo,url,2,img,False)
 	match = re.compile('href="(.+?)" >&laquo; Previous Entries</a>').findall(codigo_fonte)	
 	if match:
 		nexturl = match[0]
@@ -83,37 +82,43 @@ def encontrar_tipo_da_fonte(url,titulo):
 		urldaily = getStreamUrlVL(match[0])
 		return titulo + ' [COLOR green](Fonte: videolog.tv)[/COLOR]',urldaily
 	match = re.compile('file=(.+?)/mov/.+?"').findall(codigo_fonte)
-	if match:
-		return titulo + ' [COLOR green](Fonte: sapo.pt)[/COLOR]',match[0]+'/mov'
-	match = re.compile('<div id="video-inside">.+?src="(.+?)"').findall(codigo_fonte)
+	if match: return titulo + ' [COLOR green](Fonte: sapo.pt)[/COLOR]',match[0]+'/mov'
+	#match = re.compile('').findall(codigo_fonte)
+	match = re.compile('<div id="video-inside"> (.+?) </div>').findall(codigo_fonte)	
 	if match:
 		if match[0].find('youtube') > -1:
 			match2 = re.compile('youtube.com/embed/(.+?)["\\?]').findall(match[0])
+			if not match2:
+				match2 = re.compile('youtube.com/embed/(.+?)').findall(match[0])
 			if match2:
 				urlfound,source = url_solver('http://youtube.com/embed/'+match2[0])
-				if urlfound <> '-':
-					return titulo +' [COLOR green](Fonte: '+source+')[/COLOR]',urlfound
+				if urlfound <> '-': return titulo +' [COLOR green](Fonte: '+source+')[/COLOR]',urlfound
 		elif match[0].find('vimeo') > -1:
 			match2 = re.compile('player.vimeo.com/video/(.+?)["\\?]').findall(match[0])
 			if match2:
 				urlfound,source = url_solver('http://vimeo.com/'+match2[0])
-				if urlfound <> '-':
-					return titulo +' [COLOR green](Fonte: '+source+')[/COLOR]',urlfound
+				if urlfound <> '-': return titulo +' [COLOR green](Fonte: '+source+')[/COLOR]',urlfound
 		elif match[0].find('dailymotion') > -1:
 			match2 = re.compile('www.dailymotion.com/embed/video/(.+?)["\\?]').findall(match[0])
 			if match2:
 				urlfound,source = url_solver('http://www.dailymotion.com/video/'+match2[0])
-				if urlfound <> '-':
-					return titulo +' [COLOR green](Fonte: '+source+')[/COLOR]',urlfound
+				if urlfound <> '-': return titulo +' [COLOR green](Fonte: '+source+')[/COLOR]',urlfound
 		elif match[0].find('zapkolik') > -1:
 			codigo_fonte2 = abrir_url(match[0])
 			match2 = re.compile('vid.src = \'(.+?)\'').findall(codigo_fonte2)
-			if match2:
-				return titulo + ' [COLOR green](Fonte: zapkolik.com)[/COLOR]',match2[0]		
+			if match2: return titulo + ' [COLOR green](Fonte: zapkolik.com)[/COLOR]',match2[0]
+		elif match[0].find('mais.uol.com.br') > -1:
+			return '-','-'
+			#match2 = re.compile('<a href="(.+?)">').findall(match[0])	
+			#if match2:
+			#	codigo_fonte2 = abrir_url(match2[0])
+			#	match2 = re.compile('<input type="hidden" id="postMediaFilePath" value="http://storage.mais.uol.com.br/(.+?).flv" />').findall(codigo_fonte2)
+			#	if match2:
+			#		videolink = 'http://video21.mais.uol.com.br/'+match2[0]+'.mp4%3Fver%3D1&r%3Dhttp%3A%2F%2Fplayer.mais.uol.com.br%2Fplayer_video_v2.swf'
+			#		return titulo + ' [COLOR green](Fonte: mais.uol.com.br)[/COLOR]',videolink			
 		else:
 			urlfound,source = url_solver('http:'+match[0])
-			if urlfound <> '-':
-				return titulo +' [COLOR green](Fonte: '+source+')[/COLOR]',urlfound
+			if urlfound <> '-': return titulo +' [COLOR green](Fonte: '+source+')[/COLOR]',urlfound
 	return titulo + ' [COLOR red](Fonte Não Suportada)[/COLOR]','http://google.pt'
 
 def url_solver(urlfinal):
@@ -133,8 +138,7 @@ def url_solver(urlfinal):
 def getStreamUrlVL(id):
 	content = abrir_url("http://videolog.tv/"+id)
 	match = re.compile('<meta property="og:image" content="http://videos.videolog.tv/(.+?)/(.+?)/'+id).findall(content)
-	for first,last in match:	
-		return 'http://videos.videolog.tv/'+first+'/'+last+'/'+id+'_HD.mp4'		
+	for first,last in match: return 'http://videos.videolog.tv/'+first+'/'+last+'/'+id+'_HD.mp4'		
 		
 def subststring(titulo):
 	titulo = titulo.replace('&#8211;','-')	
@@ -169,15 +173,13 @@ def get_params():
         if len(paramstring)>=2:
                 params=sys.argv[2]
                 cleanedparams=params.replace('?','')
-                if (params[len(params)-1]=='/'):
-                        params=params[0:len(params)-2]
+                if (params[len(params)-1]=='/'): params=params[0:len(params)-2]
                 pairsofparams=cleanedparams.split('&')
                 param={}
                 for i in range(len(pairsofparams)):
                         splitparams={}
                         splitparams=pairsofparams[i].split('=')
-                        if (len(splitparams))==2:
-                                param[splitparams[0]]=splitparams[1]
+                        if (len(splitparams))==2: param[splitparams[0]]=splitparams[1]
                                 
         return param
      
