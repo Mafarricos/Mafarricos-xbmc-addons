@@ -12,11 +12,12 @@ addonfolder = selfAddon.getAddonInfo('path')
 scriptsfolder = '/resources/scripts/'
 artsfolder = '/resources/img/'
 mensagemok = xbmcgui.Dialog().ok
+mensagemyesno = xbmcgui.Dialog().yesno
 
 ################################################## 
 #MENUS
 def CATEGORIES():
-	addDir('Verificar Espaço Ocupado',5,addonfolder+artsfolder+'/cleancache.png')
+	#addDir('Verificar Espaço Ocupado',5,addonfolder+artsfolder+'/cleancache.png')
 	addDir('Limpar Cache',1,addonfolder+artsfolder+'/cleancache.png')
 	addDir('Verificar FIQ FSM',4,addonfolder+artsfolder+'/fiqfsmCHECK.png')	
 	addDir('Activar FIQ FSM',2,addonfolder+artsfolder+'/fiqfsmON.png')
@@ -25,28 +26,29 @@ def CATEGORIES():
 ##################################################
 #FUNCOES
 def limpacache():
-	file = addonfolder+scriptsfolder+'tam.txt'
-	if xbmcvfs.exists(file): xbmcvfs.delete(file)
-	if selfAddon.getSetting('subtitles_folder') == 'true':
-		os.system('sh '+addonfolder+scriptsfolder+'subtitlesT.sh >> '+file)
-		os.system('sh '+addonfolder+scriptsfolder+'subtitles.sh')
-	if selfAddon.getSetting('packages_folder') == 'true':
-		os.system('sh '+addonfolder+scriptsfolder+'packagesT.sh >> '+file)
-		os.system('sh '+addonfolder+scriptsfolder+'packages.sh')
-	if selfAddon.getSetting('thumbnails_folder') == 'true':	
-		os.system('sh '+addonfolder+scriptsfolder+'ThumbnailsT.sh >> '+file)
-		os.system('sh '+addonfolder+scriptsfolder+'Thumbnails.sh')	
-	if selfAddon.getSetting('temp_folder') == 'true':
-		os.system('sh '+addonfolder+scriptsfolder+'tempT.sh >> '+file)
-		os.system('sh '+addonfolder+scriptsfolder+'temp.sh')
-	if selfAddon.getSetting('metacache_folder') == 'true':		
-		os.system('sh '+addonfolder+scriptsfolder+'metacacheT.sh >> '+file)
-		os.system('sh '+addonfolder+scriptsfolder+'metacache.sh')
-	conteudo = openfile(file)
-	if not conteudo:
-		conteudo = 'Nada a limpar'
-	ok = mensagemok('Limpeza de cache',conteudo)
-	if xbmcvfs.exists(file): xbmcvfs.delete(file)
+	if espacoocupado():
+		file = addonfolder+scriptsfolder+'tam.txt'
+		if xbmcvfs.exists(file): xbmcvfs.delete(file)
+		if selfAddon.getSetting('subtitles_folder') == 'true':
+			os.system('sh '+addonfolder+scriptsfolder+'subtitlesT.sh >> '+file)
+			os.system('sh '+addonfolder+scriptsfolder+'subtitles.sh')
+		if selfAddon.getSetting('packages_folder') == 'true':
+			os.system('sh '+addonfolder+scriptsfolder+'packagesT.sh >> '+file)
+			os.system('sh '+addonfolder+scriptsfolder+'packages.sh')
+		if selfAddon.getSetting('thumbnails_folder') == 'true':	
+			os.system('sh '+addonfolder+scriptsfolder+'ThumbnailsT.sh >> '+file)
+			os.system('sh '+addonfolder+scriptsfolder+'Thumbnails.sh')	
+		if selfAddon.getSetting('temp_folder') == 'true':
+			os.system('sh '+addonfolder+scriptsfolder+'tempT.sh >> '+file)
+			os.system('sh '+addonfolder+scriptsfolder+'temp.sh')
+		if selfAddon.getSetting('metacache_folder') == 'true':		
+			os.system('sh '+addonfolder+scriptsfolder+'metacacheT.sh >> '+file)
+			os.system('sh '+addonfolder+scriptsfolder+'metacache.sh')
+		conteudo = openfile(file)
+		if not conteudo:
+			conteudo = 'Nada a limpar'
+		ok = mensagemok('Limpeza de cache',conteudo)
+		if xbmcvfs.exists(file): xbmcvfs.delete(file)
 
 def espacoocupado():
 	file = addonfolder+scriptsfolder+'tam.txt'
@@ -65,8 +67,9 @@ def espacoocupado():
 		if 'G' in sizes: sizesfloat = sizesfloat+float(sizes[:-1])*1024
 	if not conteudo:
 		conteudo = '0MB'
-	ok = mensagemok('Verificação de Espaço','Pode libertar: '+str(round(sizesfloat,2))+' MB')
+	ok = mensagemyesno('Verificação de Espaço','Pode libertar: '+str(round(sizesfloat,2))+' MB\nDeseja continuar?')
 	if xbmcvfs.exists(file): xbmcvfs.delete(file)
+	return ok
 	
 def fiqfsm(OnOff):
 	ok = mensagemok('Limpeza de cache','em desenvolvimento')
@@ -83,6 +86,7 @@ def openfile(filename):
 	except:
 		print "Nao abriu o ficheiro: %s" % filename
 		return None
+
 ######################################################FUNCOES JÁ FEITAS
 def addDir(name,mode,iconimage,pasta=False):
         u=sys.argv[0]+"?mode="+str(mode)+"&name="+urllib.quote_plus(name)
