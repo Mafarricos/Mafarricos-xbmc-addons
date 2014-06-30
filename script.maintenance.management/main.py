@@ -68,7 +68,7 @@ def espacoocupado():
 		if 'G' in sizes: sizesfloat = sizesfloat+float(sizes[:-1])*1024
 	if not conteudo:
 		conteudo = '0MB'
-	ok = mensagemyesno('Verificação de Espaço','Pode libertar: '+str(round(sizesfloat,2))+' MB\nDeseja continuar?')
+	ok = mensagemyesno('Verificação de Espaço','Pode libertar: '+str(round(sizesfloat,2))+' MB','Deseja continuar?')
 	if xbmcvfs.exists(file): xbmcvfs.delete(file)
 	return ok
 	
