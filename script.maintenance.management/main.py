@@ -19,6 +19,7 @@ mensagemyesno = xbmcgui.Dialog().yesno
 def CATEGORIES():
 	#addDir('Verificar Espaço Ocupado',5,addonfolder+artsfolder+'/cleancache.png')
 	addDir('Limpar Cache',1,addonfolder+artsfolder+'/cleancache.png')
+	addDir('Limpar userdata de Addons já desinstalados',5,addonfolder+artsfolder+'/cleancache.png')
 	addDir('Verificar FIQ FSM',4,addonfolder+artsfolder+'/fiqfsmCHECK.png')	
 	addDir('Activar FIQ FSM',2,addonfolder+artsfolder+'/fiqfsmON.png')
 	addDir('Desactivar FIQ FSM',3,addonfolder+artsfolder+'/fiqfsmOFF.png')
@@ -75,6 +76,9 @@ def fiqfsm(OnOff):
 	ok = mensagemok('Limpeza de cache','em desenvolvimento')
 	
 def checkfiqfsm():
+	ok = mensagemok('Limpeza de cache','em desenvolvimento')
+
+def cleanuserdata():
 	ok = mensagemok('Limpeza de cache','em desenvolvimento')
 
 def openfile(filename):
@@ -136,6 +140,6 @@ elif mode==1: limpacache()
 elif mode==2: fiqfsm(True)
 elif mode==3: fiqfsm(False)
 elif mode==4: checkfiqfsm()
-elif mode==5: espacoocupado()
+elif mode==5: cleanuserdata()
 
 xbmcplugin.endOfDirectory(int(sys.argv[1]))
