@@ -20,6 +20,8 @@ def CATEGORIES():
 	#addDir('Verificar Espaço Ocupado',5,addonfolder+artsfolder+'/cleancache.png')
 	addDir('Limpar Cache',1,addonfolder+artsfolder+'/cleancache.png')
 	addDir('Limpar userdata de Addons já desinstalados',5,addonfolder+artsfolder+'/cleancache.png')
+	addDir('Backup Biblioteca Filmes/Séries',6,addonfolder+artsfolder+'/cleancache.png')
+	addDir('Restore Biblioteca Filmes/Séries',7,addonfolder+artsfolder+'/cleancache.png')	
 	addDir('Verificar FIQ FSM',4,addonfolder+artsfolder+'/fiqfsmCHECK.png')	
 	addDir('Activar FIQ FSM',2,addonfolder+artsfolder+'/fiqfsmON.png')
 	addDir('Desactivar FIQ FSM',3,addonfolder+artsfolder+'/fiqfsmOFF.png')
@@ -79,6 +81,9 @@ def checkfiqfsm():
 	ok = mensagemok('Limpeza de cache','em desenvolvimento')
 
 def cleanuserdata():
+	ok = mensagemok('Limpeza de cache','em desenvolvimento')
+
+def backupRestore(OnOff):
 	ok = mensagemok('Limpeza de cache','em desenvolvimento')
 
 def openfile(filename):
@@ -141,5 +146,7 @@ elif mode==2: fiqfsm(True)
 elif mode==3: fiqfsm(False)
 elif mode==4: checkfiqfsm()
 elif mode==5: cleanuserdata()
+elif mode==6: backupRestore(True)
+elif mode==7: backupRestore(False)
 
 xbmcplugin.endOfDirectory(int(sys.argv[1]))
