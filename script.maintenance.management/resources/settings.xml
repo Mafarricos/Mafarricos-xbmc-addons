@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<settings>
+    <category label="Gestão">
+        <setting label="Apagar Pasta Temporária" type="bool" id="temp_folder" default="true"/>
+        <setting label="Apagar cache de Legendas" type="bool" id="subtitles_folder" default="true"/>
+        <setting label="Apagar Pasta Metacache" type="bool" id="metacache_folder" default="true"/>
+        <setting label="Apagar Packages" type="bool" id="packages_folder" default="true"/>
+        <setting label="Apagar cache de Imagens" type="bool" id="thumbnails_folder" default="true"/>
+    </category>
+</settings>

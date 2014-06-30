@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<addon id="script.maintenance.management" name="Manutenção do PI" version="0.0.1" provider-name="Mafarricos">
+  <requires>
+    <import addon="xbmc.python" version="2.1.0"/>
+  </requires>
+  <extension point="xbmc.python.pluginsource" library="main.py">
+    <provides>executable</provides>
+  </extension>
+  <extension point="xbmc.addon.metadata">
+    <language>en</language>
+    <platform>linux</platform>
+    <summary lang="en">Manutenção do PI</summary>
+    <description lang="en">Comandos para a manutenção do PI</description>
+  </extension>
+</addon>
