@@ -13,6 +13,11 @@ scriptsfolder = '/resources/scripts/'
 artsfolder = '/resources/img/'
 mensagemok = xbmcgui.Dialog().ok
 mensagemyesno = xbmcgui.Dialog().yesno
+addonsfolder = addonfolder.replace(addon_id,'');
+packagesfolder = addonsfolder+'packages/'
+userdatafolder = addonsfolder.replace('/addons/','/userdata/addon_data/')
+thumbnailsfolder = addonsfolder.replace('/addons/','/userdata/Thumbnails/')
+tempfolder = addonsfolder.replace('/addons/','/temp/')
 
 ################################################## 
 #MENUS
@@ -30,48 +35,35 @@ def CATEGORIES():
 #FUNCOES
 def limpacache():
 	if espacoocupado():
+		msgtext = ''
 		file = addonfolder+scriptsfolder+'tam.txt'
 		if xbmcvfs.exists(file): xbmcvfs.delete(file)
 		if selfAddon.getSetting('subtitles_folder') == 'true':
 			os.system('sh '+addonfolder+scriptsfolder+'subtitlesT.sh >> '+file)
 			os.system('sh '+addonfolder+scriptsfolder+'subtitles.sh')
-		if selfAddon.getSetting('packages_folder') == 'true':
-			os.system('sh '+addonfolder+scriptsfolder+'packagesT.sh >> '+file)
-			os.system('sh '+addonfolder+scriptsfolder+'packages.sh')
+		if selfAddon.getSetting('packages_folder') == 'true': 
+			if deletefolderfiles(packagesfolder) == 'true': msgtext = msgtext + packagesfolder+'\n'
 		if selfAddon.getSetting('thumbnails_folder') == 'true':	
-			os.system('sh '+addonfolder+scriptsfolder+'ThumbnailsT.sh >> '+file)
-			os.system('sh '+addonfolder+scriptsfolder+'Thumbnails.sh')	
+			if deletesubfolders(thumbnailsfolder) == 'true': msgtext = msgtext + thumbnailsfolder+'\n'
 		if selfAddon.getSetting('temp_folder') == 'true':
-			os.system('sh '+addonfolder+scriptsfolder+'tempT.sh >> '+file)
-			os.system('sh '+addonfolder+scriptsfolder+'temp.sh')
+			if deletefolderfiles(tempfolder) == 'true' or deletesubfolders(tempfolder) == 'true': msgtext = msgtext + tempfolder+'\n'
 		if selfAddon.getSetting('metacache_folder') == 'true':		
 			os.system('sh '+addonfolder+scriptsfolder+'metacacheT.sh >> '+file)
 			os.system('sh '+addonfolder+scriptsfolder+'metacache.sh')
-		conteudo = openfile(file)
-		if not conteudo:
-			conteudo = 'Nada a limpar'
-		ok = mensagemok('Limpeza de cache',conteudo)
+		#conteudo = openfile(file)
+		if not msgtext:
+			msgtext = 'Nada a limpar'
+		ok = mensagemok('Limpeza de cache',msgtext)
 		if xbmcvfs.exists(file): xbmcvfs.delete(file)
 
 def espacoocupado():
-	file = addonfolder+scriptsfolder+'tam.txt'
-	sizesfloat = 0
-	if xbmcvfs.exists(file): xbmcvfs.delete(file)
+	sizeMB = 0
 	if selfAddon.getSetting('subtitles_folder') == 'true': os.system('sh '+addonfolder+scriptsfolder+'subtitlesT.sh >> '+file)
-	if selfAddon.getSetting('packages_folder') == 'true': os.system('sh '+addonfolder+scriptsfolder+'packagesT.sh >> '+file)
-	if selfAddon.getSetting('thumbnails_folder') == 'true':	 os.system('sh '+addonfolder+scriptsfolder+'ThumbnailsT.sh >> '+file)
-	if selfAddon.getSetting('temp_folder') == 'true': os.system('sh '+addonfolder+scriptsfolder+'tempT.sh >> '+file)
+	if selfAddon.getSetting('packages_folder') == 'true': sizeMB = sizeMB + returnsize(packagesfolder)
+	if selfAddon.getSetting('thumbnails_folder') == 'true':	 sizeMB = sizeMB + returnsize(thumbnailsfolder)
+	if selfAddon.getSetting('temp_folder') == 'true': sizeMB = sizeMB + returnsize(tempfolder)
 	if selfAddon.getSetting('metacache_folder') == 'true': os.system('sh '+addonfolder+scriptsfolder+'metacacheT.sh >> '+file)
-	conteudo = openfile(file)
-	size = re.findall('(\d+.\d+[GMK])\t',conteudo,re.DOTALL)
-	for sizes in size:
-		if 'K' in sizes: sizesfloat = sizesfloat+float(sizes[:-1])/1024
-		if 'M' in sizes: sizesfloat = sizesfloat+float(sizes[:-1])
-		if 'G' in sizes: sizesfloat = sizesfloat+float(sizes[:-1])*1024
-	if not conteudo:
-		conteudo = '0MB'
-	ok = mensagemyesno('Verificação de Espaço','Pode libertar: '+str(round(sizesfloat,2))+' MB','Deseja continuar?')
-	if xbmcvfs.exists(file): xbmcvfs.delete(file)
+	ok = mensagemyesno('Verificação de Espaço','Pode libertar: '+str(round(sizeMB,2))+' MB','Deseja continuar?')
 	return ok
 	
 def fiqfsm(OnOff):
@@ -84,17 +76,15 @@ def cleanuserdata():
 	textmsg = ''
 	sizeMB = 0
 	file = addonfolder+scriptsfolder+'tam.txt'	
-	addons = addonfolder.replace(addon_id,'');
-	userdata = addons.replace('\\addons\\','\\userdata\\addon_data\\')
-	dir,files = xbmcvfs.listdir(userdata)
+	dir,files = xbmcvfs.listdir(userdatafolder)
 	for directories in dir:
-		if not xbmcvfs.exists(addons+directories):
+		if not xbmcvfs.exists(addonsfolder+directories):
 			textmsg = textmsg+directories+'\n'
-			sizeMB = sizeMB + returnsize(userdata+directories)
+			sizeMB = sizeMB + returnsize(userdatafolder+directories)
 	ok = mensagemyesno('Pastas a serem eliminadas do userdata',textmsg+'\n'+str(round(sizeMB,2))+' MB')
 	if ok:
 		for directories in dir:
-			if not xbmcvfs.exists(addons+directories): shutil.rmtree(userdata+directories)
+			if not xbmcvfs.exists(addonsfolder+directories): shutil.rmtree(userdatafolder+directories)
 
 def returnsize(path):
 	sizebites = 0
@@ -102,6 +92,26 @@ def returnsize(path):
 		for name in files:
 			sizebites = sizebites + float(os.path.getsize(os.path.join(root, name)))
 	return (sizebites / 1024 / 1024)
+
+def deletefolderfiles(path):
+	deleted = "false"
+	for root, dirs, files in os.walk(path):
+		for name in files: 
+			try: 
+				xbmcvfs.delete(path+name)
+				deleted = 'true'
+			except:
+				print 'failed deleting file'
+				pass
+	return deleted
+
+def deletesubfolders(path):
+	deleted = 'false'
+	dir,files = xbmcvfs.listdir(path)
+	for directories in dir:
+		shutil.rmtree(path+directories)
+		deleted = 'true'
+	return deleted
 	
 def backupRestore(OnOff):
 	ok = mensagemok('Limpeza de cache','em desenvolvimento')
