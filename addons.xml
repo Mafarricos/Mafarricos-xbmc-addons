@@ -1,18 +1,17 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <addons>
-<addon id="plugin.video.portocanal" name="Porto Canal" version="0.0.2" provider-name="Mafarricos">
+<addon id="script.maintenance.management" name="Manutenção do XBMC" version="0.0.2" provider-name="Mafarricos">
   <requires>
     <import addon="xbmc.python" version="2.1.0"/>
   </requires>
   <extension point="xbmc.python.pluginsource" library="main.py">
-    <provides>video</provides>
+    <provides>executable</provides>
   </extension>
   <extension point="xbmc.addon.metadata">
     <language>en</language>
     <platform>all</platform>
-    <summary lang="en">Porto Canal</summary>
-    <description lang="en">Visualização dos videos do site http://portocanal.sapo.pt</description>
-    <platform>all</platform>
+    <summary lang="en">Manutenção do XBMC (Addon em Desenvolvimento)</summary>
+    <description lang="en">Comandos para a manutenção do PI</description>
   </extension>
 </addon>
 
@@ -32,21 +31,18 @@
   </extension>
 </addon>
 
-<addon id="plugin.video.tabonito" name="Tá Bonito" version="0.0.4" provider-name="Mafarricos">
-  <requires>
-    <import addon="xbmc.python" version="2.1.0"/>
-	<import addon="script.module.urlresolver" version="2.1.2"/>
-  </requires>
-  <extension point="xbmc.python.pluginsource" library="main.py">
-    <provides>video</provides>
-  </extension>
-  <extension point="xbmc.addon.metadata">
-    <language>en</language>
-    <platform>all</platform>
-    <summary lang="en">Tá Bonito</summary>
-    <description lang="en">Visualização de videos engraçados do site: http://www.tabonito.pt</description>
-    <platform>all</platform>
-  </extension>
+<addon id="repository.mafarricosModded.xbmc" name="Mafarricos Modded repositorio" version="1.0.0" provider-name="Mafarricos">
+	<extension point="xbmc.addon.repository" name="Mafarricos Modded Add-on Repository">
+		<info compressed="false">http://raw.github.com/Mafarricos/Mafarricos-modded-xbmc-addons/master/addons.xml</info>
+		<checksum>http://raw.github.com/Mafarricos/Mafarricos-modded-xbmc-addons/master/addons.xml.md5</checksum>
+		<datadir zip="true">http://raw.github.com/Mafarricos/Mafarricos-modded-xbmc-addons/master/repo</datadir>
+	</extension>
+	<extension point="xbmc.addon.metadata">
+		<summary>Repositorio de Addons Modificados por Mafarricos</summary>
+		<description>Addons Modificados por Mafarricos, contacto: MafaStudios@gmail.com</description>
+		<disclaimer></disclaimer>
+		<platform>all</platform>
+	</extension>
 </addon>
 
 <addon id="plugin.video.tabrutal" name="Tá Brutal" version="0.0.4" provider-name="Mafarricos">
@@ -66,21 +62,18 @@
   </extension>
 </addon>
 
-<addon id="plugin.video.tipolol" name="Tipo LOL" version="0.0.1" provider-name="Mafarricos">
-  <requires>
-    <import addon="xbmc.python" version="2.1.0"/>
-	<import addon="script.module.urlresolver" version="2.1.2"/>
-  </requires>
-  <extension point="xbmc.python.pluginsource" library="main.py">
-    <provides>video</provides>
-  </extension>
-  <extension point="xbmc.addon.metadata">
-    <language>en</language>
-    <platform>all</platform>
-    <summary lang="en">Tipo LOL</summary>
-    <description lang="en">Visualização de videos engraçados do site: http://tipolol.org</description>
-    <platform>all</platform>
-  </extension>
+<addon id="repository.mafarricos.xbmc" name="Mafarricos repositorio" version="1.0.4" provider-name="Mafarricos">
+	<extension point="xbmc.addon.repository" name="Mafarricos Add-on Repository">
+		<info compressed="false">http://raw.github.com/Mafarricos/Mafarricos-xbmc-addons/master/addons.xml</info>
+		<checksum>http://raw.github.com/Mafarricos/Mafarricos-xbmc-addons/master/addons.xml.md5</checksum>
+		<datadir zip="true">http://raw.github.com/Mafarricos/Mafarricos-xbmc-addons/master/repo</datadir>
+	</extension>
+	<extension point="xbmc.addon.metadata">
+		<summary>Repositorio Mafarricos</summary>
+		<description>Addons de Mafarricos, contacto: MafaStudios@gmail.com</description>
+		<disclaimer></disclaimer>
+		<platform>all</platform>
+	</extension>
 </addon>
 
 <addon id="plugin.video.videosinfantis" name="Videos Infantis" version="0.4.3" provider-name="Mafarricos">
@@ -107,46 +100,53 @@
   </extension>
 </addon>
 
-<addon id="repository.mafarricos.xbmc" name="Mafarricos repositorio" version="1.0.4" provider-name="Mafarricos">
-	<extension point="xbmc.addon.repository" name="Mafarricos Add-on Repository">
-		<info compressed="false">http://raw.github.com/Mafarricos/Mafarricos-xbmc-addons/master/addons.xml</info>
-		<checksum>http://raw.github.com/Mafarricos/Mafarricos-xbmc-addons/master/addons.xml.md5</checksum>
-		<datadir zip="true">http://raw.github.com/Mafarricos/Mafarricos-xbmc-addons/master/repo</datadir>
-	</extension>
-	<extension point="xbmc.addon.metadata">
-		<summary>Repositorio Mafarricos</summary>
-		<description>Addons de Mafarricos, contacto: MafaStudios@gmail.com</description>
-		<disclaimer></disclaimer>
-		<platform>all</platform>
-	</extension>
+<addon id="plugin.video.tabonito" name="Tá Bonito" version="0.0.4" provider-name="Mafarricos">
+  <requires>
+    <import addon="xbmc.python" version="2.1.0"/>
+	<import addon="script.module.urlresolver" version="2.1.2"/>
+  </requires>
+  <extension point="xbmc.python.pluginsource" library="main.py">
+    <provides>video</provides>
+  </extension>
+  <extension point="xbmc.addon.metadata">
+    <language>en</language>
+    <platform>all</platform>
+    <summary lang="en">Tá Bonito</summary>
+    <description lang="en">Visualização de videos engraçados do site: http://www.tabonito.pt</description>
+    <platform>all</platform>
+  </extension>
 </addon>
 
-<addon id="repository.mafarricosModded.xbmc" name="Mafarricos Modded repositorio" version="1.0.0" provider-name="Mafarricos">
-	<extension point="xbmc.addon.repository" name="Mafarricos Modded Add-on Repository">
-		<info compressed="false">http://raw.github.com/Mafarricos/Mafarricos-modded-xbmc-addons/master/addons.xml</info>
-		<checksum>http://raw.github.com/Mafarricos/Mafarricos-modded-xbmc-addons/master/addons.xml.md5</checksum>
-		<datadir zip="true">http://raw.github.com/Mafarricos/Mafarricos-modded-xbmc-addons/master/repo</datadir>
-	</extension>
-	<extension point="xbmc.addon.metadata">
-		<summary>Repositorio de Addons Modificados por Mafarricos</summary>
-		<description>Addons Modificados por Mafarricos, contacto: MafaStudios@gmail.com</description>
-		<disclaimer></disclaimer>
-		<platform>all</platform>
-	</extension>
-</addon>
-
-<addon id="script.maintenance.management" name="Manutenção do PI" version="0.0.1" provider-name="Mafarricos">
+<addon id="plugin.video.portocanal" name="Porto Canal" version="0.0.2" provider-name="Mafarricos">
   <requires>
     <import addon="xbmc.python" version="2.1.0"/>
   </requires>
   <extension point="xbmc.python.pluginsource" library="main.py">
-    <provides>executable</provides>
+    <provides>video</provides>
   </extension>
   <extension point="xbmc.addon.metadata">
     <language>en</language>
-    <platform>linux</platform>
-    <summary lang="en">Manutenção do PI (Addon em Desenvolvimento)</summary>
-    <description lang="en">Comandos para a manutenção do PI</description>
+    <platform>all</platform>
+    <summary lang="en">Porto Canal</summary>
+    <description lang="en">Visualização dos videos do site http://portocanal.sapo.pt</description>
+    <platform>all</platform>
+  </extension>
+</addon>
+
+<addon id="plugin.video.tipolol" name="Tipo LOL" version="0.0.1" provider-name="Mafarricos">
+  <requires>
+    <import addon="xbmc.python" version="2.1.0"/>
+	<import addon="script.module.urlresolver" version="2.1.2"/>
+  </requires>
+  <extension point="xbmc.python.pluginsource" library="main.py">
+    <provides>video</provides>
+  </extension>
+  <extension point="xbmc.addon.metadata">
+    <language>en</language>
+    <platform>all</platform>
+    <summary lang="en">Tipo LOL</summary>
+    <description lang="en">Visualização de videos engraçados do site: http://tipolol.org</description>
+    <platform>all</platform>
   </extension>
 </addon>
 </addons>
