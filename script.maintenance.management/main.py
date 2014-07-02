@@ -4,7 +4,7 @@
 # email: MafaStudios@gmail.com
 # This program is free software: GNU General Public License
 ##############BIBLIOTECAS A IMPORTAR E DEFINICOES####################
-import urllib,urllib2,xbmcplugin,xbmcgui,xbmcaddon,os,xbmcvfs,re
+import urllib,urllib2,xbmcplugin,xbmcgui,xbmcaddon,os,xbmcvfs,re,shutil
 
 addon_id = 'script.maintenance.management'
 selfAddon = xbmcaddon.Addon(id=addon_id)
@@ -82,27 +82,27 @@ def checkfiqfsm():
 
 def cleanuserdata():
 	textmsg = ''
+	sizeMB = 0
 	file = addonfolder+scriptsfolder+'tam.txt'	
 	addons = addonfolder.replace(addon_id,'');
 	userdata = addons.replace('\\addons\\','\\userdata\\addon_data\\')
 	dir,files = xbmcvfs.listdir(userdata)
 	for directories in dir:
-		if not xbmcvfs.exists(addons+directories): 
+		if not xbmcvfs.exists(addons+directories):
 			textmsg = textmsg+directories+'\n'
-			os.system('du '+userdata+directories' -sh >> '+file)
-	conteudo = openfile(file)
-	size = re.findall('(\d+.\d+[GMK])\t',conteudo,re.DOTALL)
-	for sizes in size:
-		if 'K' in sizes: sizesfloat = sizesfloat+float(sizes[:-1])/1024
-		if 'M' in sizes: sizesfloat = sizesfloat+float(sizes[:-1])
-		if 'G' in sizes: sizesfloat = sizesfloat+float(sizes[:-1])*1024
-	if not conteudo:
-		conteudo = '0MB'		
-	ok = mensagemyesno('Pastas a serem eliminadas do userdata',textmsg+'\nEspaço a Libertar: '+str(round(sizesfloat,2))+' MB','Deseja continuar?')
+			sizeMB = sizeMB + returnsize(userdata+directories)
+	ok = mensagemyesno('Pastas a serem eliminadas do userdata',textmsg+'\n'+str(round(sizeMB,2))+' MB')
 	if ok:
 		for directories in dir:
-			if not xbmcvfs.exists(addons+directories): os.system('rm -r '+userdata+directories)
+			if not xbmcvfs.exists(addons+directories): shutil.rmtree(userdata+directories)
 
+def returnsize(path):
+	sizebites = 0
+	for root, dirs, files in os.walk(path):
+		for name in files:
+			sizebites = sizebites + float(os.path.getsize(os.path.join(root, name)))
+	return (sizebites / 1024 / 1024)
+	
 def backupRestore(OnOff):
 	ok = mensagemok('Limpeza de cache','em desenvolvimento')
 
