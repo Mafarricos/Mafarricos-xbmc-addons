@@ -18,64 +18,65 @@ packagesfolder = addonsfolder+'packages/'
 userdatafolder = addonsfolder.replace('/addons/','/userdata/addon_data/')
 thumbnailsfolder = addonsfolder.replace('/addons/','/userdata/Thumbnails/')
 tempfolder = addonsfolder.replace('/addons/','/temp/')
+databasefolder = addonsfolder.replace('/addons/','/userdata/Database/')
 
 ################################################## 
 #MENUS
 def CATEGORIES():
-	#addDir('Verificar Espaço Ocupado',5,addonfolder+artsfolder+'/cleancache.png')
 	addDir('Limpar Cache',1,addonfolder+artsfolder+'/cleancache.png')
 	addDir('Limpar userdata de Addons já desinstalados',5,addonfolder+artsfolder+'/cleancache.png')
 	addDir('Backup Biblioteca Filmes/Séries',6,addonfolder+artsfolder+'/cleancache.png')
 	addDir('Restore Biblioteca Filmes/Séries',7,addonfolder+artsfolder+'/cleancache.png')	
+	addDir('FIQ FSM',8,addonfolder+artsfolder+'/fiqfsmCHECK.png',True)	
+
+def FIQ_FSM():		
 	addDir('Verificar FIQ FSM',4,addonfolder+artsfolder+'/fiqfsmCHECK.png')	
 	addDir('Activar FIQ FSM',2,addonfolder+artsfolder+'/fiqfsmON.png')
 	addDir('Desactivar FIQ FSM',3,addonfolder+artsfolder+'/fiqfsmOFF.png')
-		
+
 ##################################################
 #FUNCOES
 def limpacache():
 	if espacoocupado():
 		msgtext = ''
-		file = addonfolder+scriptsfolder+'tam.txt'
-		if xbmcvfs.exists(file): xbmcvfs.delete(file)
 		if selfAddon.getSetting('subtitles_folder') == 'true':
-			os.system('sh '+addonfolder+scriptsfolder+'subtitlesT.sh >> '+file)
-			os.system('sh '+addonfolder+scriptsfolder+'subtitles.sh')
+			foldersdeleted = cleansubtitlesdata() 
+			if foldersdeleted: msgtext = msgtext + foldersdeleted
 		if selfAddon.getSetting('packages_folder') == 'true': 
 			if deletefolderfiles(packagesfolder) == 'true': msgtext = msgtext + packagesfolder+'\n'
 		if selfAddon.getSetting('thumbnails_folder') == 'true':	
 			if deletesubfolders(thumbnailsfolder) == 'true': msgtext = msgtext + thumbnailsfolder+'\n'
+			if deletefolderfiles(databasefolder,'Textures') == 'true': msgtext = msgtext + databasefolder+'TexturesXX.db'+'\n'
 		if selfAddon.getSetting('temp_folder') == 'true':
 			if deletefolderfiles(tempfolder) == 'true' or deletesubfolders(tempfolder) == 'true': msgtext = msgtext + tempfolder+'\n'
-		if selfAddon.getSetting('metacache_folder') == 'true':		
-			os.system('sh '+addonfolder+scriptsfolder+'metacacheT.sh >> '+file)
-			os.system('sh '+addonfolder+scriptsfolder+'metacache.sh')
-		#conteudo = openfile(file)
+		if selfAddon.getSetting('metacache_folder') == 'true':	
+			if deletesubfolders(userdatafolder+'script.module.metahandler/') == 'true': msgtext = msgtext + userdatafolder+'script.module.metahandler/'+'\n'	
 		if not msgtext:
 			msgtext = 'Nada a limpar'
 		ok = mensagemok('Limpeza de cache',msgtext)
-		if xbmcvfs.exists(file): xbmcvfs.delete(file)
 
-def espacoocupado():
-	sizeMB = 0
-	if selfAddon.getSetting('subtitles_folder') == 'true': os.system('sh '+addonfolder+scriptsfolder+'subtitlesT.sh >> '+file)
-	if selfAddon.getSetting('packages_folder') == 'true': sizeMB = sizeMB + returnsize(packagesfolder)
-	if selfAddon.getSetting('thumbnails_folder') == 'true':	 sizeMB = sizeMB + returnsize(thumbnailsfolder)
-	if selfAddon.getSetting('temp_folder') == 'true': sizeMB = sizeMB + returnsize(tempfolder)
-	if selfAddon.getSetting('metacache_folder') == 'true': os.system('sh '+addonfolder+scriptsfolder+'metacacheT.sh >> '+file)
-	ok = mensagemyesno('Verificação de Espaço','Pode libertar: '+str(round(sizeMB,2))+' MB','Deseja continuar?')
-	return ok
-	
 def fiqfsm(OnOff):
 	ok = mensagemok('Limpeza de cache','em desenvolvimento')
 	
 def checkfiqfsm():
 	ok = mensagemok('Limpeza de cache','em desenvolvimento')
 
+def backupRestore(OnOff):
+	ok = mensagemok('Limpeza de cache','em desenvolvimento')
+
+def espacoocupado():
+	sizeMB = 0
+	if selfAddon.getSetting('subtitles_folder') == 'true': sizeMB = sizeMB +subtitlesdatasize()
+	if selfAddon.getSetting('packages_folder') == 'true': sizeMB = sizeMB + returnsize(packagesfolder)
+	if selfAddon.getSetting('thumbnails_folder') == 'true':	 sizeMB = sizeMB + returnsize(thumbnailsfolder) + returnsize(databasefolder,'Textures')
+	if selfAddon.getSetting('temp_folder') == 'true': sizeMB = sizeMB + returnsize(tempfolder)
+	if selfAddon.getSetting('metacache_folder') == 'true': sizeMB = sizeMB + returnsize(userdatafolder+'script.module.metahandler/meta_cache/')
+	ok = mensagemyesno('Verificação de Espaço','Pode libertar: '+str(round(sizeMB,2))+' MB','Deseja continuar?')
+	return ok
+	
 def cleanuserdata():
 	textmsg = ''
 	sizeMB = 0
-	file = addonfolder+scriptsfolder+'tam.txt'	
 	dir,files = xbmcvfs.listdir(userdatafolder)
 	for directories in dir:
 		if not xbmcvfs.exists(addonsfolder+directories):
@@ -86,23 +87,36 @@ def cleanuserdata():
 		for directories in dir:
 			if not xbmcvfs.exists(addonsfolder+directories): shutil.rmtree(userdatafolder+directories)
 
-def returnsize(path):
-	sizebites = 0
-	for root, dirs, files in os.walk(path):
-		for name in files:
-			sizebites = sizebites + float(os.path.getsize(os.path.join(root, name)))
-	return (sizebites / 1024 / 1024)
+def cleansubtitlesdata():
+	foldersdeleted = ''
+	subtfolder = ''
+	dir,files = xbmcvfs.listdir(userdatafolder)
+	for directories in dir:
+		if 'subtitles' in directories:
+			subtfolder = userdatafolder+directories+'/temp/'
+			if xbmcvfs.exists(subtfolder): 
+				foldersdeleted = foldersdeleted + subtfolder+'\n'
+				shutil.rmtree(subtfolder)
+	return foldersdeleted
 
-def deletefolderfiles(path):
+def subtitlesdatasize():
+	sizeMB = 0
+	subtfolder = ''
+	dir,files = xbmcvfs.listdir(userdatafolder)
+	for directories in dir:
+		if 'subtitles' in directories:
+			subtfolder = userdatafolder+directories+'/temp/'
+			if xbmcvfs.exists(subtfolder): sizeMB = sizeMB + returnsize(subtfolder)
+	return sizeMB
+
+def deletefolderfiles(path,oneFile=None):
 	deleted = "false"
 	for root, dirs, files in os.walk(path):
-		for name in files: 
-			try: 
-				xbmcvfs.delete(path+name)
-				deleted = 'true'
-			except:
-				print 'failed deleting file'
-				pass
+		for name in files:
+			if oneFile:
+				if oneFile in name: deleted = deletefile(path+name)
+			else:
+				deleted = deletefile(path+name)
 	return deleted
 
 def deletesubfolders(path):
@@ -112,9 +126,26 @@ def deletesubfolders(path):
 		shutil.rmtree(path+directories)
 		deleted = 'true'
 	return deleted
-	
-def backupRestore(OnOff):
-	ok = mensagemok('Limpeza de cache','em desenvolvimento')
+
+def deletefile(path):
+	deleted = 'false'
+	try: 
+		xbmcvfs.delete(path)
+		deleted = 'true'
+	except:
+		print 'failed deleting file'
+		pass
+	return deleted
+
+def returnsize(path,oneFile=None):
+	sizebites = 0
+	for root, dirs, files in os.walk(path):
+		for name in files:
+			if oneFile:
+				if oneFile in name:
+					sizebites = sizebites + float(os.path.getsize(os.path.join(root, name)))
+			else: sizebites = sizebites + float(os.path.getsize(os.path.join(root, name)))
+	return (sizebites / 1024 / 1024)
 
 def openfile(filename):
 	try:
@@ -178,5 +209,6 @@ elif mode==4: checkfiqfsm()
 elif mode==5: cleanuserdata()
 elif mode==6: backupRestore(True)
 elif mode==7: backupRestore(False)
+elif mode==8: FIQ_FSM()
 
 xbmcplugin.endOfDirectory(int(sys.argv[1]))
