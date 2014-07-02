@@ -81,7 +81,16 @@ def checkfiqfsm():
 	ok = mensagemok('Limpeza de cache','em desenvolvimento')
 
 def cleanuserdata():
-	ok = mensagemok('Limpeza de cache','em desenvolvimento')
+	textmsg = ''
+	addons = addonfolder.replace(addon_id,'');
+	userdata = addons.replace('\\addons\\','\\userdata\\addon_data\\')
+	dir,files = xbmcvfs.listdir(userdata)
+	for directories in dir:
+		if not xbmcvfs.exists(addons+directories): textmsg = textmsg+directories+'\n'
+	ok = mensagemyesno('Pastas a serem eliminadas do userdata',textmsg)
+	if ok:
+		for directories in dir:
+			if not xbmcvfs.exists(addons+directories): os.system('rm -r '+userdata+directories)
 
 def backupRestore(OnOff):
 	ok = mensagemok('Limpeza de cache','em desenvolvimento')
