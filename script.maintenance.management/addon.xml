@@ -9,7 +9,7 @@
   <extension point="xbmc.addon.metadata">
     <language>en</language>
     <platform>linux</platform>
-    <summary lang="en">Manutenção do PI</summary>
+    <summary lang="en">Manutenção do PI (Addon em Desenvolvimento)</summary>
     <description lang="en">Comandos para a manutenção do PI</description>
   </extension>
 </addon>
