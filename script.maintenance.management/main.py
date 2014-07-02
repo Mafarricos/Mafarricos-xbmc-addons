@@ -82,12 +82,23 @@ def checkfiqfsm():
 
 def cleanuserdata():
 	textmsg = ''
+	file = addonfolder+scriptsfolder+'tam.txt'	
 	addons = addonfolder.replace(addon_id,'');
 	userdata = addons.replace('\\addons\\','\\userdata\\addon_data\\')
 	dir,files = xbmcvfs.listdir(userdata)
 	for directories in dir:
-		if not xbmcvfs.exists(addons+directories): textmsg = textmsg+directories+'\n'
-	ok = mensagemyesno('Pastas a serem eliminadas do userdata',textmsg)
+		if not xbmcvfs.exists(addons+directories): 
+			textmsg = textmsg+directories+'\n'
+			os.system('du '+userdata+directories' -sh >> '+file)
+	conteudo = openfile(file)
+	size = re.findall('(\d+.\d+[GMK])\t',conteudo,re.DOTALL)
+	for sizes in size:
+		if 'K' in sizes: sizesfloat = sizesfloat+float(sizes[:-1])/1024
+		if 'M' in sizes: sizesfloat = sizesfloat+float(sizes[:-1])
+		if 'G' in sizes: sizesfloat = sizesfloat+float(sizes[:-1])*1024
+	if not conteudo:
+		conteudo = '0MB'		
+	ok = mensagemyesno('Pastas a serem eliminadas do userdata',textmsg+'\nEspaço a Libertar: '+str(round(sizesfloat,2))+' MB','Deseja continuar?')
 	if ok:
 		for directories in dir:
 			if not xbmcvfs.exists(addons+directories): os.system('rm -r '+userdata+directories)
