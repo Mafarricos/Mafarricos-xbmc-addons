@@ -178,10 +178,13 @@ def returnsize(path,oneFile=None):
 def rebootorexit():
 	if selfAddon.getSetting('auto_reboot-exit') == 'true':
 		ok = mensagemok('Reiniciar/Sair do XBMC','O XBMC vai fechar ou reiniciar conforme o sistema')
-		try: xbmc.executebuiltin("Quit")
-		except: 
+		if 'OpenELEC' in os.uname():
 			xbmc.restart()
-			pass
+		else:
+			try: xbmc.executebuiltin("Quit")
+			except: 
+				xbmc.restart()
+				pass
 	else: ok = mensagemok('Reiniciar o XBMC','Deve reiniciar o XBMC')
 
 def openfile(filename):
