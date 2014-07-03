@@ -14,17 +14,12 @@ artsfolder = '/resources/img/'
 mensagemok = xbmcgui.Dialog().ok
 mensagemyesno = xbmcgui.Dialog().yesno
 addonsfolder = addonfolder.replace(addon_id,'');
-packagesfolder = addonsfolder+'packages/'
-if sys.platform == 'win32':
-	userdatafolder = addonsfolder.replace('\\addons\\','\\userdata\\addon_data\\')
-	thumbnailsfolder = addonsfolder.replace('\\addons\\','\\userdata\\Thumbnails\\')
-	tempfolder = addonsfolder.replace('\\addons\\','\\temp\\')
-	databasefolder = addonsfolder.replace('\\addons\\','\\userdata\\Database\\')
-else:
-	userdatafolder = addonsfolder.replace('/addons/','/userdata/addon_data/')
-	thumbnailsfolder = addonsfolder.replace('/addons/','/userdata/Thumbnails/')
-	tempfolder = addonsfolder.replace('/addons/','/temp/')
-	databasefolder = addonsfolder.replace('/addons/','/userdata/Database/')
+packagesfolder = os.path.join(addonsfolder,'packages')
+userdatafolder = xbmc.translatePath(os.path.join('special://userdata','addon_data'))
+thumbnailsfolder = xbmc.translatePath('special://thumbnails')
+tempfolder = xbmc.translatePath('special://temp')
+databasefolder = xbmc.translatePath('special://database')
+installfolder = xbmc.translatePath('special://xbmc')
 
 ################################################## 
 #MENUS
@@ -53,8 +48,8 @@ def desinstalar():
 			content = openfile(addonsfolder+directories+'/addon.xml')
 			if content:
 				nome=re.compile('name="(.+?)"').findall(content)
-				addonsize = returnsize(addonsfolder+directories)
-				userdatasize = returnsize(userdatafolder+directories)
+				addonsize = returnsize(os.path.join(addonsfolder,directories))
+				userdatasize = returnsize(os.path.join(userdatafolder,directories))
 				addDir(directories+" - [COLOR green]"+nome[0]+"[/COLOR] (Addon: "+str(round(addonsize,2))+" MB) (Addondata:"+str(round(userdatasize,2))+" MB)",10,addonfolder+artsfolder+'/cleancache.png',False,directories)
 
 ##################################################
@@ -73,9 +68,9 @@ def limpacache():
 			if deletefolderfiles(databasefolder,'Textures'): msgtext = msgtext + databasefolder+'TexturesXX.db'+'\n'
 			thumbsDel = True
 		if selfAddon.getSetting('temp_folder') == 'true':
-			if deletesubfolders(tempfolder) or deletefolderfiles(tempfolder): msgtext = msgtext + tempfolder+'\n'
+			if (deletesubfolders(tempfolder) and deletefolderfiles(tempfolder)) or (deletesubfolders(tempfolder) or deletefolderfiles(tempfolder)): msgtext = msgtext + tempfolder+'\n'
 		if selfAddon.getSetting('metacache_folder'):	
-			if deletesubfolders(userdatafolder+'script.module.metahandler/'): msgtext = msgtext + userdatafolder+'script.module.metahandler/'+'\n'	
+			if deletesubfolders(os.path.join(userdatafolder,'script.module.metahandler')): msgtext = msgtext + userdatafolder+'script.module.metahandler'+'\n'	
 		if not msgtext:
 			msgtext = 'Nada a limpar'
 		ok = mensagemok('Limpeza de cache',msgtext)
@@ -97,7 +92,7 @@ def espacoocupado():
 	if selfAddon.getSetting('packages_folder') == 'true': sizeMB = sizeMB + returnsize(packagesfolder)
 	if selfAddon.getSetting('thumbnails_folder') == 'true' and sys.platform <> 'win32': sizeMB = sizeMB + returnsize(thumbnailsfolder) + returnsize(databasefolder,'Textures')
 	if selfAddon.getSetting('temp_folder') == 'true': sizeMB = sizeMB + returnsize(tempfolder)
-	if selfAddon.getSetting('metacache_folder') == 'true': sizeMB = sizeMB + returnsize(userdatafolder+'script.module.metahandler/meta_cache/')
+	if selfAddon.getSetting('metacache_folder') == 'true': sizeMB = sizeMB + returnsize(os.path.join(userdatafolder,'script.module.metahandler/meta_cache'))
 	ok = mensagemyesno('Verificação de Espaço','Pode libertar: '+str(round(sizeMB,2))+' MB\nDeseja continuar?')
 	return ok
 	
@@ -107,14 +102,14 @@ def cleanuserdata():
 	dir,files = xbmcvfs.listdir(userdatafolder)
 	for directories in dir:
 		if not 'service.openelec.settings' in directories:
-			if not xbmcvfs.exists(addonsfolder+directories):
+			if not xbmcvfs.exists(os.path.join(addonsfolder,directories)):
 				textmsg = textmsg+directories+'\n'
-				sizeMB = sizeMB + returnsize(userdatafolder+directories)
+				sizeMB = sizeMB + returnsize(os.path.join(userdatafolder,directories))
 	ok = mensagemyesno('Pastas a serem eliminadas do userdata:',textmsg+str(round(sizeMB,2))+' MB\nDeseja Continuar?')
 	if ok and textmsg:
 		for directories in dir:
 			if not 'service.openelec.settings' in directories:
-				if not xbmcvfs.exists(addonsfolder+directories): shutil.rmtree(userdatafolder+directories)
+				if not xbmcvfs.exists(os.path.join(addonsfolder,directories)): shutil.rmtree(os.path.join(userdatafolder,directories))
 		ok = mensagemok('Concluido','Operação Terminada')
 
 def cleansubtitlesdata():
@@ -123,7 +118,7 @@ def cleansubtitlesdata():
 	dir,files = xbmcvfs.listdir(userdatafolder)
 	for directories in dir:
 		if 'subtitles' in directories:
-			subtfolder = userdatafolder+directories+'/temp/'
+			subtfolder = os.path.join(os.path.join(userdatafolder,directories),'temp')
 			if xbmcvfs.exists(subtfolder): 
 				foldersdeleted = foldersdeleted + subtfolder+'\n'
 				shutil.rmtree(subtfolder)
@@ -135,7 +130,7 @@ def subtitlesdatasize():
 	dir,files = xbmcvfs.listdir(userdatafolder)
 	for directories in dir:
 		if 'subtitles' in directories:
-			subtfolder = userdatafolder+directories+'/temp/'
+			subtfolder = os.path.join(userdatafolder+directories,'temp')
 			if xbmcvfs.exists(subtfolder): sizeMB = sizeMB + returnsize(subtfolder)
 	return sizeMB
 
@@ -145,12 +140,12 @@ def deletefolderfiles(path,oneFile=None):
 		for name in files:
 			if oneFile:
 				if oneFile in name: 
-					try: deleted = deletefile(path+name)
+					try: deleted = deletefile(os.path.join(path,name))
 					except: 
-						deleted = os.remove(path+name)
+						deleted = os.remove(os.path.join(path,name))
 						pass
 			else:
-				if ".log" not in name: deleted = deletefile(path+name)
+				if ".log" not in name: deleted = deletefile(os.path.join(path,name))
 	return deleted
 
 def deletesubfolders(path):
@@ -164,9 +159,9 @@ def deletesubfolders(path):
 def deleteaddon(addon):
 	ok = mensagemyesno('Desinstalar Addon',"Vai remover toda a informação (addon+userdata) do addon:\n"+addon+'\nDeseja continuar?')
 	if ok:
-		try: shutil.rmtree(userdatafolder+addon)
+		try: shutil.rmtree(os.path.join(userdatafolder,addon))
 		except: pass
-		shutil.rmtree(addonsfolder+addon)
+		shutil.rmtree(os.path.join(addonsfolder,addon))
 		ok = deletefolderfiles(databasefolder,'Addons')
 		xbmc.executebuiltin("Container.Refresh")
 		rebootorexit()
@@ -220,6 +215,7 @@ def openfile(filename):
 
 ######################################################FUNCOES JÁ FEITAS
 def addDir(name,mode,iconimage,pasta=False,folderDel=None):
+        if sys.argv[0] < 0: sys.argv[0] = 1
         u=sys.argv[0]+"?folderDel="+str(folderDel)+"&mode="+str(mode)+"&name="+urllib.quote_plus(name)
         ok=True
         liz=xbmcgui.ListItem(name, iconImage="DefaultFolder.png", thumbnailImage=iconimage)
