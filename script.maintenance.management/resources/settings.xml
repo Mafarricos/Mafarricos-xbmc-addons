@@ -6,5 +6,6 @@
         <setting label="Apagar Pasta Metacache" type="bool" id="metacache_folder" default="true"/>
         <setting label="Apagar Packages" type="bool" id="packages_folder" default="true"/>
         <setting label="Apagar cache de Imagens" type="bool" id="thumbnails_folder" default="true"/>
+        <setting label="Reiniciar/Sair do XBMC após alterações" type="bool" id="auto_reboot-exit" default="true"/>
     </category>
 </settings>

@@ -25,6 +25,7 @@ databasefolder = addonsfolder.replace('/addons/','/userdata/Database/')
 def CATEGORIES():
 	addDir('Limpar Cache',1,addonfolder+artsfolder+'/cleancache.png')
 	addDir('Limpar userdata de Addons já desinstalados',5,addonfolder+artsfolder+'/cleancache.png')
+	addDir('Desinstalar Addons',9,addonfolder+artsfolder+'/cleancache.png',True)
 	addDir('Backup Biblioteca Filmes/Séries',6,addonfolder+artsfolder+'/cleancache.png')
 	addDir('Restore Biblioteca Filmes/Séries',7,addonfolder+artsfolder+'/cleancache.png')	
 	addDir('FIQ FSM',8,addonfolder+artsfolder+'/fiqfsmCHECK.png',True)	
@@ -34,26 +35,42 @@ def FIQ_FSM():
 	addDir('Activar FIQ FSM',2,addonfolder+artsfolder+'/fiqfsmON.png')
 	addDir('Desactivar FIQ FSM',3,addonfolder+artsfolder+'/fiqfsmOFF.png')
 
+def desinstalar():
+	names =['metadata','module','common','packages']		
+	dir,files = xbmcvfs.listdir(addonsfolder)
+	for directories in sorted(dir):
+		found = False
+	        if re.search('metadata',directories) or re.search('module',directories) or re.search('common',directories) or re.search('packages',directories): found = True
+		if not found: 
+			content = openfile(addonsfolder+directories+'/addon.xml')
+			if content:
+				nome=re.compile('name="(.+?)"').findall(content)					
+				addDir(directories+" - [COLOR green]"+nome[0]+"[/COLOR]",10,addonfolder+artsfolder+'/cleancache.png',False,directories)
+
 ##################################################
 #FUNCOES
 def limpacache():
 	if espacoocupado():
 		msgtext = ''
+		thumbsDel = False
 		if selfAddon.getSetting('subtitles_folder') == 'true':
 			foldersdeleted = cleansubtitlesdata() 
 			if foldersdeleted: msgtext = msgtext + foldersdeleted
 		if selfAddon.getSetting('packages_folder') == 'true': 
-			if deletefolderfiles(packagesfolder) == 'true': msgtext = msgtext + packagesfolder+'\n'
+			if deletefolderfiles(packagesfolder): msgtext = msgtext + packagesfolder+'\n'
 		if selfAddon.getSetting('thumbnails_folder') == 'true':	
-			if deletesubfolders(thumbnailsfolder) == 'true': msgtext = msgtext + thumbnailsfolder+'\n'
-			if deletefolderfiles(databasefolder,'Textures') == 'true': msgtext = msgtext + databasefolder+'TexturesXX.db'+'\n'
+			if deletesubfolders(thumbnailsfolder): msgtext = msgtext + thumbnailsfolder+'\n'
+			if deletefolderfiles(databasefolder,'Textures'): msgtext = msgtext + databasefolder+'TexturesXX.db'+'\n'
+			thumbsDel = True
 		if selfAddon.getSetting('temp_folder') == 'true':
-			if deletefolderfiles(tempfolder) == 'true' or deletesubfolders(tempfolder) == 'true': msgtext = msgtext + tempfolder+'\n'
-		if selfAddon.getSetting('metacache_folder') == 'true':	
-			if deletesubfolders(userdatafolder+'script.module.metahandler/') == 'true': msgtext = msgtext + userdatafolder+'script.module.metahandler/'+'\n'	
+			if deletesubfolders(tempfolder) or deletefolderfiles(tempfolder): msgtext = msgtext + tempfolder+'\n'
+		if selfAddon.getSetting('metacache_folder'):	
+			if deletesubfolders(userdatafolder+'script.module.metahandler/'): msgtext = msgtext + userdatafolder+'script.module.metahandler/'+'\n'	
 		if not msgtext:
 			msgtext = 'Nada a limpar'
 		ok = mensagemok('Limpeza de cache',msgtext)
+		if thumbsDel: rebootorexit()
+		else: ok = mensagemok('Concluido','Operação Terminada')
 
 def fiqfsm(OnOff):
 	ok = mensagemok('Limpeza de cache','em desenvolvimento')
@@ -71,7 +88,7 @@ def espacoocupado():
 	if selfAddon.getSetting('thumbnails_folder') == 'true':	 sizeMB = sizeMB + returnsize(thumbnailsfolder) + returnsize(databasefolder,'Textures')
 	if selfAddon.getSetting('temp_folder') == 'true': sizeMB = sizeMB + returnsize(tempfolder)
 	if selfAddon.getSetting('metacache_folder') == 'true': sizeMB = sizeMB + returnsize(userdatafolder+'script.module.metahandler/meta_cache/')
-	ok = mensagemyesno('Verificação de Espaço','Pode libertar: '+str(round(sizeMB,2))+' MB','Deseja continuar?')
+	ok = mensagemyesno('Verificação de Espaço','Pode libertar: '+str(round(sizeMB,2))+' MB\nDeseja continuar?')
 	return ok
 	
 def cleanuserdata():
@@ -82,10 +99,11 @@ def cleanuserdata():
 		if not xbmcvfs.exists(addonsfolder+directories):
 			textmsg = textmsg+directories+'\n'
 			sizeMB = sizeMB + returnsize(userdatafolder+directories)
-	ok = mensagemyesno('Pastas a serem eliminadas do userdata',textmsg+'\n'+str(round(sizeMB,2))+' MB')
-	if ok:
+	ok = mensagemyesno('Pastas a serem eliminadas do userdata:',textmsg+str(round(sizeMB,2))+' MB\nDeseja Continuar?')
+	if ok and textmsg:
 		for directories in dir:
 			if not xbmcvfs.exists(addonsfolder+directories): shutil.rmtree(userdatafolder+directories)
+		ok = mensagemok('Concluido','Operação Terminada')
 
 def cleansubtitlesdata():
 	foldersdeleted = ''
@@ -110,28 +128,38 @@ def subtitlesdatasize():
 	return sizeMB
 
 def deletefolderfiles(path,oneFile=None):
-	deleted = "false"
+	deleted = False
 	for root, dirs, files in os.walk(path):
 		for name in files:
 			if oneFile:
 				if oneFile in name: deleted = deletefile(path+name)
 			else:
-				deleted = deletefile(path+name)
+				if ".log" not in name: deleted = deletefile(path+name)
 	return deleted
 
 def deletesubfolders(path):
-	deleted = 'false'
+	deleted = False
 	dir,files = xbmcvfs.listdir(path)
 	for directories in dir:
 		shutil.rmtree(path+directories)
-		deleted = 'true'
+		deleted = True
 	return deleted
 
+def deleteaddon(addon):
+	ok = mensagemyesno('Desinstalar Addon',"Vai remover toda a informação (addon+userdata) do addon:\n"+addon+'\nDeseja continuar?')
+	if ok:
+		try: shutil.rmtree(userdatafolder+addon)
+		except: pass
+		shutil.rmtree(addonsfolder+addon)
+		ok = deletefolderfiles(databasefolder,'Addons')
+		xbmc.executebuiltin("Container.Refresh")
+		rebootorexit()
+
 def deletefile(path):
-	deleted = 'false'
+	deleted = False
 	try: 
 		xbmcvfs.delete(path)
-		deleted = 'true'
+		deleted = True
 	except:
 		print 'failed deleting file'
 		pass
@@ -147,6 +175,15 @@ def returnsize(path,oneFile=None):
 			else: sizebites = sizebites + float(os.path.getsize(os.path.join(root, name)))
 	return (sizebites / 1024 / 1024)
 
+def rebootorexit():
+	if selfAddon.getSetting('auto_reboot-exit') == 'true':
+		ok = mensagemok('Reiniciar/Sair do XBMC','O XBMC vai fechar ou reiniciar conforme o sistema')
+		try: xbmc.executebuiltin("Quit")
+		except: 
+			xbmc.restart()
+			pass
+	else: ok = mensagemok('Reiniciar o XBMC','Deve reiniciar o XBMC')
+
 def openfile(filename):
 	try:
 		fh = open(filename, 'rb')
@@ -158,8 +195,8 @@ def openfile(filename):
 		return None
 
 ######################################################FUNCOES JÁ FEITAS
-def addDir(name,mode,iconimage,pasta=False):
-        u=sys.argv[0]+"?mode="+str(mode)+"&name="+urllib.quote_plus(name)
+def addDir(name,mode,iconimage,pasta=False,folderDel=None):
+        u=sys.argv[0]+"?folderDel="+str(folderDel)+"&mode="+str(mode)+"&name="+urllib.quote_plus(name)
         ok=True
         liz=xbmcgui.ListItem(name, iconImage="DefaultFolder.png", thumbnailImage=iconimage)
 	liz.setProperty('fanart_image',addonfolder+'/fanart.jpg')
@@ -183,10 +220,13 @@ def get_params():
         return param
       
 params=get_params()
+folderDel=None
 name=None
 mode=None
 iconimage=None
 
+try: folderDel=urllib.unquote_plus(params["folderDel"])
+except: pass
 try: name=urllib.unquote_plus(params["name"])
 except: pass
 try: mode=int(params["mode"])
@@ -197,6 +237,7 @@ except: pass
 print "Mode: "+str(mode)
 print "Name: "+str(name)
 print "Iconimage: "+str(iconimage)
+print "folderDel: "+str(folderDel)
 
 #################################
 #MODOS
@@ -210,5 +251,7 @@ elif mode==5: cleanuserdata()
 elif mode==6: backupRestore(True)
 elif mode==7: backupRestore(False)
 elif mode==8: FIQ_FSM()
+elif mode==9: desinstalar()
+elif mode==10: deleteaddon(folderDel)
 
 xbmcplugin.endOfDirectory(int(sys.argv[1]))
