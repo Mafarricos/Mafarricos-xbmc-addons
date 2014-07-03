@@ -146,7 +146,7 @@ def deletefolderfiles(path,oneFile=None):
 		for name in files:
 			if oneFile:
 				if oneFile in name: 
-					if sys.platform == 'win32': createandwritebatch(file,'timeout 5\n','del '+os.path.join(path,name))
+					if sys.platform == 'win32': createandwritebatch(file,'Taskkill /IM XBMC.exe /F\ntimeout 3\n','del '+os.path.join(path,name)+'\npause')
 					else:
 						try: deleted = deletefile(os.path.join(path,name))
 						except: 
@@ -173,7 +173,7 @@ def deleteaddon(addon):
 		ok = deletefolderfiles(databasefolder,'Addons')
 		xbmc.executebuiltin("Container.Refresh")
 		rebootorexit()
-		#if sys.platform == 'win32': os.system(addonfolder+scriptsfolder+'winbat.bat')
+		if sys.platform == 'win32': os.system(addonfolder+scriptsfolder+'winbat.bat')
 
 def deletefile(path):
 	deleted = False
