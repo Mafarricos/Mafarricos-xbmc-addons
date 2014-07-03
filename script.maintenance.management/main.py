@@ -96,13 +96,15 @@ def cleanuserdata():
 	sizeMB = 0
 	dir,files = xbmcvfs.listdir(userdatafolder)
 	for directories in dir:
-		if not xbmcvfs.exists(addonsfolder+directories):
-			textmsg = textmsg+directories+'\n'
-			sizeMB = sizeMB + returnsize(userdatafolder+directories)
+		if not 'service.openelec.settings' in directories:
+			if not xbmcvfs.exists(addonsfolder+directories):
+				textmsg = textmsg+directories+'\n'
+				sizeMB = sizeMB + returnsize(userdatafolder+directories)
 	ok = mensagemyesno('Pastas a serem eliminadas do userdata:',textmsg+str(round(sizeMB,2))+' MB\nDeseja Continuar?')
 	if ok and textmsg:
 		for directories in dir:
-			if not xbmcvfs.exists(addonsfolder+directories): shutil.rmtree(userdatafolder+directories)
+			if not 'service.openelec.settings' in directories:
+				if not xbmcvfs.exists(addonsfolder+directories): shutil.rmtree(userdatafolder+directories)
 		ok = mensagemok('Concluido','Operação Terminada')
 
 def cleansubtitlesdata():
