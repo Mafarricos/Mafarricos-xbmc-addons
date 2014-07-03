@@ -28,8 +28,10 @@ def CATEGORIES():
 	addDir('Limpar userdata de Addons já desinstalados',5,addonfolder+artsfolder+'/cleancache.png')
 	addDir('Desinstalar Addons',9,addonfolder+artsfolder+'/cleancache.png',True)
 	addDir('Backup Biblioteca Filmes/Séries',6,addonfolder+artsfolder+'/cleancache.png')
-	addDir('Restore Biblioteca Filmes/Séries',7,addonfolder+artsfolder+'/cleancache.png')	
-	addDir('FIQ FSM',8,addonfolder+artsfolder+'/fiqfsmCHECK.png',True)	
+	addDir('Restore Biblioteca Filmes/Séries',7,addonfolder+artsfolder+'/cleancache.png')
+	try:
+		if 'OpenELEC' in os.uname(): addDir('FIQ FSM',8,addonfolder+artsfolder+'/fiqfsmCHECK.png',True)	
+	except: pass
 
 def FIQ_FSM():		
 	addDir('Verificar FIQ FSM',4,addonfolder+artsfolder+'/fiqfsmCHECK.png')	
@@ -50,7 +52,7 @@ def desinstalar():
 				nome=re.compile('name="(.+?)"').findall(content)
 				addonsize = returnsize(os.path.join(addonsfolder,directories))
 				userdatasize = returnsize(os.path.join(userdatafolder,directories))
-				addDir(directories+" - [COLOR green]"+nome[0]+"[/COLOR] (Addon: "+str(round(addonsize,2))+" MB) (Addondata:"+str(round(userdatasize,2))+" MB)",10,addonfolder+artsfolder+'/cleancache.png',False,directories)
+				addDir(directories+" - [COLOR green]"+nome[0]+"[/COLOR] (Espaço: "+str(round(addonsize,2)+round(userdatasize,2))+" MB)",10,addonfolder+artsfolder+'/cleancache.png',False,directories)
 
 ##################################################
 #FUNCOES
