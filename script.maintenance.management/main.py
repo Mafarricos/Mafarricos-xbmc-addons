@@ -47,7 +47,7 @@ def desinstalar():
 		found = False
 	        if re.search('metadata',directories) or re.search('module',directories) or re.search('common',directories) or re.search('packages',directories): found = True
 		if not found: 
-			content = openfile(addonsfolder+directories+'/addon.xml')
+			content = openfile(os.path.join(addonsfolder+directories,'addon.xml'))
 			if content:
 				nome=re.compile('name="(.+?)"').findall(content)
 				addonsize = returnsize(os.path.join(addonsfolder,directories))
@@ -65,7 +65,7 @@ def limpacache():
 			if foldersdeleted: msgtext = msgtext + foldersdeleted
 		if selfAddon.getSetting('packages_folder') == 'true': 
 			if deletefolderfiles(packagesfolder): msgtext = msgtext + packagesfolder+'\n'
-		if selfAddon.getSetting('thumbnails_folder') == 'true' and sys.platform <> 'win32':	
+		if selfAddon.getSetting('thumbnails_folder') == 'true':
 			if deletesubfolders(thumbnailsfolder): msgtext = msgtext + thumbnailsfolder+'\n'
 			if deletefolderfiles(databasefolder,'Textures'): msgtext = msgtext + databasefolder+'TexturesXX.db'+'\n'
 			thumbsDel = True
@@ -76,7 +76,9 @@ def limpacache():
 		if not msgtext:
 			msgtext = 'Nada a limpar'
 		ok = mensagemok('Limpeza de cache',msgtext)
-		if thumbsDel: rebootorexit()
+		if thumbsDel:
+			rebootorexit()
+			if sys.platform == 'win32': os.system(addonfolder+scriptsfolder+'winbat.bat')			
 		else: ok = mensagemok('Concluido','Operação Terminada')
 
 def fiqfsm(OnOff):
@@ -92,7 +94,7 @@ def espacoocupado():
 	sizeMB = 0
 	if selfAddon.getSetting('subtitles_folder') == 'true': sizeMB = sizeMB +subtitlesdatasize()
 	if selfAddon.getSetting('packages_folder') == 'true': sizeMB = sizeMB + returnsize(packagesfolder)
-	if selfAddon.getSetting('thumbnails_folder') == 'true' and sys.platform <> 'win32': sizeMB = sizeMB + returnsize(thumbnailsfolder) + returnsize(databasefolder,'Textures')
+	if selfAddon.getSetting('thumbnails_folder') == 'true': sizeMB = sizeMB + returnsize(thumbnailsfolder) + returnsize(databasefolder,'Textures')
 	if selfAddon.getSetting('temp_folder') == 'true': sizeMB = sizeMB + returnsize(tempfolder)
 	if selfAddon.getSetting('metacache_folder') == 'true': sizeMB = sizeMB + returnsize(os.path.join(userdatafolder,'script.module.metahandler/meta_cache'))
 	ok = mensagemyesno('Verificação de Espaço','Pode libertar: '+str(round(sizeMB,2))+' MB\nDeseja continuar?')
@@ -138,14 +140,18 @@ def subtitlesdatasize():
 
 def deletefolderfiles(path,oneFile=None):
 	deleted = False
+	file = addonfolder+scriptsfolder
+	file = os.path.join(file,'winbat.bat')
 	for root, dirs, files in os.walk(path):
 		for name in files:
 			if oneFile:
 				if oneFile in name: 
-					try: deleted = deletefile(os.path.join(path,name))
-					except: 
-						deleted = os.remove(os.path.join(path,name))
-						pass
+					if sys.platform == 'win32': createandwritebatch(file,'timeout 5\n','del '+os.path.join(path,name))
+					else:
+						try: deleted = deletefile(os.path.join(path,name))
+						except: 
+							deleted = os.remove(os.path.join(path,name))
+							pass
 			else:
 				if ".log" not in name: deleted = deletefile(os.path.join(path,name))
 	return deleted
@@ -167,6 +173,7 @@ def deleteaddon(addon):
 		ok = deletefolderfiles(databasefolder,'Addons')
 		xbmc.executebuiltin("Container.Refresh")
 		rebootorexit()
+		#if sys.platform == 'win32': os.system(addonfolder+scriptsfolder+'winbat.bat')
 
 def deletefile(path):
 	deleted = False
@@ -188,7 +195,7 @@ def returnsize(path,oneFile=None):
 	return (sizebites / 1024 / 1024)
 
 def rebootorexit():
-	if selfAddon.getSetting('auto_reboot-exit') == 'true':
+	if selfAddon.getSetting('auto_reboot-exit') == 'true' or sys.platform == 'win32':
 		ok = mensagemok('Reiniciar/Sair do XBMC','O XBMC vai fechar ou reiniciar conforme o sistema')
 		try:
 			if 'OpenELEC' in os.uname(): xbmc.restart()
@@ -215,6 +222,17 @@ def openfile(filename):
 		print "Nao abriu o ficheiro: %s" % filename
 		return None
 
+def createandwritebatch(filename,command1,command2):
+	ok = deletefile(filename)
+	try:
+		fh = open(filename, 'w')
+		fh.write(command1)
+		fh.write(command2)
+		fh.close()
+	except:
+		print "Nao gravou o ficheiro: %s" % filename
+		pass
+		
 ######################################################FUNCOES JÁ FEITAS
 def addDir(name,mode,iconimage,pasta=False,folderDel=None):
         if sys.argv[0] < 0: sys.argv[0] = 1
