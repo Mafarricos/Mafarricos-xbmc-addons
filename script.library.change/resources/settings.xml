@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<settings>
+    <category label="Gestão de Filmes">
+        <setting label="Pasta da Biblioteca" type="folder" id="movielibraryfolder"/>
+        <setting label="Pasta com os streams a substituir" type="folder" id="movielibraryfolder_tochange"/>		
+    </category>
+</settings>
