@@ -135,6 +135,21 @@
 	</extension>
 </addon>
 
+<addon id="script.library.change" name="Manutenção da Biblioteca" version="0.0.1" provider-name="Mafarricos">
+  <requires>
+    <import addon="xbmc.python" version="2.1.0"/>
+  </requires>
+  <extension point="xbmc.python.pluginsource" library="main.py">
+    <provides>executable</provides>
+  </extension>
+  <extension point="xbmc.addon.metadata">
+    <language>en</language>
+    <platform>all</platform>
+    <summary lang="en">Addon feito para alterar o strm principal usado na biblioteca por outro.</summary>
+    <description lang="en">Manutenção de streams na biblioteca</description>
+  </extension>
+</addon>
+
 <addon id="script.maintenance.management" name="Manutenção do XBMC" version="0.0.7" provider-name="Mafarricos">
   <requires>
     <import addon="xbmc.python" version="2.1.0"/>
