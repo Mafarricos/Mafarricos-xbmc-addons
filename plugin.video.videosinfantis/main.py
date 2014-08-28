@@ -37,17 +37,16 @@ siteurl3 = 'http://canalpanda.pt/'
 #MENUS
 
 def CATEGORIES():
+	kidsyoutube.addDir('Kids Youtube',siteurl,13,addonfolder+artfolder+'iconKyou.png',True,1,'',maxresults,startindex,'')
 	videosinfantis.addDir('Videos Infantis',siteurl,4,addonfolder+artfolder+'iconVI.png',True)
 	ogatodasbotas.addDir('O Gato das Botas',siteurl2,5,addonfolder+artfolder+'icongato.png',True)	
 	canalpanda.addDir('CanalPanda.pt',siteurl3,12,addonfolder+artfolder+'iconpanda.png')
-	kidsyoutube.addDir('Kids Youtube',siteurl,13,addonfolder+artfolder+'iconKyou.png',True,1,'',maxresults,startindex,'')	
 		
 ##################################################
 #FUNCOES
 
 def play(url,name):
-  if 'gatodasbotas' in url:
-	url=ogatodasbotas.encontrar_tipo_da_fonte(url)
+  if 'gatodasbotas' in url: url=ogatodasbotas.encontrar_tipo_da_fonte(url)
   listitem = xbmcgui.ListItem()
   listitem.setPath(url)
   listitem.setInfo("Video", {"Title":name})
@@ -68,15 +67,13 @@ def get_params():
         if len(paramstring)>=2:
                 params=sys.argv[2]
                 cleanedparams=params.replace('?','')
-                if (params[len(params)-1]=='/'):
-                        params=params[0:len(params)-2]
+                if (params[len(params)-1]=='/'): params=params[0:len(params)-2]
                 pairsofparams=cleanedparams.split('&')
                 param={}
                 for i in range(len(pairsofparams)):
                         splitparams={}
                         splitparams=pairsofparams[i].split('=')
-                        if (len(splitparams))==2:
-                                param[splitparams[0]]=splitparams[1]
+                        if (len(splitparams))==2: param[splitparams[0]]=splitparams[1]
                                 
         return param
 
@@ -125,10 +122,8 @@ elif mode==9: canalpanda.pesquisa(siteurl3)
 elif mode==10:
 	filterorder=re.compile('filterorder=(.+?)&').findall(url)
 	filtervalue=re.compile('filtervalue=(.+?)&').findall(url)
-	if filterorder==[]:
-       		canalpanda.lista_de_videos(url,'',filtervalue[0],siteurl3)
-	else:
-		canalpanda.lista_de_videos(url,filterorder[0],'',siteurl3)
+	if filterorder==[]: canalpanda.lista_de_videos(url,'',filtervalue[0],siteurl3)
+	else: canalpanda.lista_de_videos(url,filterorder[0],'',siteurl3)
 elif mode==11: canalpanda.programa_paginicial(url,'1',siteurl3)
 elif mode==12: canalpanda.CATEGORIESpanda(siteurl3)
 elif mode==13: kidsyoutube.CATEGORIESyou()

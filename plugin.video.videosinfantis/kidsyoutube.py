@@ -27,7 +27,7 @@ def CATEGORIESyou():
 		addDir('[COLOR yellow]Inicio[/COLOR]','','','http://digitalsherpa.com/wp-content/uploads/2013/04/social-media-marketing-tool.png',True,1,'',maxresults,startindex,'')
 		numero_de_canais = len(channels)	
 		for channel in channels:
-			content = abrir_url('https://gdata.youtube.com/feeds/api/users/'+channel+'/uploads?max-results=1&start-index=1&v=2&orderby=published')
+			content = abrir_url('https://gdata.youtube.com/feeds/api/users/'+channel+'/uploads?v=2.1')
 			match = re.compile('<name>(.+?)</name>').findall(content)		
 			totalresults = re.compile('<openSearch:totalResults>(\d+)</openSearch:totalResults>').findall(content)				
 			addDir(match[0]+' [COLOR blue]('+totalresults[0]+' Videos)[/COLOR]',channel,16,addonfolder+artfolder+'iconKyou.png',True,numero_de_canais,'',maxresults,startindex,'')
@@ -45,15 +45,13 @@ def playlistListing(name,url,maxresults,startindex):
 		addDir('[COLOR yellow]Inicio[/COLOR]',url,13,'http://digitalsherpa.com/wp-content/uploads/2013/04/social-media-marketing-tool.png',True,1,'',maxresults,startindex,'')	
 		entry = re.compile('<entry(.+?)</entry>').findall(content)
 		numeroentries = len(entry)			
-		if numeroentries == 0:
-			addDir('[COLOR red]SEM PLAYLISTS[/COLOR]',url,'','http://digitalsherpa.com/wp-content/uploads/2013/04/social-media-marketing-tool.png',False,1,'',maxresults,startindex,'')			
+		if numeroentries == 0: addDir('[COLOR red]SEM PLAYLISTS[/COLOR]',url,'','http://digitalsherpa.com/wp-content/uploads/2013/04/social-media-marketing-tool.png',False,1,'',maxresults,startindex,'')			
 		for entries in entry:
 			countHit = re.findall('<yt:countHint>(\d+)</yt:countHint>',entries,re.DOTALL)
 			name = re.findall('<title>(.+?)</title>',entries,re.DOTALL)
 			url = re.findall('<link rel=\'alternate\' type=\'text/html\' href=\'(.+?)\'/>',entries,re.DOTALL)
 			img = re.findall('name=\'mqdefault\'/><media:thumbnail url=\'(.+?)\'',entries,re.DOTALL)				
-			if countHit[0]<>0:
-				addDir(name[0]+' ('+countHit[0]+' Videos)',url[0],14,img[0],True,numeroentries,'',maxresults,startindex,'')						
+			if countHit[0]<>0: addDir(name[0]+' ('+countHit[0]+' Videos)',url[0],14,img[0],True,numeroentries,'',maxresults,startindex,'')						
 			
 def listchannel(name,url,maxresults,startindex):	
 	addDir('[COLOR yellow]Inicio[/COLOR]',url,13,'http://digitalsherpa.com/wp-content/uploads/2013/04/social-media-marketing-tool.png',True,1,'',maxresults,startindex,'')	
@@ -62,9 +60,8 @@ def listchannel(name,url,maxresults,startindex):
 #		if maxresults == None: maxresults = 15
 #		if startindex == None: startindex = 1
 		url3 = url.replace("https://www.youtube.com/playlist?list=","")
-		content = abrir_url('https://gdata.youtube.com/feeds/api/playlists/'+url3+'?max-results='+str(maxresults)+'&start-index='+str(startindex)+'&v=2&orderby=published')	
-	else:
-		content = abrir_url('https://gdata.youtube.com/feeds/api/users/'+url+'/uploads?max-results='+str(maxresults)+'&start-index='+str(startindex)+'&v=2&orderby=published')
+		content = abrir_url('https://gdata.youtube.com/feeds/api/playlists/'+url3+'?max-results='+str(maxresults)+'&start-index='+str(startindex)+'&v=2.1')	
+	else: content = abrir_url('https://gdata.youtube.com/feeds/api/users/'+url+'/uploads?v=2.1&max-results='+str(maxresults)+'&start-index='+str(startindex))
 	content = replacecontent(content)	
 #	dateadded = '';
 #	genre ='';
@@ -77,30 +74,24 @@ def listchannel(name,url,maxresults,startindex):
 	totalpages = int(math.ceil(float(totalresults[0])/float(maxresults)))	
 	for entries in entry:
 		duracao = re.findall('<yt:duration seconds=\'(\d+)\'/>',entries,re.DOTALL)
-		if not duracao:
-			duracao[0] = '0'
+		if not duracao: duracao[0] = '0'
 		titulo = re.findall('<title>(.+?)</title>',entries,re.DOTALL)
 		url2 = re.findall('<link rel=\'alternate\' type=\'text/html\' href=\'(.+?)\'/>',entries,re.DOTALL)
 		img = re.findall('name=\'mqdefault\'/><media:thumbnail url=\'(.+?)\'',entries,re.DOTALL)	
-		if not img:
-			img[0]=''
+		if not img: img[0]=''
 		plot = re.findall('<media:description type=\'plain\'>(.+?)</media:description>',entries,re.DOTALL)		
 		id_video = url2[0].replace("https://www.youtube.com/watch?v=","")
 		id_video = id_video.replace("&amp;feature=youtube_gdata","")
 		url2='plugin://plugin.video.youtube/?action=play_video&videoid='+id_video
-		if not plot:
-			plotresume = ''
-		else:
-			plotresume = plot[0].decode("utf-8")
+		if not plot: plotresume = ''
+		else: plotresume = plot[0].decode("utf-8")
 		informacao = { "Title": titulo[0] , "plot": plotresume}
 		addDir(titulo[0],url2,2,img[0],False,numero_de_videos,duracao[0],'','',informacao)
 	startindex = int(startindex)+int(maxresults)
 	pageno = (startindex - 1) / maxresults
 	if totalresults:
-		if int(totalresults[0]) > int(startindex):
-			addDir('[COLOR yellow]('+str(pageno)+'/'+str(totalpages)+') Próxima >>[/COLOR]',url,14,addonfolder+artfolder+'iconKyou.png',True,1,'',maxresults,startindex,'')
-		else:
-			addDir('[COLOR yellow]('+str(pageno)+'/'+str(totalpages)+')[/COLOR]',url,'',addonfolder+artfolder+'iconKyou.png',False,1,'',maxresults,startindex,'')
+		if int(totalresults[0]) > int(startindex): addDir('[COLOR yellow]('+str(pageno)+'/'+str(totalpages)+') Próxima >>[/COLOR]',url,14,addonfolder+artfolder+'iconKyou.png',True,1,'',maxresults,startindex,'')
+		else: addDir('[COLOR yellow]('+str(pageno)+'/'+str(totalpages)+')[/COLOR]',url,'',addonfolder+artfolder+'iconKyou.png',False,1,'',maxresults,startindex,'')
 
 def replacecontent(content):
 	content = content.replace("\n","")
@@ -115,15 +106,13 @@ def playlistchannel(name,url,maxresults,startindex):
 	progress.create('Videos Infantis', 'A Criar Playlist!')
 	if 'playlist' in url:
 		url3 = url.replace("https://www.youtube.com/playlist?list=","")
-		content = abrir_url('https://gdata.youtube.com/feeds/api/playlists/'+url3+'?max-results='+str(maxresults)+'&start-index='+str(startindex)+'&v=2&orderby=published')	
-	else:
-		content = abrir_url('https://gdata.youtube.com/feeds/api/users/'+url+'/uploads?max-results='+str(maxresults)+'&start-index='+str(startindex)+'&v=2&orderby=published')	
+		content = abrir_url('https://gdata.youtube.com/feeds/api/playlists/'+url3+'?max-results='+str(maxresults)+'&start-index='+str(startindex)+'&v=2.1')	
+	else: content = abrir_url('https://gdata.youtube.com/feeds/api/users/'+url+'/uploads?max-results='+str(maxresults)+'&start-index='+str(startindex)+'&v=2.1')	
 	content = replacecontent(content)
 	match = re.compile('<entry(.+?)</entry>').findall(content)
 	totalresults = re.compile('<openSearch:totalResults>(\d+)</openSearch:totalResults>').findall(content)	
 	vidsmissing = int(totalresults[0])-int(startindex)+1
-	if vidsmissing < maxresults:
-		maxresults = vidsmissing
+	if vidsmissing < maxresults: maxresults = vidsmissing
 	i=1
 	for entries in match:
 		titulo = re.findall('<title>(.+?)</title>',entries,re.DOTALL)
@@ -191,15 +180,13 @@ def get_params():
         if len(paramstring)>=2:
                 params=sys.argv[2]
                 cleanedparams=params.replace('?','')
-                if (params[len(params)-1]=='/'):
-                        params=params[0:len(params)-2]
+                if (params[len(params)-1]=='/'): params=params[0:len(params)-2]
                 pairsofparams=cleanedparams.split('&')
                 param={}
                 for i in range(len(pairsofparams)):
                         splitparams={}
                         splitparams=pairsofparams[i].split('=')
-                        if (len(splitparams))==2:
-                                param[splitparams[0]]=splitparams[1]
+                        if (len(splitparams))==2: param[splitparams[0]]=splitparams[1]
                                 
         return param
     
