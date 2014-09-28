@@ -33,10 +33,6 @@ listagemID = selfAddon.getSetting('list-view')
 if listagemID == '0':listagemtext='Todos (Vídeos e Texto)'
 if listagemID == '1':listagemtext='Apenas Vídeos'
 if listagemID == '2':listagemtext='Apenas Texto'
-
-#if  siteurlID == '0':
-#	siteurl = 'http://beta.sicnoticias.pt'
-#else:	
 siteurl = 'http://sicnoticias.sapo.pt'
 	
 user_agent = 'Mozilla/5.0 (Windows NT 6.1; Win64; x64; rv:10.0a1) Gecko/20111029 Firefox/10.0a1'
@@ -46,28 +42,6 @@ user_agent = 'Mozilla/5.0 (Windows NT 6.1; Win64; x64; rv:10.0a1) Gecko/20111029
 #MENUS
 
 def CATEGORIES():
-#	if siteurlID == '0':
-#		addDir('Última Edição',siteurl+'/ultima-edicao',1,'http://digitalsherpa.com/wp-content/uploads/2013/04/social-media-marketing-tool.png',True)
-#		addDir('País',siteurl+'/pais',1,'http://digitalsherpa.com/wp-content/uploads/2013/04/social-media-marketing-tool.png',True)
-#		addDir('Mundo',siteurl+'/mundo',1,'http://digitalsherpa.com/wp-content/uploads/2013/04/social-media-marketing-tool.png',True)
-#		addDir('Economia',siteurl+'/economia',1,'http://digitalsherpa.com/wp-content/uploads/2013/04/social-media-marketing-tool.png',True)		
-#		addDir('Desporto',siteurl+'/desporto',1,'http://digitalsherpa.com/wp-content/uploads/2013/04/social-media-marketing-tool.png',True)	
-#		addDir('Cultura',siteurl+'/cultura',1,'http://digitalsherpa.com/wp-content/uploads/2013/04/social-media-marketing-tool.png',True)	
-#		addDir('Opinião',siteurl+'/opiniao',1,'http://digitalsherpa.com/wp-content/uploads/2013/04/social-media-marketing-tool.png',True)		
-#		addDir('Em Vídeo',siteurl+'/noticias/em-video',1,'http://digitalsherpa.com/wp-content/uploads/2013/04/social-media-marketing-tool.png',True)		
-#		addDir('Premium',siteurl+'/premium',1,'http://digitalsherpa.com/wp-content/uploads/2013/04/social-media-marketing-tool.png',True)	
-#		addDir('','','','',False)			
-#		addDir('Programas',siteurl+'/programas',3,'http://digitalsherpa.com/wp-content/uploads/2013/04/social-media-marketing-tool.png',True)			
-#	elif siteurlID == '1':
-#		addDir('Últimas',siteurl+'/ultimas',4,'http://digitalsherpa.com/wp-content/uploads/2013/04/social-media-marketing-tool.png',True)
-#		addDir('País',siteurl+'/pais',4,'http://digitalsherpa.com/wp-content/uploads/2013/04/social-media-marketing-tool.png',True)
-#		addDir('Mundo',siteurl+'/mundo',4,'http://digitalsherpa.com/wp-content/uploads/2013/04/social-media-marketing-tool.png',True)
-#		addDir('Desporto',siteurl+'/desporto',4,'http://digitalsherpa.com/wp-content/uploads/2013/04/social-media-marketing-tool.png',True)	
-#		addDir('Economia',siteurl+'/economia',4,'http://digitalsherpa.com/wp-content/uploads/2013/04/social-media-marketing-tool.png',True)	
-#		addDir('Cultura',siteurl+'/cultura',4,'http://digitalsherpa.com/wp-content/uploads/2013/04/social-media-marketing-tool.png',True)	
-#		addDir('Opinião',siteurl+'/opiniao',4,'http://digitalsherpa.com/wp-content/uploads/2013/04/social-media-marketing-tool.png',True)		
-#		addDir('','','','',False)			
-#		addDir('Programas',siteurl+'/epg',5,'http://digitalsherpa.com/wp-content/uploads/2013/04/social-media-marketing-tool.png',True)
 	addDir('Última Edição',siteurl+'/ultima-edicao',1,'http://digitalsherpa.com/wp-content/uploads/2013/04/social-media-marketing-tool.png',True)
 	addDir('País',siteurl+'/pais',1,'http://digitalsherpa.com/wp-content/uploads/2013/04/social-media-marketing-tool.png',True)
 	addDir('Mundo',siteurl+'/mundo',1,'http://digitalsherpa.com/wp-content/uploads/2013/04/social-media-marketing-tool.png',True)
@@ -108,7 +82,7 @@ def reconstruct_list_videos(match,level):
 		else:
 			addDir('[COLOR green]'+data[0]+':[/COLOR] '+subststring(titulo[0])+' ('+duracao[0]+')',url[0],2,img[0],False)
 	elif listagemID == '0' or listagemID == '2':
-		urllink = re.findall('<div class="imageContainer landscape"> <a href="(.+?)">',match[0],re.DOTALL)
+		urllink = re.findall('<div class="imageContainer landscape"> <a href="(.+?)" class="">',match[0],re.DOTALL)
 		codigo_fonte = abrir_url(siteurl+urllink[0])	
 		texto = re.findall('<div class="bodyContainer text">(.+?)</div>',codigo_fonte,re.DOTALL)
 		if texto:
