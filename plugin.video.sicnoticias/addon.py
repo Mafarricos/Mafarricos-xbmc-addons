@@ -82,8 +82,9 @@ def reconstruct_list_videos(match,level):
 		else:
 			addDir('[COLOR green]'+data[0]+':[/COLOR] '+subststring(titulo[0])+' ('+duracao[0]+')',url[0],2,img[0],False)
 	elif listagemID == '0' or listagemID == '2':
-		urllink = re.findall('<div class="imageContainer landscape"> <a href="(.+?)" class="">',match[0],re.DOTALL)
-		codigo_fonte = abrir_url(siteurl+urllink[0])	
+		urllink = re.findall('<div class="imageContainer landscape"> <a href="(.+?)" class=".+?>',match[0],re.DOTALL)
+		if 'http://' in urllink[0]: codigo_fonte = abrir_url(urllink[0])
+		else: codigo_fonte = abrir_url(siteurl+urllink[0])	
 		texto = re.findall('<div class="bodyContainer text">(.+?)</div>',codigo_fonte,re.DOTALL)
 		if texto:
 			titulo[0]=subststring(titulo[0]) 
@@ -286,9 +287,11 @@ def encontrar_tipo_da_fonte(url):
 def abrir_url(url):
 	req = urllib2.Request(url)
 	req.add_header('User-Agent', user_agent)
-	response = urllib2.urlopen(req)
-	link=response.read()
-	response.close()
+	try:
+		response = urllib2.urlopen(req)
+		link=response.read()
+		response.close()
+	except: pass
 	return link
 
 def addDir(name,url,mode,iconimage,pasta):
