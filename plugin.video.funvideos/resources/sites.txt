@@ -1,0 +1,5 @@
+{"prettyname":"VitaminL","site":"http://vitaminl.tv","frame":"vit","enabled":"true","pagination":"/new/","starton":"1"}
+{"prettyname":"tabonito","site":"http://www.tabonito.pt","frame":"true","enabled":"treu","pagination":"/inicio?created=All&pesquisa=&sort_bef_combine=created%20DESC&sort_order=DESC&sort_by=created&page=","starton":"0"}
+{"prettyname":"jacarebanguela","site":"http://www.jacarebanguela.com.br","frame":"true","enabled":"true","pagination":"/page/","starton":"0"}
+{"prettyname":"tafixe","site":"http://www.tafixe.com","frame":"false","enabled":"true","startsection":"<div class=\"span6\">\\s+.+?<a href=\"","endsection":"\"","pagination":"/page/","starton":"1"}
+{"prettyname":"tabrutal","site":"http://www.tabrutal.pt","frame":"false","enabled":"true","startsection":"<h4 class=\"entry-title\"><a href=\"","endsection":"\">","pagination":"/page/","starton":"0"}
