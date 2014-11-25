@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <addons>
-<addon id="plugin.video.funvideos" name="Fun Videos Mix" version="0.0.1" provider-name="Mafarricos">
+<addon id="plugin.video.funvideos" name="Fun Videos" version="0.0.2" provider-name="Mafarricos">
   <requires>
     <import addon="xbmc.python" version="2.1.0"/>
   </requires>
@@ -10,8 +10,20 @@
   <extension point="xbmc.addon.metadata">
     <language>en</language>
     <platform>all</platform>
-    <summary lang="en">Fun Videos Mix</summary>
-    <description lang="en">Visualização de videos engraçados dos sites: http://www.tabonito.pt, http://www.tafixe.com, http://vitaminl.tv, http://www.tabrutal.pt, http://www.jacarebanguela.com.br</description>
+    <summary lang="en">Fun Videos</summary>
+    <description lang="en">Visualização de videos engraçados dos sites:
+	http://www.tabonito.pt
+	http://www.tafixe.com
+	http://vitaminl.tv
+	http://www.tabrutal.pt
+	http://www.jacarebanguela.com.br
+	http://www.galofrito.com.br
+	http://www.viralviralvideos.com
+	http://obutecodanet.ig.com.br
+	http://www.embrulha.com
+	http://loladatuga.com
+	http://tugavideos.com
+	</description>
     <platform>all</platform>
   </extension>
 </addon>

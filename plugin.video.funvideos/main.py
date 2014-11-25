@@ -1,16 +1,15 @@
-#!/usr/bin/env python
-# -*- coding: UTF-8 -*-
+﻿# -*- coding: UTF-8 -*-
 # by Mafarricos
 # email: MafaStudios@gmail.com
 # This program is free software: GNU General Public License
 
-import urllib,xbmcplugin,xbmcgui,xbmc,xbmcaddon
+import urllib,xbmcplugin,xbmcgui,xbmc,xbmcaddon,os
 from lib import util
 
 addon_id = 'plugin.video.funvideos'
 selfAddon = xbmcaddon.Addon(id=addon_id)
 addonfolder = selfAddon.getAddonInfo('path')
-user_agent = 'Mozilla/5.0 (Windows NT 6.1; Win64; x64; rv:10.0a1) Gecko/20111029 Firefox/10.0a1'
+sitesfile = os.path.join(os.path.join(addonfolder, 'resources'),'sites.txt')
 
 def MAIN(index=None):
 	if not index: index = 0
@@ -18,14 +17,31 @@ def MAIN(index=None):
 	unique_stuff = util.getpages(index)
 	total = len(unique_stuff)
 	for link in unique_stuff:
-		try: title = link['title'].decode("utf-8")
-		except: 
-			title = link['title'].encode('ascii', 'ignore')
-			pass
-		informacao = { "Title": title}	
-		addDir(title+' [COLOR yellow]['+link['prettyname']+'][/COLOR]',link['url'],1,link['thumbnail'],False,total,link['duration'],informacao,index)
-	addDir('Seguinte >>','next',2,'',True,1,'','',index)		
+		informacao = { "Title": link['title']}	
+		addDir(link['title']+' [COLOR yellow]['+link['prettyname']+'][/COLOR]',link['url'],1,link['thumbnail'],False,total,link['duration'],informacao,index)
+	addDir('Seguinte >>','next',2,'',True,1,'','',index)
+	if index == 0: addDir('[COLOR grey]Gerir Sites[/COLOR]','next',3,'',True,1,'','',index)
 
+def listingsites():
+	list = util.listsites()
+	total = len(list)
+	addDir('[COLOR yellow]Todos (On)[/COLOR]','on',4,'',False,total,'','',0)
+	addDir('[COLOR yellow]Todos (Off)[/COLOR]','off',4,'',False,total,'','',0)	
+	for sites in list:
+		if 'true' in sites['enabled']: addDir('[COLOR green](On)[/COLOR]  '+sites['url'],sites['url'],4,'',False,total,'','',0)
+		if 'false' in sites['enabled']: addDir('[COLOR red](Off)[/COLOR] '+sites['url'],sites['url'],4,'',False,total,'','',0)
+
+def changestatus(url):
+	import fileinput,sys
+	for line in fileinput.input(sitesfile, inplace = 1):
+		if url=='on': line = line.replace('"enabled":"false"','"enabled":"true"')
+		elif url=='off': line = line.replace('"enabled":"true"','"enabled":"false"')		
+		elif url in line: 
+			if '"enabled":"true"' in line: line = line.replace('"enabled":"true"','"enabled":"false"')
+			elif '"enabled":"false"' in line: line = line.replace('"enabled":"false"','"enabled":"true"')
+		sys.stdout.write(line)
+	xbmc.executebuiltin("Container.Refresh")
+	
 def play(url):
 	playlist = xbmc.PlayList(1)
 	playlist.clear()             
@@ -36,7 +52,7 @@ def play(url):
 	except: pass
 
 def addDir(name,url,mode,iconimage,pasta,total,duration,informacao,index):
-        u=sys.argv[0]+"?url="+urllib.quote_plus(url)+"&mode="+str(mode)+"&name="+urllib.quote_plus(name)+"&index="+str(index)
+        u=sys.argv[0]+"?url="+urllib.quote_plus(url)+"&mode="+str(mode)+"&name="+urllib.quote_plus(name.encode('ascii', 'xmlcharrefreplace'))+"&index="+str(index)
         ok=True
         liz=xbmcgui.ListItem(name, iconImage="DefaultFolder.png", thumbnailImage=iconimage)
 	liz.setProperty('fanart_image',addonfolder+'/fanart.jpg')
@@ -88,4 +104,6 @@ print "Index: "+str(index)
 if mode==None or url==None or len(url)<1: MAIN()
 elif mode==1: play(url)
 elif mode==2: MAIN(index)
+elif mode==3: listingsites()
+elif mode==4: changestatus(url)
 xbmcplugin.endOfDirectory(int(sys.argv[1]))
