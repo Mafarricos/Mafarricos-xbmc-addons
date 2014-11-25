@@ -13,6 +13,7 @@ progress = xbmcgui.DialogProgress()
 	
 def getpages(id):
 	list = []
+	unique_stuff = []
 	ins = open(sitesfile, "r" )
 	progress.create('Fun Videos', 'A Obter dados...')
 	i = 1
@@ -28,6 +29,10 @@ def getpages(id):
 		prettyname = parameters['prettyname']
 		message = "Site: " + prettyname + " ("+ str(i)+'/'+str(t)+")"		
 		progress.update( percent, "", message, "" )
+		if progress.iscanceled():
+			progress.close()
+			xbmcgui.Dialog().ok('ERROR','Cancelled.')
+			return ''		
 		i = i + 1		
 		if 'true' in enabled:
 			site = parameters['site']
@@ -45,13 +50,10 @@ def getpages(id):
 				endsection = parameters['endsection']
 				list2 = grablinks(site+pageindex+str(id+starton),prettyname,startsection,endsection)
 				if list2: list.extend(list2)
-		if progress.iscanceled():
-			progress.close()
-			xbmcgui.Dialog().ok('ERROR','Cancelled.')
-			return ''	
 	ins.close()
 	progress.close()
-	unique_stuff = { each['url'] : each for each in list }.values()
+	for item in list:
+		if item['url'] not in unique_stuff: unique_stuff.append(item)
 	return unique_stuff
 
 def grabiframes(mainURL,prettyname,results=None,index=None):
