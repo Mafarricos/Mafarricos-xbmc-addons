@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<addon id="plugin.video.tabonito" name="Tá Bonito" version="0.0.4" provider-name="Mafarricos">
+<addon id="plugin.video.tabonito" name="Tá Bonito" version="0.0.5" provider-name="Mafarricos">
   <requires>
     <import addon="xbmc.python" version="2.1.0"/>
 	<import addon="script.module.urlresolver" version="2.1.2"/>
@@ -12,6 +12,7 @@
     <platform>all</platform>
     <summary lang="en">Tá Bonito</summary>
     <description lang="en">Visualização de videos engraçados do site: http://www.tabonito.pt</description>
+	<broken>Utilização passa a ser realizada pelo addon Fun Videos do meu addon</broken>	
     <platform>all</platform>
   </extension>
 </addon>
