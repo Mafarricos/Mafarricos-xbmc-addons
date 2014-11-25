@@ -13,7 +13,6 @@ progress = xbmcgui.DialogProgress()
 	
 def getpages(id):
 	list = []
-	unique_stuff = []
 	ins = open(sitesfile, "r" )
 	progress.create('Fun Videos', 'A Obter dados...')
 	i = 1
@@ -52,8 +51,9 @@ def getpages(id):
 				if list2: list.extend(list2)
 	ins.close()
 	progress.close()
+	unique_stuff = []    
 	for item in list:
-		if item['url'] not in unique_stuff: unique_stuff.append(item)
+		if item['url'] not in str(unique_stuff): unique_stuff.append(item)
 	return unique_stuff
 
 def grabiframes(mainURL,prettyname,results=None,index=None):
