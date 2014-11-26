@@ -1,8 +1,6 @@
 Version 0.1.0
  - 9gag added
  
-Version 0.0.4
-	Unique videos fix 
 Version 0.0.3
 	Android XBMC Fix
 Version 0.0.2

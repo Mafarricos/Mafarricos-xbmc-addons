@@ -9,6 +9,7 @@ addon_id = 'plugin.video.funvideos'
 selfAddon = xbmcaddon.Addon(id=addon_id)
 addonfolder = selfAddon.getAddonInfo('path')
 sitesfile = os.path.join(os.path.join(addonfolder, 'resources'),'sites.txt')
+site9gagfile = os.path.join(os.path.join(addonfolder, 'resources'),'9gag.txt')
 progress = xbmcgui.DialogProgress()
 	
 def getpages(id):
@@ -43,7 +44,10 @@ def getpages(id):
 				if list2: list.extend(list2)
 			elif 'vit' in frame:
 				list2 = grabvit(site+pageindex+str(id+starton),prettyname)
-				if list2: list.extend(list2)			
+				if list2: list.extend(list2)	
+			elif '9gag' in frame:
+				list2 = grab9gag(site+pageindex,prettyname,str(id+starton))
+				if list2: list.extend(list2)
 			else:
 				startsection = parameters['startsection']
 				endsection = parameters['endsection']
@@ -56,13 +60,54 @@ def getpages(id):
 		if item['url'] not in str(unique_stuff): unique_stuff.append(item)
 	return unique_stuff
 
+def grab9gag(url,prettyname,id):
+	jsondata = []
+	list = []
+	ins = open(site9gagfile, "r" )
+	for line in ins: idpage = re.findall('::'+id+'::::(.+?)::', line, re.DOTALL)
+	ins.close()
+	if not idpage: page = open_url(url)
+	else: page = open_url(url+idpage[0])
+	jsondata = re.findall('   postGridPrefetchPosts = (.+?);', page, re.DOTALL)
+	j = json.loads(jsondata[0])
+	size = len(j)
+	e=0
+	for data in j:
+		e = e + 1
+		if e == size:
+			ins = open(site9gagfile, "r" )
+			for line in ins: lineread=line
+			ins.close()			
+			if not '<'+id+'>' in lineread: 
+				writes = open(site9gagfile, "a")
+				writes.write('::'+str(int(id)+1)+'::::'+data['prevPostId']+'::')
+				writes.close()
+		try:
+			duration = 0
+			time = re.findall('PT(\d+)M(\d+)S', data['videoDuration'], re.DOTALL)
+			if time:
+				for min,sec in time: 
+					duration = int(min)*60+int(sec)
+			else:
+				time = re.findall('PT(\d+)M', data['videoDuration'], re.DOTALL)
+				if time: duration = int(time[0])*60
+				else:
+					time = re.findall('PT(\d+)S', data['videoDuration'], re.DOTALL)
+					if time: duration = time[0]
+		except: 
+			duration = 60
+			pass
+		title = cleanTitle(data['ogTitle'])
+		list.append(json.loads('{"prettyname":"'+prettyname+'","url":"plugin://plugin.video.youtube/?action=play_video&videoid=' +data['videoExternalId']+'","title":"'+title+'","duration":"'+str(duration)+'","thumbnail":"'+data['thumbnail_360w']+'"}', encoding="utf-8"))
+	return list 
+	
 def grabiframes(mainURL,prettyname,results=None,index=None):
 	list = []
 	page = open_url(mainURL)
 	blocker = re.findall('data-videoid="(.+?)"', page, re.DOTALL)
 	if blocker:
 		fakeframe='<iframe src="http//www.youtube.com/embed/'+blocker[0]+'"</iframe>'
-		html_source_trunk = re.findall('<iframe(.*?)</iframe>', fakeframe, re.DOTALL)	
+		html_source_trunk = re.findall('<iframe(.*?)</iframe>', fakeframe, re.DOTALL)
 	else: html_source_trunk = re.findall('<iframe(.*?)</iframe>', page, re.DOTALL)
 	for trunk in html_source_trunk:
 			try: iframe = re.compile('src="(.+?)"').findall(trunk)[0]

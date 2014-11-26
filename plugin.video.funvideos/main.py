@@ -10,9 +10,12 @@ addon_id = 'plugin.video.funvideos'
 selfAddon = xbmcaddon.Addon(id=addon_id)
 addonfolder = selfAddon.getAddonInfo('path')
 sitesfile = os.path.join(os.path.join(addonfolder, 'resources'),'sites.txt')
-
+site9gagfile = os.path.join(os.path.join(addonfolder, 'resources'),'9gag.txt')
+	
 def MAIN(index=None):
-	if not index: index = 0
+	if not index:
+		index = 0
+		with open(site9gagfile, "w") as f: f.write("9gagcache")
 	else: index = int(index) + 1
 	unique_stuff = util.getpages(index)
 	total = len(unique_stuff)

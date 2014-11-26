@@ -1,3 +1,4 @@
+{"prettyname":"9GAG","site":"http://9gag.tv","frame":"9gag","enabled":"true","pagination":"?r[LJEGX]=","starton":"1"}
 {"prettyname":"VitaminL","site":"http://vitaminl.tv","frame":"vit","enabled":"true","pagination":"/new/","starton":"1"}
 {"prettyname":"TaBonito","site":"http://www.tabonito.pt","frame":"true","enabled":"true","pagination":"/inicio?created=All&pesquisa=&sort_bef_combine=created%20DESC&sort_order=DESC&sort_by=created&page=","starton":"0"}
 {"prettyname":"JacareBanguela","site":"http://www.jacarebanguela.com.br","frame":"true","enabled":"true","pagination":"/page/","starton":"0"}
