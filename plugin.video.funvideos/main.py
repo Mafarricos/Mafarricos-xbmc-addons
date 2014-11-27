@@ -26,7 +26,7 @@ def MAIN(index=None):
 	a = datetime.now()
 	linecache = ''
 	if not index:
-		index = 0
+		index = 0		
 		open(site9gagfile, 'w').close()
 		open(sitecachefile, 'w').close()
 	else: index = int(index) + 1
