@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<settings>
+    <category label="General">
+        <setting label="General" type="lsep" />
+        <setting id="cachesites" type="bool" label="Guardar Cache dos sites" default="true" />
+    </category>
+</settings>

@@ -5,31 +5,50 @@
 
 import urllib,xbmcplugin,xbmcgui,xbmc,xbmcaddon,os
 from lib import util
+from HTMLParser import HTMLParser
 
-addon_id = 'plugin.video.funvideos'
-selfAddon = xbmcaddon.Addon(id=addon_id)
-addonfolder = selfAddon.getAddonInfo('path')
-sitesfile = os.path.join(os.path.join(addonfolder, 'resources'),'sites.txt')
-site9gagfile = os.path.join(os.path.join(addonfolder, 'resources'),'9gag.txt')
-	
+addonName           = xbmcaddon.Addon().getAddonInfo("name")
+addonVersion        = xbmcaddon.Addon().getAddonInfo("version")
+addonId             = xbmcaddon.Addon().getAddonInfo("id")
+addonPath           = xbmcaddon.Addon().getAddonInfo("path")
+dataPath            = xbmc.translatePath(xbmcaddon.Addon().getAddonInfo("profile")).decode("utf-8")
+cachePath			= os.path.join(dataPath,'cache')
+sitesfile 			= os.path.join(os.path.join(addonPath, 'resources'),'sites.txt')
+site9gagfile 		= os.path.join(cachePath,'_9gag.txt')
+sitecachefile 		= os.path.join(cachePath,'_cache.txt')
+
+if not os.path.exists(dataPath): os.makedirs(dataPath)
+if not os.path.exists(cachePath): os.makedirs(cachePath)
+
 def MAIN(index=None):
+	parser = HTMLParser()
+	from datetime import datetime
+	a = datetime.now()
+	linecache = ''
 	if not index:
 		index = 0
-		with open(site9gagfile, "w") as f: f.write("9gagcache")
+		open(site9gagfile, 'w').close()
+		open(sitecachefile, 'w').close()
 	else: index = int(index) + 1
 	unique_stuff = util.getpages(index)
 	total = len(unique_stuff)
+	linecache= util.readalllines(sitecachefile)	
 	for link in unique_stuff:
-		informacao = { "Title": link['title']}	
-		addDir(link['title']+' [COLOR yellow]['+link['prettyname']+'][/COLOR]',link['url'],1,link['thumbnail'],False,total,link['duration'],informacao,index)
+		if link['url'] not in str(linecache):
+			util.writefile(sitecachefile,"a",'::'+link['url']+'::\n')
+			informacao = { "Title": parser.unescape(link['title'])}	
+			addDir(parser.unescape(link['title'])+' [COLOR yellow]['+link['prettyname']+'][/COLOR]',link['url'],1,link['thumbnail'],False,total,link['duration'],informacao,index)
 	addDir('Seguinte >>','next',2,'',True,1,'','',index)
 	if index == 0: addDir('[COLOR grey]Gerir Sites[/COLOR]','next',3,'',True,1,'','',index)
-
+	b = datetime.now()
+	print '##took '+str((b-a).total_seconds())
+	
 def listingsites():
 	list = util.listsites()
 	total = len(list)
 	addDir('[COLOR yellow]Todos (On)[/COLOR]','on',4,'',False,total,'','',0)
-	addDir('[COLOR yellow]Todos (Off)[/COLOR]','off',4,'',False,total,'','',0)	
+	addDir('[COLOR yellow]Todos (Off)[/COLOR]','off',4,'',False,total,'','',0)
+	addDir('[COLOR red]Remover Cache[/COLOR]','cache',5,'',False,total,'','',0)	
 	for sites in list:
 		if 'true' in sites['enabled']: addDir('[COLOR green](On)[/COLOR]  '+sites['url'],sites['url'],4,'',False,total,'','',0)
 		if 'false' in sites['enabled']: addDir('[COLOR red](Off)[/COLOR] '+sites['url'],sites['url'],4,'',False,total,'','',0)
@@ -58,7 +77,7 @@ def addDir(name,url,mode,iconimage,pasta,total,duration,informacao,index):
         u=sys.argv[0]+"?url="+urllib.quote_plus(url)+"&mode="+str(mode)+"&name="+urllib.quote_plus(name.encode('ascii', 'xmlcharrefreplace'))+"&index="+str(index)
         ok=True
         liz=xbmcgui.ListItem(name, iconImage="DefaultFolder.png", thumbnailImage=iconimage)
-	liz.setProperty('fanart_image',addonfolder+'/fanart.jpg')
+	liz.setProperty('fanart_image',addonPath+'/fanart.jpg')
 	if informacao <> '': liz.setInfo( type="Video", infoLabels=informacao )	
 	if duration <> '':
 		liz.addStreamInfo('Video', {"duration":duration})	
@@ -109,4 +128,5 @@ elif mode==1: play(url)
 elif mode==2: MAIN(index)
 elif mode==3: listingsites()
 elif mode==4: changestatus(url)
+elif mode==5: util.removecache()
 xbmcplugin.endOfDirectory(int(sys.argv[1]))

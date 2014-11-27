@@ -1,3 +1,13 @@
+Version 0.2.0
+ - BestOfYoutube added
+ - cache videos
+ 
+Version 0.1.0
+ - 9gag added
+Version 0.0.4
+	Unique videos fix 
+Version 0.0.3
+	Android XBMC Fix
 Version 0.0.2
 Sites added:
 	http://www.tabonito.pt
@@ -11,6 +21,5 @@ Sites added:
 	http://www.embrulha.com
 	http://loladatuga.com
 	http://tugavideos.com
-
 Version 0.0.1
 * First addon release

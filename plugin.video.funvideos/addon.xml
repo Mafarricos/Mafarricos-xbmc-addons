@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<addon id="plugin.video.funvideos" name="Fun Videos" version="0.1.0" provider-name="Mafarricos">
+<addon id="plugin.video.funvideos" name="Fun Videos" version="0.2.0" provider-name="Mafarricos">
   <requires>
     <import addon="xbmc.python" version="2.1.0"/>
   </requires>
@@ -16,6 +16,7 @@
 	http://www.tafixe.com
 	http://vitaminl.tv
 	http://www.tabrutal.pt
+	http://www.bestofyoutube.com
 	http://www.jacarebanguela.com.br
 	http://www.galofrito.com.br
 	http://www.viralviralvideos.com
