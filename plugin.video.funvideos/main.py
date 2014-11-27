@@ -22,8 +22,6 @@ if not os.path.exists(cachePath): os.makedirs(cachePath)
 
 def MAIN(index=None):
 	parser = HTMLParser()
-	from datetime import datetime
-	a = datetime.now()
 	linecache = ''
 	if not index:
 		index = 0		
@@ -40,8 +38,6 @@ def MAIN(index=None):
 			addDir(parser.unescape(link['title'])+' [COLOR yellow]['+link['prettyname']+'][/COLOR]',link['url'],1,link['thumbnail'],False,total,link['duration'],informacao,index)
 	addDir('Seguinte >>','next',2,'',True,1,'','',index)
 	if index == 0: addDir('[COLOR grey]Gerir Sites[/COLOR]','next',3,'',True,1,'','',index)
-	b = datetime.now()
-	print '##took '+str((b-a).total_seconds())
 	
 def listingsites():
 	list = util.listsites()

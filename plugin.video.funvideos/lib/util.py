@@ -149,7 +149,7 @@ def grab9gag(url,prettyname,id):
 	list = []
 	line = readoneline(site9gagfile)
 	idpage = re.findall('::'+id+'::::(.+?)::', line, re.DOTALL)
-	if not idpage: page = open_url(url)
+	if not idpage: page = open_url('http://9gag.tv')
 	else: page = open_url(url+idpage[0])
 	jsondata = re.findall('   postGridPrefetchPosts = (.+?);', page, re.DOTALL)
 	j = json.loads(jsondata[0])
