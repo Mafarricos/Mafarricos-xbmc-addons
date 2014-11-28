@@ -5,6 +5,7 @@
 
 import urllib2,re,threading,os,json,xbmcaddon,xbmcgui,xbmc
 from HTMLParser import HTMLParser
+import basic
 
 addonName           = xbmcaddon.Addon().getAddonInfo("name")
 addonVersion        = xbmcaddon.Addon().getAddonInfo("version")
@@ -17,9 +18,8 @@ site9gagfile 		= os.path.join(cachePath,'_9gag.txt')
 sitecachefile 		= os.path.join(cachePath,'_cache.txt')
 getSetting          = xbmcaddon.Addon().getSetting
 
-progress = xbmcgui.DialogProgress()
-	
 def getpages(id):
+	progress = xbmcgui.DialogProgress()
 	list = []
 	progress.create('Fun Videos', 'A Obter dados...')
 	i = 1
@@ -72,7 +72,7 @@ def getpages(id):
 
 def grablinks(mainURL,prettyname,sectionstart,sectionend,mainsite=None):
 	list = []
-	page = open_url(mainURL)
+	page = basic.open_url(mainURL)
 	html_source_trunk = re.findall(sectionstart+'(.*?)'+sectionend, page, re.DOTALL)
 	threads = []
 	results = []
@@ -88,12 +88,12 @@ def grabiframes(mainURL,prettyname,results=None,index=None,pageURL=None):
 	list = []
 	if pageURL: pagecache = os.path.join(cachePath,pageURL)
 	if pageURL and getSetting("cachesites") == 'true' and os.path.isfile(pagecache):
-		jsonline = readfiletoJSON2(pagecache)
+		jsonline = basic.readfiletoJSON(pagecache)
 		jsonloaded = json.loads(jsonline, encoding="utf-8")
 		if index: results.append(jsonloaded)
 		else: list.append(jsonloaded)
 	else:
-		try: page = open_url(mainURL)
+		try: page = basic.open_url(mainURL)
 		except: 
 				page = ' '
 				pass
@@ -117,31 +117,31 @@ def grabiframes(mainURL,prettyname,results=None,index=None,pageURL=None):
 								if resolver_iframe: 	
 									if index: results.append(resolver_iframe)
 									else: list.append(resolver_iframe)
-									if pageURL and getSetting("cachesites") == 'true': writefile(pagecache,'w',textR)
+									if pageURL and getSetting("cachesites") == 'true': basic.writefile(pagecache,'w',textR)
 							elif iframe.find('dailymotion') > -1:
 								textR,resolver_iframe = daily_resolver(iframe,prettyname)
 								if resolver_iframe: 							
 									if index: results.append(resolver_iframe)
 									else: list.append(resolver_iframe)
-									if pageURL and getSetting("cachesites") == 'true': writefile(pagecache,'w',textR)
+									if pageURL and getSetting("cachesites") == 'true': basic.writefile(pagecache,'w',textR)
 							elif iframe.find('vimeo') > -1:
 								textR,resolver_iframe = vimeo_resolver(iframe,prettyname)
 								if resolver_iframe: 							
 									if index: results.append(resolver_iframe)
 									else: list.append(resolver_iframe)
-									if pageURL and getSetting("cachesites") == 'true': writefile(pagecache,'w',textR)
+									if pageURL and getSetting("cachesites") == 'true': basic.writefile(pagecache,'w',textR)
 							elif iframe.find('sapo') > -1:
 								textR,resolver_iframe = sapo_resolver(iframe,prettyname)
 								if resolver_iframe: 							
 									if index: results.append(resolver_iframe)
 									else: list.append(resolver_iframe)
-									if pageURL and getSetting("cachesites") == 'true': writefile(pagecache,'w',textR)
+									if pageURL and getSetting("cachesites") == 'true': basic.writefile(pagecache,'w',textR)
 							elif iframe.find('videolog') > -1:
 								textR,resolver_iframe = videolog_resolver(iframe,prettyname)
 								if resolver_iframe: 							
 									if index: results.append(resolver_iframe)
 									else: list.append(resolver_iframe)
-									if pageURL and getSetting("cachesites") == 'true': writefile(pagecache,'w',textR)
+									if pageURL and getSetting("cachesites") == 'true': basic.writefile(pagecache,'w',textR)
 						except BaseException as e:
 							print '##ERROR-##funvideos-grabiframes: '+iframe+' '+str(e)
 				else: print '##ERROR-funvideos:frame on server not supported: '+iframe
@@ -150,10 +150,10 @@ def grabiframes(mainURL,prettyname,results=None,index=None,pageURL=None):
 def grab9gag(url,prettyname,id):
 	jsondata = []
 	list = []
-	line = readoneline(site9gagfile)
+	line = basic.readoneline(site9gagfile)
 	idpage = re.findall('::'+id+'::::(.+?)::', line, re.DOTALL)
-	if not idpage: page = open_url('http://9gag.tv')
-	else: page = open_url(url+idpage[0],'9gag')
+	if not idpage: page = basic.open_url('http://9gag.tv')
+	else: page = basic.open_url(url+idpage[0],'9gag')
 	jsondata = re.findall('   postGridPrefetchPosts = (.+?);', page, re.DOTALL)
 	j = json.loads(jsondata[0])
 	size = len(j)
@@ -161,8 +161,8 @@ def grab9gag(url,prettyname,id):
 	for data in j:
 		e = e + 1
 		if e == size:
-			line = readoneline(site9gagfile)
-			if not '<'+id+'>' in line: writefile(site9gagfile,"a",'::'+str(int(id)+1)+'::::'+data['prevPostId']+'::') 
+			line = basic.readoneline(site9gagfile)
+			if not '<'+id+'>' in line: basic.writefile(site9gagfile,"a",'::'+str(int(id)+1)+'::::'+data['prevPostId']+'::') 
 		try:
 			duration = 0
 			time = re.findall('PT(\d+)M(\d+)S', data['videoDuration'], re.DOTALL)
@@ -177,33 +177,33 @@ def grab9gag(url,prettyname,id):
 		except: 
 			duration = 60
 			pass
-		title = cleanTitle(data['ogTitle'])	
+		title = basic.cleanTitle(data['ogTitle'])	
 		videocache = os.path.join(cachePath,data['videoExternalId'])
 		jsontext = '{"prettyname":"'+prettyname+'","url":"plugin://plugin.video.youtube/?action=play_video&videoid=' +data['videoExternalId']+'","title":"'+title.encode('ascii','xmlcharrefreplace')+'","duration":"'+str(duration)+'","thumbnail":"'+data['thumbnail_360w']+'"}'
 		jsonloaded = json.loads(jsontext, encoding="utf-8")
-		if getSetting("cachesites") == 'true' and not os.path.isfile(videocache): writefile(videocache,'w',jsontext.encode('utf8'))
+		if getSetting("cachesites") == 'true' and not os.path.isfile(videocache): basic.writefile(videocache,'w',jsontext.encode('utf8'))
 		list.append(jsonloaded)
 	return list 
 
 def grabbreak(url,prettyname):
 	list = []
 	try:
-		page = open_url(url)
+		page = basic.open_url(url)
 		page = page.replace("\\","")
 		ids = re.findall('data-content-id="(\d+)"', page, re.DOTALL)
 		for videoid in ids:
 			videocache = os.path.join(cachePath,str(videoid))
 			if getSetting("cachesites") == 'true' and os.path.isfile(videocache):
-				jsonline = readfiletoJSON2(videocache)
+				jsonline = basic.readfiletoJSON(videocache)
 				jsonloaded = json.loads(jsonline, encoding="utf-8")
 				list.append(jsonloaded)
 			else:
-				content = open_url("http://www.break.com/embed/"+videoid)
+				content = basic.open_url("http://www.break.com/embed/"+videoid)
 				matchAuth=re.compile('"AuthToken": "(.+?)"', re.DOTALL).findall(content)
 				matchURL=re.compile('"uri": "(.+?)".+?"height": (.+?),', re.DOTALL).findall(content)
 				matchYT=re.compile('"youtubeId": "(.*?)"', re.DOTALL).findall(content)
 				title=re.compile('"contentName": "(.+?)",', re.DOTALL).findall(content)
-				title = cleanTitle(title[0])
+				title = basic.cleanTitle(title[0])
 				title2 = ''				
 				try: title2 = title.decode('utf8').encode('ascii','xmlcharrefreplace')
 				except: pass
@@ -217,7 +217,7 @@ def grabbreak(url,prettyname):
 					if getSetting("cachesites") == 'true' and not os.path.isfile(videocache): 
 						jsontext = '{"prettyname":"'+prettyname+'","url":"'+finalUrl+'","title":"'+title+'","duration":"'+str(duration[0])+'","thumbnail":"'+thumb[0]+'"}'
 						jsonloaded = json.loads(jsontext, encoding="utf-8")			
-						writefile(videocache2,'w',jsontext.encode('utf8'))
+						basic.writefile(videocache2,'w',jsontext.encode('utf8'))
 				else:
 					max=0
 					for url, height in matchURL:
@@ -227,7 +227,7 @@ def grabbreak(url,prettyname):
 							max=height
 				jsontext = '{"prettyname":"'+prettyname+'","url":"'+finalUrl+'","title":"'+title+'","duration":"'+str(duration[0])+'","thumbnail":"'+thumb[0]+'"}'
 				jsonloaded = json.loads(jsontext, encoding="utf-8")
-				if getSetting("cachesites") == 'true' and not os.path.isfile(videocache): writefile(videocache,'w',jsontext.encode('utf8'))
+				if getSetting("cachesites") == 'true' and not os.path.isfile(videocache): basic.writefile(videocache,'w',jsontext.encode('utf8'))
 				list.append(jsonloaded)
 		if list: return list
 	except BaseException as e:
@@ -236,7 +236,7 @@ def grabbreak(url,prettyname):
 def grabvit(url,prettyname):
 	list = []
 	try:
-		content = open_url(url)
+		content = basic.open_url(url)
 		spl = content.split('<div class="videoListItem">')
 		for i in range(1, len(spl), 1):
 			entry = spl[i]
@@ -249,7 +249,7 @@ def grabvit(url,prettyname):
 			thumb = "http://img.youtube.com/vi/"+id+"/0.jpg"
 			match = re.compile('alt="(.+?)"', re.DOTALL).findall(entry)
 			title = match[0]
-			title = cleanTitle(title)
+			title = basic.cleanTitle(title)
 			videocache = os.path.join(cachePath,str(id))
 			title2 = ''		
 			try: title2 = title.decode('utf8').encode('ascii','xmlcharrefreplace')
@@ -257,7 +257,7 @@ def grabvit(url,prettyname):
 			if title2 <> '': title = title2
 			jsontext = '{"prettyname":"'+prettyname+'","url":"plugin://plugin.video.youtube/?action=play_video&videoid=' + str(id)+'","title":"'+title+'","duration":"'+str(duration)+'","thumbnail":"'+thumb+'"}'
 			jsonloaded = json.loads(jsontext, encoding="utf-8")
-			if getSetting("cachesites") == 'true' and not os.path.isfile(videocache): writefile(videocache,'w',jsontext.encode('utf8'))
+			if getSetting("cachesites") == 'true' and not os.path.isfile(videocache): basic.writefile(videocache,'w',jsontext.encode('utf8'))
 			list.append(jsonloaded)
 		if list: return list
 	except BaseException as e:
@@ -269,12 +269,12 @@ def sapo_resolver(url,prettyname):
 	if match: 
 		videocache = os.path.join(cachePath,str(match[0]))
 		if os.path.isfile(videocache):
-			jsonline = readfiletoJSON2(videocache)
+			jsonline = basic.readfiletoJSON(videocache)
 			jsonloaded = json.loads(jsonline, encoding="utf-8")
 			return jsonline,jsonloaded
 		else:
 			try:
-				sapoAPI = open_url('http://rd3.videos.sapo.pt/'+match[0]+'/rss2')	
+				sapoAPI = basic.open_url('http://rd3.videos.sapo.pt/'+match[0]+'/rss2')	
 				title = ''
 				duration = ''
 				thumbnail = ''	
@@ -291,7 +291,7 @@ def sapo_resolver(url,prettyname):
 				urlfinal = re.compile('<sapo:videoFile>(.+?)</sapo:videoFile>').findall(sapoAPI)
 				jsontext = '{"prettyname":"'+prettyname+'","url":"'+urlfinal[0]+'","title":"'+title+'","duration":"'+str(duration)+'","thumbnail":"'+thumbnail[0]+'"}'
 				jsonloaded = json.loads(jsontext, encoding="utf-8")
-				if getSetting("cachesites") == 'true': writefile(videocache,'w',jsontext.encode('utf8'))
+				if getSetting("cachesites") == 'true': basic.writefile(videocache,'w',jsontext.encode('utf8'))
 				return jsontext,jsonloaded
 			except BaseException as e:
 				print '##ERROR-funvideos:sapo_resolver: '+url+' '+str(e)
@@ -303,12 +303,12 @@ def youtube_resolver(url,prettyname):
 	if match:
 		videocache = os.path.join(cachePath,str(match[0]))
 		if getSetting("cachesites") == 'true' and os.path.isfile(videocache):
-			jsonline = readfiletoJSON2(videocache)
+			jsonline = basic.readfiletoJSON(videocache)
 			jsonloaded = json.loads(jsonline, encoding="utf-8")
 			return jsonline,jsonloaded
 		else:
 			try:
-				data=open_url('https://gdata.youtube.com/feeds/api/videos/' + str(match[0]) +'?v2&alt=json')
+				data=basic.open_url('https://gdata.youtube.com/feeds/api/videos/' + str(match[0]) +'?v2&alt=json')
 				parameters = json.loads(data)
 				title = ''
 				duration = ''
@@ -322,7 +322,7 @@ def youtube_resolver(url,prettyname):
 				thumbnail = parameters['entry']['media$group']['media$thumbnail'][0]['url']
 				jsontext= '{"prettyname":"'+prettyname+'","url":"plugin://plugin.video.youtube/?action=play_video&videoid=' + str(match[0])+'","title":"'+title.encode('ascii','xmlcharrefreplace')+'","duration":"'+str(duration)+'","thumbnail":"'+thumbnail+'"}'
 				jsonloaded = json.loads('{"prettyname":"'+prettyname+'","url":"plugin://plugin.video.youtube/?action=play_video&videoid=' + str(match[0])+'","title":"'+title.encode('ascii','xmlcharrefreplace')+'","duration":"'+str(duration)+'","thumbnail":"'+thumbnail+'"}', encoding="latin-1")
-				if getSetting("cachesites") == 'true': writefile(videocache,'w',jsontext)
+				if getSetting("cachesites") == 'true': basic.writefile(videocache,'w',jsontext)
 				return jsontext,jsonloaded
 			except BaseException as e:
 				print '##ERROR-funvideos:youtube_resolver: '+str(match[0])+' '+str(e)
@@ -334,17 +334,17 @@ def daily_resolver(url,prettyname):
 	if match:
 		videocache = os.path.join(cachePath,str(match[0]))
 		if getSetting("cachesites") == 'true' and os.path.isfile(videocache):
-			jsonline = readfiletoJSON2(videocache)
+			jsonline = basic.readfiletoJSON(videocache)
 			jsonloaded = json.loads(jsonline, encoding="utf-8")
 			return jsonline,jsonloaded
 		else:
 			try:
-				data=open_url('https://api.dailymotion.com/video/' + str(match[0]) +'?fields=title,duration,thumbnail_url,description')
+				data=basic.open_url('https://api.dailymotion.com/video/' + str(match[0]) +'?fields=title,duration,thumbnail_url,description')
 				parameters = json.loads(data)
 				title = ''
 				duration = ''
 				thumbnail = ''
-				title = cleanTitle(parameters['title'])
+				title = basic.cleanTitle(parameters['title'])
 				title2 = ''	
 				try: title2 = title.decode('utf8').encode('ascii','xmlcharrefreplace')
 				except: pass
@@ -353,7 +353,7 @@ def daily_resolver(url,prettyname):
 				thumbnail = parameters['thumbnail_url']
 				jsontext = '{"prettyname":"'+prettyname+'","url":"plugin://plugin.video.dailymotion_com/?mode=playVideo&url=' + str(match[0])+'","title":"'+title.encode('ascii','xmlcharrefreplace')+'","duration":"'+str(duration)+'","thumbnail":"'+thumbnail+'"}'
 				jsonloaded = json.loads(jsontext, encoding="utf-8")
-				if getSetting("cachesites") == 'true': writefile(videocache,'w',jsontext.encode('utf8'))				
+				if getSetting("cachesites") == 'true': basic.writefile(videocache,'w',jsontext.encode('utf8'))				
 				return jsontext,jsonloaded
 			except BaseException as e:
 				print '##ERROR-funvideos:daily_resolver: '+str(match[0])+' '+str(e)
@@ -365,12 +365,12 @@ def vimeo_resolver(url,prettyname):
 	if match:
 		videocache = os.path.join(cachePath,str(match[0]))
 		if getSetting("cachesites") == 'true' and os.path.isfile(videocache):
-			jsonline = readfiletoJSON2(videocache)
+			jsonline = basic.readfiletoJSON(videocache)
 			jsonloaded = json.loads(jsonline, encoding="utf-8")
 			return jsonline,jsonloaded
 		else:	
 			try:
-				data=open_url('http://player.vimeo.com/video/'+str(match[0])+'/config?type=moogaloop&referrer=&player_url=player.vimeo.com&v=1.0.0&cdn_url=http://a.vimeocdn.com')
+				data=basic.open_url('http://player.vimeo.com/video/'+str(match[0])+'/config?type=moogaloop&referrer=&player_url=player.vimeo.com&v=1.0.0&cdn_url=http://a.vimeocdn.com')
 				parameters = json.loads(data)
 				title = ''
 				duration = ''
@@ -386,7 +386,7 @@ def vimeo_resolver(url,prettyname):
 				except: url = parameters['request']['files']['h264']['sd']['url']
 				jsontext = '{"prettyname":"'+prettyname+'","url":"' + url +'","title":"'+title.encode('ascii','xmlcharrefreplace')+'","duration":"'+str(duration)+'","thumbnail":"'+thumbnail+'"}'
 				jsonloaded = json.loads(jsontext, encoding="utf-8")
-				if getSetting("cachesites") == 'true': writefile(videocache,'w',jsontext.encode('utf8'))
+				if getSetting("cachesites") == 'true': basic.writefile(videocache,'w',jsontext.encode('utf8'))
 				return jsontext,jsonloaded
 			except BaseException as e:
 				print '##ERROR-funvideos:vimeo_resolver: '+str(match[0])+' '+str(e)
@@ -398,7 +398,7 @@ def videolog_resolver(url,prettyname):
 		videoID = ID[0]		
 		videocache = os.path.join(cachePath,str(videoID))
 		if getSetting("cachesites") == 'true' and os.path.isfile(videocache):
-			jsonline = readfiletoJSON2(videocache)
+			jsonline = basic.readfiletoJSON(videocache)
 			jsonloaded = json.loads(jsonline, encoding="utf-8")
 			return jsonline,jsonloaded
 		else:
@@ -406,7 +406,7 @@ def videolog_resolver(url,prettyname):
 			match = re.compile('<meta property="og:image" content="http://videos.videolog.tv/(.+?)/(.+?)/g_'+id+'_\d+').findall(content)
 			image = re.compile('<meta property="og:image" content="(.+?)">').findall(content)
 			title = re.compile('<meta property="og:title" content="(.+?)">').findall(content)
-			title = cleanTitle(title[0])
+			title = basic.cleanTitle(title[0])
 			title2 = ''	
 			try: title2 = title.decode('utf8').encode('ascii','xmlcharrefreplace')
 			except: pass
@@ -414,84 +414,8 @@ def videolog_resolver(url,prettyname):
 			url='http://videos.videolog.tv/'+match[0]+'/'+match[1]+'/'+id+'.mp4'
 			jsontext = '{"prettyname":"'+prettyname+'","url":"' + url +'","title":"'+title.encode('ascii','xmlcharrefreplace')+'","duration":"60","thumbnail":"'+image[0]+'"}'
 			jsonloaded = json.loads(jsontext, encoding="utf-8")
-			if getSetting("cachesites") == 'true': writefile(videocache,'w',jsontext.encode('utf8'))			
+			if getSetting("cachesites") == 'true': basic.writefile(videocache,'w',jsontext.encode('utf8'))			
 			return jsontext,jsonloaded
 	except BaseException as e:
 		print '##ERROR-funvideos:videolog_resolver: '+str(id)+' '+str(e)
 		pass
-
-def cleanTitle(title):
-	title = title.replace("&lt;", "<").replace("&gt;", ">").replace("&amp;", "&").replace("&#39;", "'").replace("&quot;", "\"").replace("&ndash;", "-")
-	title = title.replace('"',"")
-	title = title.strip()
-	return title
-
-def open_url(url,type=None):
-	if type=='9gag':
-		try:
-			import requests
-			page = requests.get(url)
-			return page.text
-		except BaseException as e: print '##ERROR-funvideos:open_url: '+str(url)+' '+str(e)		
-	else:
-		try:
-			user_agent = 'Mozilla/5.0 (Windows NT 6.1; Win64; x64; rv:10.0a1) Gecko/20111029 Firefox/10.0a1'
-			req = urllib2.Request(url)
-			req.add_header('User-Agent', user_agent)
-			response = urllib2.urlopen(req)
-			link=response.read()
-			response.close()
-			return link
-		except BaseException as e: print '##ERROR-funvideos:open_url: '+str(url)+' '+str(e)	
-	
-def listsites():
-	list = []
-	ins = open(sitesfile, "r" )	
-	for line in ins: 
-		parameters = json.loads(line)
-		url=parameters['site']
-		enabled=parameters['enabled']		
-		list.append(json.loads('{"url":"'+url+'","enabled":"'+enabled+'"}'))						
-	return list
-
-def readoneline(file):
-	f = open(file,"r")
-	line = f.read()
-	f.close()
-	return line
-
-def readalllines(file):
-	f = open(file,"r")
-	lines = f.readlines()
-	f.close()
-	return lines
-
-def readfiletoJSON(file):
-	parser = HTMLParser()
-	f = open(file,"r")
-	line = str(f.read().strip('\n')).decode('utf-8').encode('ascii','xmlcharrefreplace')
-	print '##line',line
-	jsoncache = json.loads(line,encoding='utf-8')
-	f.close()
-	title = parser.unescape(jsoncache['title'])
-	duration = jsoncache['duration']
-	thumbnail = jsoncache['thumbnail']
-	url = jsoncache['url']
-	return title,duration,thumbnail,url
-
-def readfiletoJSON2(file):
-	f = open(file,"r")
-	line = f.read().strip('\n')
-	f.close()	
-	return line
-	
-def writefile(file,mode,string):
-	writes = open(file, mode)
-	writes.write(string)
-	writes.close()
-
-def removecache():
-	for root,dir,files in os.walk(cachePath):
-		for f in files:
-			if not '_cache' in f and not '_9gag' in f: os.unlink(os.path.join(root, f))
-	xbmcgui.Dialog().ok('Cache','Eliminação Completa.')

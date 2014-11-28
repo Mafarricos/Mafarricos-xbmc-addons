@@ -5,6 +5,7 @@
 
 import urllib,xbmcplugin,xbmcgui,xbmc,xbmcaddon,os
 from lib import util
+from lib import basic
 from HTMLParser import HTMLParser
 
 addonName           = xbmcaddon.Addon().getAddonInfo("name")
@@ -30,17 +31,17 @@ def MAIN(index=None):
 	else: index = int(index) + 1
 	unique_stuff = util.getpages(index)
 	total = len(unique_stuff)
-	linecache= util.readalllines(sitecachefile)	
+	linecache= basic.readalllines(sitecachefile)	
 	for link in unique_stuff:
 		if link['url'] not in str(linecache):
-			util.writefile(sitecachefile,"a",'::'+link['url']+'::\n')
+			basic.writefile(sitecachefile,"a",'::'+link['url']+'::\n')
 			informacao = { "Title": parser.unescape(link['title'])}	
 			addDir(parser.unescape(link['title'])+' [COLOR yellow]['+link['prettyname']+'][/COLOR]',link['url'],1,link['thumbnail'],False,total,link['duration'],informacao,index)
 	addDir('Seguinte >>','next',2,'',True,1,'','',index)
 	if index == 0: addDir('[COLOR grey]Gerir Sites[/COLOR]','next',3,'',True,1,'','',index)
 	
 def listingsites():
-	list = util.listsites()
+	list = basic.listsites(sitesfile)
 	total = len(list)
 	addDir('[COLOR yellow]Todos (On)[/COLOR]','on',4,'',False,total,'','',0)
 	addDir('[COLOR yellow]Todos (Off)[/COLOR]','off',4,'',False,total,'','',0)
@@ -124,5 +125,5 @@ elif mode==1: play(url)
 elif mode==2: MAIN(index)
 elif mode==3: listingsites()
 elif mode==4: changestatus(url)
-elif mode==5: util.removecache()
+elif mode==5: basic.removecache(cachePath)
 xbmcplugin.endOfDirectory(int(sys.argv[1]))
