@@ -11,14 +11,9 @@ addonName           = xbmcaddon.Addon().getAddonInfo("name")
 addonVersion        = xbmcaddon.Addon().getAddonInfo("version")
 addonId             = xbmcaddon.Addon().getAddonInfo("id")
 addonPath           = xbmcaddon.Addon().getAddonInfo("path")
-dataPath            = xbmc.translatePath(xbmcaddon.Addon().getAddonInfo("profile")).decode("utf-8")
-cachePath			= os.path.join(dataPath,'cache')
-sitesfile 			= os.path.join(os.path.join(addonPath, 'resources'),'sites.txt')
-site9gagfile 		= os.path.join(cachePath,'_9gag.txt')
-sitecachefile 		= os.path.join(cachePath,'_cache.txt')
 getSetting          = xbmcaddon.Addon().getSetting
 
-def getpages(id):
+def getpages(id,sitesfile,site9gagfile,cachePath):
 	progress = xbmcgui.DialogProgress()
 	list = []
 	progress.create('Fun Videos', 'A Obter dados...')
@@ -47,7 +42,7 @@ def getpages(id):
 			starton = int(parameters['starton'])
 			print '##funvideos-site: '+site+pageindex+str(id+starton)			
 			if 'true' in frame: 
-				list2 = grabiframes(site+pageindex+str(id+starton),prettyname)
+				list2 = grabiframes(site+pageindex+str(id+starton),prettyname,cachePath)
 				if list2: list.extend(list2)
 			elif 'vit' in frame:
 				list2 = vitaminl.grab(site+pageindex+str(id+starton),prettyname,cachePath,getSetting("cachesites"))
@@ -61,7 +56,7 @@ def getpages(id):
 			else:
 				startsection = parameters['startsection']
 				endsection = parameters['endsection']
-				list2 = grablinks(site+pageindex+str(id+starton),prettyname,startsection,endsection,site)
+				list2 = grablinks(site+pageindex+str(id+starton),prettyname,startsection,endsection,cachePath,site)
 				if list2: list.extend(list2)
 	ins.close()
 	progress.close()
@@ -70,7 +65,7 @@ def getpages(id):
 		if item['url'] not in str(unique_stuff): unique_stuff.append(item)
 	return unique_stuff
 
-def grablinks(mainURL,prettyname,sectionstart,sectionend,mainsite=None):
+def grablinks(mainURL,prettyname,sectionstart,sectionend,cachePath,mainsite=None):
 	list = []
 	page = basic.open_url(mainURL)
 	html_source_trunk = re.findall(sectionstart+'(.*?)'+sectionend, page, re.DOTALL)
@@ -79,12 +74,12 @@ def grablinks(mainURL,prettyname,sectionstart,sectionend,mainsite=None):
 	for i in range(0, len(html_source_trunk)): 
 		print "##funvideos-grablinks: "+html_source_trunk[i]
 		if mainsite: pageURL=html_source_trunk[i].replace(mainsite,'').replace('/','').replace('.','').encode('utf-8')
-		threads.append(threading.Thread(name=mainURL+str(i),target=grabiframes,args=(html_source_trunk[i], prettyname, results, i+1, pageURL, )))	
+		threads.append(threading.Thread(name=mainURL+str(i),target=grabiframes,args=(html_source_trunk[i],prettyname,cachePath,results,i+1,pageURL, )))	
 	[i.start() for i in threads]
 	[i.join() for i in threads]
 	return results
 
-def grabiframes(mainURL,prettyname,results=None,index=None,pageURL=None):
+def grabiframes(mainURL,prettyname,cachePath,results=None,index=None,pageURL=None):
 	list = []
 	if pageURL: pagecache = os.path.join(cachePath,pageURL)
 	if pageURL and getSetting("cachesites") == 'true' and os.path.isfile(pagecache):
@@ -113,31 +108,31 @@ def grabiframes(mainURL,prettyname,results=None,index=None,pageURL=None):
 						print "##funvideos-grabiframes: "+iframe
 						try:
 							if iframe.find('youtube') > -1:
-								textR,resolver_iframe = youtube_resolver(iframe,prettyname)
+								textR,resolver_iframe = youtube_resolver(iframe,prettyname,cachePath)
 								if resolver_iframe: 	
 									if index: results.append(resolver_iframe)
 									else: list.append(resolver_iframe)
 									if pageURL and getSetting("cachesites") == 'true': basic.writefile(pagecache,'w',textR)
 							elif iframe.find('dailymotion') > -1:
-								textR,resolver_iframe = daily_resolver(iframe,prettyname)
+								textR,resolver_iframe = daily_resolver(iframe,prettyname,cachePath)
 								if resolver_iframe: 							
 									if index: results.append(resolver_iframe)
 									else: list.append(resolver_iframe)
 									if pageURL and getSetting("cachesites") == 'true': basic.writefile(pagecache,'w',textR)
 							elif iframe.find('vimeo') > -1:
-								textR,resolver_iframe = vimeo_resolver(iframe,prettyname)
+								textR,resolver_iframe = vimeo_resolver(iframe,prettyname,cachePath)
 								if resolver_iframe: 							
 									if index: results.append(resolver_iframe)
 									else: list.append(resolver_iframe)
 									if pageURL and getSetting("cachesites") == 'true': basic.writefile(pagecache,'w',textR)
 							elif iframe.find('sapo') > -1:
-								textR,resolver_iframe = sapo_resolver(iframe,prettyname)
+								textR,resolver_iframe = sapo_resolver(iframe,prettyname,cachePath)
 								if resolver_iframe: 							
 									if index: results.append(resolver_iframe)
 									else: list.append(resolver_iframe)
 									if pageURL and getSetting("cachesites") == 'true': basic.writefile(pagecache,'w',textR)
 							elif iframe.find('videolog') > -1:
-								textR,resolver_iframe = videolog_resolver(iframe,prettyname)
+								textR,resolver_iframe = videolog_resolver(iframe,prettyname,cachePath)
 								if resolver_iframe: 							
 									if index: results.append(resolver_iframe)
 									else: list.append(resolver_iframe)
@@ -147,7 +142,7 @@ def grabiframes(mainURL,prettyname,results=None,index=None,pageURL=None):
 				else: print '##ERROR-funvideos:frame on server not supported: '+iframe
 	if not index: return list
 
-def sapo_resolver(url,prettyname):
+def sapo_resolver(url,prettyname,cachePath):
 	match = re.compile('file=http://.+?/(.+?)/mov/').findall(url)
 	if match: 
 		videocache = os.path.join(cachePath,str(match[0]))
@@ -180,7 +175,7 @@ def sapo_resolver(url,prettyname):
 				print '##ERROR-funvideos:sapo_resolver: '+url+' '+str(e)
 				pass
 	
-def youtube_resolver(url,prettyname):
+def youtube_resolver(url,prettyname,cachePath):
 	match = re.compile('.*?youtube.com/embed/(.+?)\?').findall(url)
 	if not match: match = re.compile('.*?youtube.com/embed/(.*)').findall(url)
 	if match:
@@ -196,22 +191,23 @@ def youtube_resolver(url,prettyname):
 				title = ''
 				duration = ''
 				thumbnail = ''
-				title = parameters['entry']['title']['$t']
+				title = basic.cleanTitle(parameters['entry']['title']['$t'])
 				title2 = ''	
 				try: title2 = title.decode('utf8').encode('ascii','xmlcharrefreplace')
-				except: pass
+				except: title2 = title.encode('ascii','xmlcharrefreplace')
 				if title2 <> '': title = title2
+				print title
 				duration = parameters['entry']['media$group']['yt$duration']['seconds']
 				thumbnail = parameters['entry']['media$group']['media$thumbnail'][0]['url']
-				jsontext= '{"prettyname":"'+prettyname+'","url":"plugin://plugin.video.youtube/?action=play_video&videoid=' + str(match[0])+'","title":"'+title.encode('ascii','xmlcharrefreplace')+'","duration":"'+str(duration)+'","thumbnail":"'+thumbnail+'"}'
-				jsonloaded = json.loads('{"prettyname":"'+prettyname+'","url":"plugin://plugin.video.youtube/?action=play_video&videoid=' + str(match[0])+'","title":"'+title.encode('ascii','xmlcharrefreplace')+'","duration":"'+str(duration)+'","thumbnail":"'+thumbnail+'"}', encoding="latin-1")
+				jsontext= '{"prettyname":"'+prettyname+'","url":"plugin://plugin.video.youtube/?action=play_video&videoid=' + str(match[0])+'","title":"'+title+'","duration":"'+str(duration)+'","thumbnail":"'+thumbnail+'"}'
+				jsonloaded = json.loads('{"prettyname":"'+prettyname+'","url":"plugin://plugin.video.youtube/?action=play_video&videoid=' + str(match[0])+'","title":"'+title+'","duration":"'+str(duration)+'","thumbnail":"'+thumbnail+'"}', encoding="latin-1")
 				if getSetting("cachesites") == 'true': basic.writefile(videocache,'w',jsontext)
 				return jsontext,jsonloaded
 			except BaseException as e:
 				print '##ERROR-funvideos:youtube_resolver: '+str(match[0])+' '+str(e)
 				pass
     
-def daily_resolver(url,prettyname):
+def daily_resolver(url,prettyname,cachePath):
 	if url.find('?') > -1: match = re.compile('/embed/video/(.+?)\?').findall(url)
 	else: match = re.compile('/embed/video/(.*)').findall(url)
 	if match:
@@ -242,7 +238,7 @@ def daily_resolver(url,prettyname):
 				print '##ERROR-funvideos:daily_resolver: '+str(match[0])+' '+str(e)
 				pass
 
-def vimeo_resolver(url,prettyname):
+def vimeo_resolver(url,prettyname,cachePath):
 	if url.find('?') > -1: match = re.compile('vimeo.com/video/(.+?)\?').findall(url)
 	else: match = re.compile('vimeo.com/video/(.*)').findall(url)
 	if match:
@@ -275,7 +271,7 @@ def vimeo_resolver(url,prettyname):
 				print '##ERROR-funvideos:vimeo_resolver: '+str(match[0])+' '+str(e)
 				pass
 
-def videolog_resolver(url,prettyname):
+def videolog_resolver(url,prettyname,cachePath):
 	try:
 		ID = re.compile('id_video=(.+?)&amp').findall(url[0])
 		videoID = ID[0]		

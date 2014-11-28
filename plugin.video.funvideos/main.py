@@ -29,14 +29,17 @@ def MAIN(index=None):
 		open(site9gagfile, 'w').close()
 		open(sitecachefile, 'w').close()
 	else: index = int(index) + 1
-	unique_stuff = util.getpages(index)
+	unique_stuff = util.getpages(index,sitesfile,site9gagfile,cachePath)
 	total = len(unique_stuff)
 	linecache= basic.readalllines(sitecachefile)	
 	for link in unique_stuff:
 		if link['url'] not in str(linecache):
-			basic.writefile(sitecachefile,"a",'::'+link['url']+'::\n')
+			basic.writefile(sitecachefile,"a",'::pageindex::'+str(index)+'::'+link['url']+'::\n')
 			informacao = { "Title": parser.unescape(link['title'])}	
 			addDir(parser.unescape(link['title'])+' [COLOR yellow]['+link['prettyname']+'][/COLOR]',link['url'],1,link['thumbnail'],False,total,link['duration'],informacao,index)
+		elif '::pageindex::'+str(index)+'::'+link['url'] in str(linecache):
+			informacao = { "Title": parser.unescape(link['title'])}			
+			addDir(parser.unescape(link['title'])+' [COLOR yellow]['+link['prettyname']+'][/COLOR]',link['url'],1,link['thumbnail'],False,total,link['duration'],informacao,index)		
 	addDir('Seguinte >>','next',2,'',True,1,'','',index)
 	if index == 0: addDir('[COLOR grey]Gerir Sites[/COLOR]','next',3,'',True,1,'','',index)
 	
