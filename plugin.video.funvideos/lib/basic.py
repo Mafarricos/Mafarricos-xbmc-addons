@@ -3,7 +3,7 @@
 # email: MafaStudios@gmail.com
 # This program is free software: GNU General Public License
 
-import os,json,xbmcgui
+import os,json
 from HTMLParser import HTMLParser
 
 def cleanTitle(title):
@@ -65,7 +65,9 @@ def writefile(file,mode,string):
 	writes.close()
 
 def removecache(cachePath):
-	for root,dir,files in os.walk(cachePath):
-		for f in files:
-			if not '_cache' in f and not '_9gag' in f: os.unlink(os.path.join(root, f))
-	xbmcgui.Dialog().ok('Cache','Eliminação Completa.')
+	try:
+		for root,dir,files in os.walk(cachePath):
+			for f in files:
+				if not '_cache' in f and not '_9gag' in f: os.unlink(os.path.join(root, f))
+		return 'Eliminação Completa.'
+	except BaseException as e: return str(e)

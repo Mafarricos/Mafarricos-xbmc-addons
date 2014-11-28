@@ -5,7 +5,7 @@
 
 import urllib2,re,threading,os,json,xbmcaddon,xbmcgui,xbmc
 from HTMLParser import HTMLParser
-import basic
+import basic,ninegag,Break,vitaminl
 
 addonName           = xbmcaddon.Addon().getAddonInfo("name")
 addonVersion        = xbmcaddon.Addon().getAddonInfo("version")
@@ -50,13 +50,13 @@ def getpages(id):
 				list2 = grabiframes(site+pageindex+str(id+starton),prettyname)
 				if list2: list.extend(list2)
 			elif 'vit' in frame:
-				list2 = grabvit(site+pageindex+str(id+starton),prettyname)
+				list2 = vitaminl.grab(site+pageindex+str(id+starton),prettyname,cachePath,getSetting("cachesites"))
 				if list2: list.extend(list2)	
 			elif '9gag' in frame:
-				list2 = grab9gag(site+pageindex,prettyname,str(id+starton))
+				list2 = ninegag.grab(site+pageindex,prettyname,str(id+starton),cachePath,site9gagfile,getSetting("cachesites"))
 				if list2: list.extend(list2)
 			elif 'break' in frame:
-				list2 = grabbreak(site+pageindex+str(id+starton),prettyname)
+				list2 = Break.grab(site+pageindex+str(id+starton),prettyname,cachePath,getSetting("cachesites"))
 				if list2: list.extend(list2)				
 			else:
 				startsection = parameters['startsection']
@@ -147,123 +147,6 @@ def grabiframes(mainURL,prettyname,results=None,index=None,pageURL=None):
 				else: print '##ERROR-funvideos:frame on server not supported: '+iframe
 	if not index: return list
 
-def grab9gag(url,prettyname,id):
-	jsondata = []
-	list = []
-	line = basic.readoneline(site9gagfile)
-	idpage = re.findall('::'+id+'::::(.+?)::', line, re.DOTALL)
-	if not idpage: page = basic.open_url('http://9gag.tv')
-	else: page = basic.open_url(url+idpage[0],'9gag')
-	jsondata = re.findall('   postGridPrefetchPosts = (.+?);', page, re.DOTALL)
-	j = json.loads(jsondata[0])
-	size = len(j)
-	e=0
-	for data in j:
-		e = e + 1
-		if e == size:
-			line = basic.readoneline(site9gagfile)
-			if not '<'+id+'>' in line: basic.writefile(site9gagfile,"a",'::'+str(int(id)+1)+'::::'+data['prevPostId']+'::') 
-		try:
-			duration = 0
-			time = re.findall('PT(\d+)M(\d+)S', data['videoDuration'], re.DOTALL)
-			if time:
-				for min,sec in time: duration = int(min)*60+int(sec)
-			else:
-				time = re.findall('PT(\d+)M', data['videoDuration'], re.DOTALL)
-				if time: duration = int(time[0])*60
-				else:
-					time = re.findall('PT(\d+)S', data['videoDuration'], re.DOTALL)
-					if time: duration = time[0]
-		except: 
-			duration = 60
-			pass
-		title = basic.cleanTitle(data['ogTitle'])	
-		videocache = os.path.join(cachePath,data['videoExternalId'])
-		jsontext = '{"prettyname":"'+prettyname+'","url":"plugin://plugin.video.youtube/?action=play_video&videoid=' +data['videoExternalId']+'","title":"'+title.encode('ascii','xmlcharrefreplace')+'","duration":"'+str(duration)+'","thumbnail":"'+data['thumbnail_360w']+'"}'
-		jsonloaded = json.loads(jsontext, encoding="utf-8")
-		if getSetting("cachesites") == 'true' and not os.path.isfile(videocache): basic.writefile(videocache,'w',jsontext.encode('utf8'))
-		list.append(jsonloaded)
-	return list 
-
-def grabbreak(url,prettyname):
-	list = []
-	try:
-		page = basic.open_url(url)
-		page = page.replace("\\","")
-		ids = re.findall('data-content-id="(\d+)"', page, re.DOTALL)
-		for videoid in ids:
-			videocache = os.path.join(cachePath,str(videoid))
-			if getSetting("cachesites") == 'true' and os.path.isfile(videocache):
-				jsonline = basic.readfiletoJSON(videocache)
-				jsonloaded = json.loads(jsonline, encoding="utf-8")
-				list.append(jsonloaded)
-			else:
-				content = basic.open_url("http://www.break.com/embed/"+videoid)
-				matchAuth=re.compile('"AuthToken": "(.+?)"', re.DOTALL).findall(content)
-				matchURL=re.compile('"uri": "(.+?)".+?"height": (.+?),', re.DOTALL).findall(content)
-				matchYT=re.compile('"youtubeId": "(.*?)"', re.DOTALL).findall(content)
-				title=re.compile('"contentName": "(.+?)",', re.DOTALL).findall(content)
-				title = basic.cleanTitle(title[0])
-				title2 = ''				
-				try: title2 = title.decode('utf8').encode('ascii','xmlcharrefreplace')
-				except: pass
-				if title2 <> '': title = title2		
-				duration=re.compile('"videoLengthInSeconds": "(\d+)",', re.DOTALL).findall(content)	
-				thumb = re.compile('"thumbUri": "(.+?)",', re.DOTALL).findall(content)				
-				finalUrl=""
-				if matchYT and matchYT[0]!="":
-					finalUrl = "plugin://plugin.video.youtube/?action=play_video&videoid=" + matchYT[0]
-					videocache2 = os.path.join(cachePath,str(matchYT[0]))				
-					if getSetting("cachesites") == 'true' and not os.path.isfile(videocache): 
-						jsontext = '{"prettyname":"'+prettyname+'","url":"'+finalUrl+'","title":"'+title+'","duration":"'+str(duration[0])+'","thumbnail":"'+thumb[0]+'"}'
-						jsonloaded = json.loads(jsontext, encoding="utf-8")			
-						basic.writefile(videocache2,'w',jsontext.encode('utf8'))
-				else:
-					max=0
-					for url, height in matchURL:
-						height=int(height)
-						if height>max: 
-							finalUrl=url.replace(".wmv",".flv")+"?"+matchAuth[0]
-							max=height
-				jsontext = '{"prettyname":"'+prettyname+'","url":"'+finalUrl+'","title":"'+title+'","duration":"'+str(duration[0])+'","thumbnail":"'+thumb[0]+'"}'
-				jsonloaded = json.loads(jsontext, encoding="utf-8")
-				if getSetting("cachesites") == 'true' and not os.path.isfile(videocache): basic.writefile(videocache,'w',jsontext.encode('utf8'))
-				list.append(jsonloaded)
-		if list: return list
-	except BaseException as e:
-		print '##ERROR-funvideos:Break_resolver: '+url+' '+str(e)
-
-def grabvit(url,prettyname):
-	list = []
-	try:
-		content = basic.open_url(url)
-		spl = content.split('<div class="videoListItem">')
-		for i in range(1, len(spl), 1):
-			entry = spl[i]
-			match = re.compile('data-youtubeid="(.+?)"', re.DOTALL).findall(entry)
-			id = match[0]
-			match = re.compile('<div class="duration">(.+?)</div>', re.DOTALL).findall(entry)
-			duration = match[0].strip()
-			splDuration = duration.split(":")
-			duration = str(int(splDuration[0])*60+int(splDuration[1]))
-			thumb = "http://img.youtube.com/vi/"+id+"/0.jpg"
-			match = re.compile('alt="(.+?)"', re.DOTALL).findall(entry)
-			title = match[0]
-			title = basic.cleanTitle(title)
-			videocache = os.path.join(cachePath,str(id))
-			title2 = ''		
-			try: title2 = title.decode('utf8').encode('ascii','xmlcharrefreplace')
-			except: pass
-			if title2 <> '': title = title2
-			jsontext = '{"prettyname":"'+prettyname+'","url":"plugin://plugin.video.youtube/?action=play_video&videoid=' + str(id)+'","title":"'+title+'","duration":"'+str(duration)+'","thumbnail":"'+thumb+'"}'
-			jsonloaded = json.loads(jsontext, encoding="utf-8")
-			if getSetting("cachesites") == 'true' and not os.path.isfile(videocache): basic.writefile(videocache,'w',jsontext.encode('utf8'))
-			list.append(jsonloaded)
-		if list: return list
-	except BaseException as e:
-		print '##ERROR-funvideos:VitaminL_resolver: '+url+' '+str(e)
-		pass
-
 def sapo_resolver(url,prettyname):
 	match = re.compile('file=http://.+?/(.+?)/mov/').findall(url)
 	if match: 
@@ -285,7 +168,7 @@ def sapo_resolver(url,prettyname):
 				title = re.compile('<title>(.+?)</title>').findall(sapoAPI)
 				title2 = ''
 				title = title[1]
-				try: title2 = title[1].decode('utf8').encode('ascii','xmlcharrefreplace')
+				try: title2 = title.decode('utf8').encode('ascii','xmlcharrefreplace')
 				except: pass
 				if title2 <> '': title = title2			
 				urlfinal = re.compile('<sapo:videoFile>(.+?)</sapo:videoFile>').findall(sapoAPI)
