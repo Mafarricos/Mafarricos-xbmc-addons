@@ -1,6 +1,8 @@
+Version 0.2.3
+- android fix fetching 9gag
+
 Version 0.2.2
  - android fix
-
 Version 0.2.1
  - cache improvement
 Version 0.2.0

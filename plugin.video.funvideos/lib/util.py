@@ -150,7 +150,7 @@ def grab9gag(url,prettyname,id):
 	line = readoneline(site9gagfile)
 	idpage = re.findall('::'+id+'::::(.+?)::', line, re.DOTALL)
 	if not idpage: page = open_url('http://9gag.tv')
-	else: page = open_url(url+idpage[0])
+	else: page = open_url(url+idpage[0],'9gag')
 	jsondata = re.findall('   postGridPrefetchPosts = (.+?);', page, re.DOTALL)
 	j = json.loads(jsondata[0])
 	size = len(j)
@@ -375,16 +375,23 @@ def cleanTitle(title):
 	title = title.strip()
 	return title
 
-def open_url(url):
-	try:
-		user_agent = 'Mozilla/5.0 (Windows NT 6.1; Win64; x64; rv:10.0a1) Gecko/20111029 Firefox/10.0a1'
-		req = urllib2.Request(url)
-		req.add_header('User-Agent', user_agent)
-		response = urllib2.urlopen(req)
-		link=response.read()
-		response.close()
-		return link
-	except BaseException as e: print '##ERROR-funvideos:open_url: '+str(url)+' '+str(e)	
+def open_url(url,type=None):
+	if type=='9gag':
+		try:
+			import requests
+			page = requests.get(url)
+			return page.text
+		except BaseException as e: print '##ERROR-funvideos:open_url: '+str(url)+' '+str(e)		
+	else:
+		try:
+			user_agent = 'Mozilla/5.0 (Windows NT 6.1; Win64; x64; rv:10.0a1) Gecko/20111029 Firefox/10.0a1'
+			req = urllib2.Request(url)
+			req.add_header('User-Agent', user_agent)
+			response = urllib2.urlopen(req)
+			link=response.read()
+			response.close()
+			return link
+		except BaseException as e: print '##ERROR-funvideos:open_url: '+str(url)+' '+str(e)	
 	
 def listsites():
 	list = []

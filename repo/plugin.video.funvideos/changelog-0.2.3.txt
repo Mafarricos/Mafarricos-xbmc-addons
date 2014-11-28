@@ -1,6 +1,17 @@
+Version 0.2.3
+- android fix fetching 9gag
+
+Version 0.2.2
+ - android fix
+Version 0.2.1
+ - cache improvement
+Version 0.2.0
+ - BestOfYoutube added
+ - cache videos
 Version 0.1.0
  - 9gag added
- 
+Version 0.0.4
+	Unique videos fix 
 Version 0.0.3
 	Android XBMC Fix
 Version 0.0.2
