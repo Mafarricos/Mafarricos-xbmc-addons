@@ -5,6 +5,7 @@
 {"prettyname":"JacareBanguela","site":"http://www.jacarebanguela.com.br","frame":"true","enabled":"true","pagination":"/page/","starton":"0"}
 {"prettyname":"GaloFrito","site":"http://www.galofrito.com.br","frame":"true","enabled":"true","pagination":"/page/","starton":"1"}
 {"prettyname":"ViralViralVideos","site":"http://www.viralviralvideos.com","frame":"true","enabled":"true","pagination":"/page/","starton":"1"}
+{"prettyname":"EpaLOL","site":"http://www.epalol.com","frame":"true","enabled":"true","pagination":"/page/","starton":"1"}
 {"prettyname":"oButecoDaNet","site":"http://obutecodanet.ig.com.br","frame":"true","enabled":"true","pagination":"/index.php/page/","starton":"1"}
 {"prettyname":"TaFixe","site":"http://www.tafixe.com","frame":"false","enabled":"true","startsection":"<div class=\"span6\">\\s+.+?<a href=\"","endsection":"\"","pagination":"/page/","starton":"1"}
 {"prettyname":"TaBrutal","site":"http://www.tabrutal.pt","frame":"false","enabled":"true","startsection":"<h4 class=\"entry-title\"><a href=\"","endsection":"\">","pagination":"/page/","starton":"0"}

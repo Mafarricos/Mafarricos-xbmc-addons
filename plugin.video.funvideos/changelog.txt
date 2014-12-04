@@ -1,6 +1,9 @@
+Version 0.2.6
+- added http://www.epalol.com
+- fix to sites unblocking content with facebook like
+
 Version 0.2.5
 - code cleanup and redone.
-
 Version 0.2.4
 - added http://www.break.com
 Version 0.2.3

@@ -94,8 +94,10 @@ def grabiframes(mainURL,prettyname,cachePath,results=None,index=None,pageURL=Non
 				pass
 		blocker = re.findall('data-videoid="(.+?)"', page, re.DOTALL)
 		if blocker:
-			fakeframe='<iframe src="http//www.youtube.com/embed/'+blocker[0]+'"</iframe>'
-			html = re.findall('<iframe(.*?)</iframe>', fakeframe, re.DOTALL)
+			fakeframe = []		
+			for videoid in blocker:
+				fakeframe.append('<iframe src="http//www.youtube.com/embed/'+videoid+'"</iframe>')
+			html = fakeframe
 		else: html = re.findall('<iframe(.*?)</iframe>', page, re.DOTALL)
 		for trunk in html:
 				try: iframe = re.compile('src="(.+?)"').findall(trunk)[0]
