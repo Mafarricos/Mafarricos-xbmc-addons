@@ -100,48 +100,50 @@ def grabiframes(mainURL,prettyname,cachePath,results=None,index=None,pageURL=Non
 			html = fakeframe
 		else: html = re.findall('<iframe(.*?)</iframe>', page, re.DOTALL)
 		for trunk in html:
-				try: iframe = re.compile('src="(.+?)"').findall(trunk)[0]
+			try: iframe = re.compile('src="(.+?)"').findall(trunk)[0]
+			except: 
+				try: iframe = re.compile("src='(.+?)'").findall(trunk)[0]
 				except: 
-					try: iframe = re.compile("src='(.+?)'").findall(trunk)[0]
+					try:iframe = re.compile('data-src="(.+?)"').findall(trunk)[0]
 					except: iframe = ''
-				if iframe:
-					if iframe.find('ad120m.com') > -1 or iframe.find('facebook') > -1 or iframe.find('metaffiliation') > -1 or iframe.find('banner600') > -1 or iframe.find('engine.adbooth.com') > -1 or iframe.find('www.lolx2.com') > -1 or iframe.find('jetpack.wordpress.com') > -1: pass
-					else:
-						print "##funvideos-grabiframes: "+iframe
-						try:
-							if iframe.find('youtube') > -1:
-								textR,resolver_iframe = youtube_resolver(iframe,prettyname,cachePath)
-								if resolver_iframe: 	
-									if index: results.append(resolver_iframe)
-									else: list.append(resolver_iframe)
-									if pageURL and getSetting("cachesites") == 'true': basic.writefile(pagecache,'w',textR)
-							elif iframe.find('dailymotion') > -1:
-								textR,resolver_iframe = daily_resolver(iframe,prettyname,cachePath)
-								if resolver_iframe: 							
-									if index: results.append(resolver_iframe)
-									else: list.append(resolver_iframe)
-									if pageURL and getSetting("cachesites") == 'true': basic.writefile(pagecache,'w',textR)
-							elif iframe.find('vimeo') > -1:
-								textR,resolver_iframe = vimeo_resolver(iframe,prettyname,cachePath)
-								if resolver_iframe: 							
-									if index: results.append(resolver_iframe)
-									else: list.append(resolver_iframe)
-									if pageURL and getSetting("cachesites") == 'true': basic.writefile(pagecache,'w',textR)
-							elif iframe.find('sapo') > -1:
-								textR,resolver_iframe = sapo_resolver(iframe,prettyname,cachePath)
-								if resolver_iframe: 							
-									if index: results.append(resolver_iframe)
-									else: list.append(resolver_iframe)
-									if pageURL and getSetting("cachesites") == 'true': basic.writefile(pagecache,'w',textR)
-							elif iframe.find('videolog') > -1:
-								textR,resolver_iframe = videolog_resolver(iframe,prettyname,cachePath)
-								if resolver_iframe: 							
-									if index: results.append(resolver_iframe)
-									else: list.append(resolver_iframe)
-									if pageURL and getSetting("cachesites") == 'true': basic.writefile(pagecache,'w',textR)
-						except BaseException as e:
-							print '##ERROR-##funvideos-grabiframes: '+iframe+' '+str(e)
-				else: print '##ERROR-funvideos:frame on server not supported: '+iframe
+			if iframe:
+				if iframe.find('ad120m.com') > -1 or iframe.find('facebook') > -1 or iframe.find('metaffiliation') > -1 or iframe.find('banner600') > -1 or iframe.find('engine.adbooth.com') > -1 or iframe.find('www.lolx2.com') > -1 or iframe.find('jetpack.wordpress.com') > -1: pass
+				else:
+					print "##funvideos-grabiframes: "+iframe
+					try:
+						if iframe.find('youtube') > -1:
+							textR,resolver_iframe = youtube_resolver(iframe.replace('-nocookie',''),prettyname,cachePath)
+							if resolver_iframe: 	
+								if index: results.append(resolver_iframe)
+								else: list.append(resolver_iframe)
+								if pageURL and getSetting("cachesites") == 'true': basic.writefile(pagecache,'w',textR)
+						elif iframe.find('dailymotion') > -1:
+							textR,resolver_iframe = daily_resolver(iframe,prettyname,cachePath)
+							if resolver_iframe: 							
+								if index: results.append(resolver_iframe)
+								else: list.append(resolver_iframe)
+								if pageURL and getSetting("cachesites") == 'true': basic.writefile(pagecache,'w',textR)
+						elif iframe.find('vimeo') > -1:
+							textR,resolver_iframe = vimeo_resolver(iframe,prettyname,cachePath)
+							if resolver_iframe: 							
+								if index: results.append(resolver_iframe)
+								else: list.append(resolver_iframe)
+								if pageURL and getSetting("cachesites") == 'true': basic.writefile(pagecache,'w',textR)
+						elif iframe.find('sapo') > -1:
+							textR,resolver_iframe = sapo_resolver(iframe,prettyname,cachePath)
+							if resolver_iframe: 							
+								if index: results.append(resolver_iframe)
+								else: list.append(resolver_iframe)
+								if pageURL and getSetting("cachesites") == 'true': basic.writefile(pagecache,'w',textR)
+						elif iframe.find('videolog') > -1:
+							textR,resolver_iframe = videolog_resolver(iframe,prettyname,cachePath)
+							if resolver_iframe: 							
+								if index: results.append(resolver_iframe)
+								else: list.append(resolver_iframe)
+								if pageURL and getSetting("cachesites") == 'true': basic.writefile(pagecache,'w',textR)
+					except BaseException as e:
+						print '##ERROR-##funvideos-grabiframes: '+iframe+' '+str(e)
+			else: print '##ERROR-funvideos:frame on server not supported: '+iframe
 	if not index: return list
 
 def sapo_resolver(url,prettyname,cachePath):

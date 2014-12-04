@@ -12,4 +12,5 @@
 {"prettyname":"Embrulha","site":"http://www.embrulha.com","frame":"false","enabled":"true","startsection":"<h2><a href=\\'","endsection":"/\\'","pagination":"/page/","starton":"1"}
 {"prettyname":"TugaVideos","site":"http://tugavideos.com","frame":"false","enabled":"true","startsection":"</div>\\s+<h2><a href=\"","endsection":"\"","pagination":"/page/","starton":"1"}
 {"prettyname":"loladatuga","site":"http://loladatuga.com","frame":"false","enabled":"true","startsection":"<div class=\"post-thumbnail\">\\s+<a href=\"","endsection":"\"","pagination":"/page/","starton":"1"}
+{"prettyname":"VamosLaPortugal","site":"http://www.vamoslaportugal.com/videos","frame":"false","enabled":"true","startsection":"<h2 class=\"title\">\\s+<a href=\"","endsection":"\"","pagination":"/page/","starton":"1"}
 {"prettyname":"Break","site":"http://www.break.com","frame":"break","enabled":"true","pagination":"/content/GetContentTimeStreamByChannelIdAndFilterBy?channelId=1&filterBy=videos&pageNum=","starton":"1"}
