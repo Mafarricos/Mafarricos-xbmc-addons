@@ -3,7 +3,7 @@
 # email: MafaStudios@gmail.com
 # This program is free software: GNU General Public License
 
-import urllib,xbmcplugin,xbmcgui,xbmc,re
+import urllib,urllib2,xbmcplugin,xbmcgui,xbmc,re
 
 def MAIN():
 	html = open_url('http://jell.yfish.us/')
@@ -26,9 +26,13 @@ def MAIN():
 	addDir(nametext+' [Profile Level:'+profile[0]+', Bitrate Min:'+bitmin[0]+' Mbps, Bitrate Avg:'+bitavg[0]+' Mbps, Bitrate Max.:'+bitmax[0]+' Mbps, Size:'+size[0]+' MB]','http://jell.yfish.us/'+urltext,1,'',False,seconds[0],informacao)	
 
 def open_url(url,type=None):
-	import requests
-	page = requests.get(url)
-	return page.text
+	user_agent = 'Mozilla/5.0 (Windows NT 6.1; Win64; x64; rv:10.0a1) Gecko/20111029 Firefox/10.0a1'
+	req = urllib2.Request(url)
+	req.add_header('User-Agent', user_agent)
+	response = urllib2.urlopen(req)
+	link=response.read()
+	response.close()
+	return link
 	
 def play(url):
 	playlist = xbmc.PlayList(1)
