@@ -3,7 +3,11 @@
 # email: MafaStudios@gmail.com
 # This program is free software: GNU General Public License
 
-import urllib,urllib2,xbmcplugin,xbmcgui,xbmc,re
+import urllib,urllib2,xbmcplugin,xbmcgui,xbmc,re,xbmcaddon,os
+
+addonId             = xbmcaddon.Addon().getAddonInfo("id")
+getSetting          = xbmcaddon.Addon().getSetting
+language            = xbmcaddon.Addon().getLocalizedString
 
 def MAIN():
 	html = open_url('http://jell.yfish.us/')
@@ -43,15 +47,29 @@ def play(url):
 		xbmcPlayer.play(playlist)
 	except: pass
 
+def download(url,name):
+	cookie = '';
+	user_agent = 'Mozilla/5.0 (Windows NT 6.1; Win64; x64; rv:10.0a1) Gecko/20111029 Firefox/10.0a1'
+	referer = ''
+	folder = xbmc.translatePath(getSetting("downloads"))
+	if folder == '':
+		yes = xbmcgui.Dialog().yesno(language(30001).encode('utf-8'), language(30000).encode('utf-8'))
+		if yes: xbmc.executebuiltin('Addon.OpenSettings(%s)' % addonId)
+		return	
+	dest = os.path.join(folder, name.rsplit(' [', 1)[0])
+	import commondownloader
+	commondownloader.download(url, dest, 'Jellyfish', referer=referer, agent=user_agent, cookie=cookie)
+
 def addDir(name,url,mode,iconimage,pasta,duration,informacao):
-        u=sys.argv[0]+"?url="+urllib.quote_plus(url)+"&mode="+str(mode)+"&name="+urllib.quote_plus(name)
-        ok=True
-        liz=xbmcgui.ListItem(name, iconImage="DefaultFolder.png", thumbnailImage=iconimage)
+	context = []
+	u=sys.argv[0]+"?url="+urllib.quote_plus(url)+"&mode="+str(mode)+"&name="+urllib.quote_plus(name)
+	liz=xbmcgui.ListItem(name, iconImage="DefaultFolder.png", thumbnailImage=iconimage)
 	if informacao <> '': liz.setInfo( type="Video", infoLabels=informacao )	
-	if duration <> '':
-		liz.addStreamInfo('Video', {"duration":duration})	
-        ok=xbmcplugin.addDirectoryItem(handle=int(sys.argv[1]),url=u,listitem=liz,isFolder=pasta)
-        return ok
+	if duration <> '': liz.addStreamInfo('Video', {"duration":duration})
+	context.append((language(30016).encode('utf-8'), 'XBMC.RunPlugin(%s?mode=2&url=%s&name=%s)' % (sys.argv[0], urllib.quote_plus(url),name)))
+	liz.addContextMenuItems(context, replaceItems=False) 	
+	ok=xbmcplugin.addDirectoryItem(handle=int(sys.argv[1]),url=u,listitem=liz,isFolder=pasta)
+	return ok
 		
 def get_params():
         param=[]
@@ -94,4 +112,5 @@ print "Index: "+str(index)
 
 if mode==None or url==None or len(url)<1: MAIN()
 elif mode==1: play(url)
+elif mode==2: download(url,name)
 xbmcplugin.endOfDirectory(int(sys.argv[1]))

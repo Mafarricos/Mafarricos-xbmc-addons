@@ -32,7 +32,7 @@
   </extension>
 </addon>
 
-<addon id="plugin.video.jellyfish" name="Jellyfish Video Test Files" version="0.0.2" provider-name="Mafarricos">
+<addon id="plugin.video.jellyfish" name="Jellyfish Video Test Files" version="0.1.0" provider-name="Mafarricos">
   <requires>
     <import addon="xbmc.python" version="2.1.0"/>
   </requires>
@@ -42,7 +42,7 @@
   <extension point="xbmc.addon.metadata">
     <language>en</language>
     <platform>all</platform>
-    <summary lang="en">Fun Videos</summary>
+    <summary lang="en">Video Test Files</summary>
     <description lang="en">A number of H.264 encoded .mkv video clips that can be used for testing the network streaming and playback performance of media streamers and HTPCs.
 	All Original content on http://www.jell.yfish.us
 	</description>
