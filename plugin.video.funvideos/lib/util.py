@@ -67,8 +67,10 @@ def getpages(id,sitesfile,site9gagfile,cachePath):
 
 def grablinks(mainURL,prettyname,sectionstart,sectionend,cachePath,mainsite=None):
 	list = []
+	html_source_trunk = []
 	page = basic.open_url(mainURL)
-	html_source_trunk = re.findall(sectionstart+'(.*?)'+sectionend, page, re.DOTALL)
+	try: html_source_trunk = re.findall(sectionstart+'(.*?)'+sectionend, page, re.DOTALL)
+	except: pass
 	threads = []
 	results = []
 	for i in range(0, len(html_source_trunk)): 
