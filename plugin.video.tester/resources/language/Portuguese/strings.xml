@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<strings>
+	<string id="30000">Configurar a pasta de transferências?</string>
+	<string id="30001">Erro</string>
+	<string id="30002">Transferência Falhou</string>
+	<string id="30003">Sem resposta do servidor</string>
+	<string id="30004">Tamanho desconhecido</string>
+	<string id="30005">Não foi possível fazer a transferência</string>
+	<string id="30006">Confirmar transferência</string>
+	<string id="30007">Ficheiro completo tem %dMB</string>
+	<string id="30008">Continuar com a Transferência?</string>
+	<string id="30009">Sim</string>
+	<string id="30010">Não</string>
+	<string id="30011">Progresso Transferência</string>
+	<string id="30012">Velocidade Média: </string>
+	<string id="30013">Transferência terminou.</string>
+	<string id="30014">Transferências</string>
+	<string id="30015">Pasta de Transferências</string>
+	<string id="30016">Transferir</string>
+	<string id="30017">Vídeos de 3Mbps até 120Mbps</string>
+	<string id="30018">Vídeos de 480p a 4K, 3D e 24Hz a 60Hz</string>
+	<string id="30019">Só Download - Vídeos de 720p e 1080p e 3D</string>
+	<string id="30020">Vídeos de 720p a 4K (4K de 6GB)</string>
+</strings>

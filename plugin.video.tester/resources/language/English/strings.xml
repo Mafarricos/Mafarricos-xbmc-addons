@@ -1,0 +1,24 @@
+﻿<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<strings>
+	<string id="30000">Setup Download folder?</string>
+	<string id="30001">Error</string>
+	<string id="30002">Download failed</string>
+	<string id="30003">No response from server</string>
+	<string id="30004">Unknown filesize</string>
+	<string id="30005">Unable to download</string>
+	<string id="30006">Confirm Download</string>
+	<string id="30007">Complete file is %dMB</string>
+	<string id="30008">Continue with download?</string>
+	<string id="30009">Confirm</string>
+	<string id="30010">Cancel</string>
+	<string id="30011">Download Progress</string>
+	<string id="30012">Average Speed: </string>
+	<string id="30013">Download Finished.</string>
+	<string id="30014">Download</string>
+	<string id="30015">Download Folder</string>
+	<string id="30016">Download</string>
+	<string id="30017">Videos from 3Mbps to 120Mbps</string>
+	<string id="30018">Videos from 480p to 4K, 3D and 24Hz to 60Hz</string>
+	<string id="30019">Only Download - Videos from 720p to 1080p and 3D</string>
+	<string id="30020">Videos from 720p to 4K (4K of 6GB)</string>
+</strings>
