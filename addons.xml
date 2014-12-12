@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <addons>
-<addon id="plugin.video.funvideos" name="Fun Videos" version="0.2.7" provider-name="Mafarricos">
+<addon id="plugin.video.funvideos" name="Fun Videos" version="0.2.8" provider-name="Mafarricos">
   <requires>
     <import addon="xbmc.python" version="2.1.0"/>
 	<import addon="script.module.requests" version="2.4.3"/>
@@ -114,6 +114,29 @@
     <summary lang="en">Tá Brutal</summary>
     <description lang="en">Visualização de videos engraçados do site: http://www.tabrutal.pt</description>
 	<broken>Utilização passa a ser realizada pelo addon Fun Videos do meu addon</broken>
+    <platform>all</platform>
+  </extension>
+</addon>
+
+<addon id="plugin.video.tester" name="Video Test Files" version="0.1.0" provider-name="Mafarricos">
+  <requires>
+    <import addon="xbmc.python" version="2.14.0"/>
+  </requires>
+  <extension point="xbmc.python.pluginsource" library="main.py">
+    <provides>video</provides>
+  </extension>
+  <extension point="xbmc.addon.metadata">
+    <language>en</language>
+    <platform>all</platform>
+    <summary lang="en">Video Test Files</summary>
+    <description lang="en">A number of H.264 encoded .mkv video clips that can be used for testing the network streaming and playback performance of media streamers and HTPCs.
+	All Original content on:
+	http://jell.yfish.us
+	http://bigbuckbunny.org
+	http://tearsofsteel.org
+	http://sintel.org
+	http://elephantsdream.org
+	</description>
     <platform>all</platform>
   </extension>
 </addon>
