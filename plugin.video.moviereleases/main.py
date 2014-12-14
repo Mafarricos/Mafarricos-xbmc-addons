@@ -67,7 +67,11 @@ def populatelist(results,list):
 			listgenre = []
 			for genre in jsondata['genres']: listgenre.append(genre['name'])
 			strgenre = ', '.join(listgenre)
-			informacao = {"code": jsondata['imdb_id'], "title": jsondata['title'], "originaltitle": jsondata['original_title'], "year": Year[0], "rating": jsondata['vote_average'], "plot": jsondata['overview'] , "genre": strgenre, "votes": jsondata['vote_count'], "duration": jsondata['runtime']}
+			liststudios = []
+			for studios in jsondata['production_companies']: liststudios.append(studios['name'])
+			try: strstudios = liststudios[0]
+			except: strstudios = ''
+			informacao = {"code": jsondata['imdb_id'], "title": jsondata['title'], "originaltitle": jsondata['original_title'], "year": Year[0], "rating": jsondata['vote_average'], "plot": jsondata['overview'] , "genre": strgenre, "votes": jsondata['vote_count'], "duration": jsondata['runtime'], "studio": strstudios}
 			if getSetting('allyear') == 'true': list.append([index,jsondata['title']+' ('+Year[0]+')',tmdb_image+jsondata['poster_path'],informacao,ttcode[0],Year[0]])
 			elif int(Year[0]) >= int(getSetting('minyear')) and int(Year[0]) <= int(getSetting('maxyear')): list.append([index,jsondata['title']+' ('+Year[0]+')',tmdb_image+jsondata['poster_path'],informacao,ttcode[0],Year[0]])
 		except:
