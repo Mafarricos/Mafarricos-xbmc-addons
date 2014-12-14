@@ -46,12 +46,12 @@ def MAIN(index):
 	[i.join() for i in threads2]
 	list = sorted(list, key=getKey)
 	linecache= readalllines(sitecachefile)
-	for order,title,poster,information in list:
+	for order,title,poster,information,imdb_id,year in list:
 		if title not in str(linecache):
 			writefile(sitecachefile,"a",'::pageindex::'+str(ranging)+'::'+title.encode('ascii', 'xmlcharrefreplace')+'::\n')
-			addDir(title,title,1,poster,False,len(list),information,ranging)
-		elif '::pageindex::'+str(ranging)+'::'+title.encode('ascii', 'xmlcharrefreplace') in str(linecache): addDir(title,title,1,poster,False,len(list),information,ranging)
-	addDir('Next>>','','','',True,1,'',ranging)		
+			addDir(title,title,2,poster,False,len(list),information,ranging,imdb_id,year)
+		elif '::pageindex::'+str(ranging)+'::'+title.encode('ascii', 'xmlcharrefreplace') in str(linecache): addDir(title,title,2,poster,False,len(list),information,ranging,imdb_id,year)
+	addDir('Next>>','','','',True,1,'',ranging,'','')		
 	
 def populatelist(results,list):
 	for index,link in results:
@@ -68,8 +68,8 @@ def populatelist(results,list):
 			for genre in jsondata['genres']: listgenre.append(genre['name'])
 			strgenre = ', '.join(listgenre)
 			informacao = {"code": jsondata['imdb_id'], "title": jsondata['title'], "originaltitle": jsondata['original_title'], "year": Year[0], "rating": jsondata['vote_average'], "plot": jsondata['overview'] , "genre": strgenre, "votes": jsondata['vote_count'], "duration": jsondata['runtime']}
-			if getSetting('allyear') == 'true': list.append([index,jsondata['title']+' ('+Year[0]+')',tmdb_image+jsondata['poster_path'],informacao])
-			elif int(Year[0]) >= int(getSetting('minyear')) and int(Year[0]) <= int(getSetting('maxyear')): list.append([index,jsondata['title']+' ('+Year[0]+')',tmdb_image+jsondata['poster_path'],informacao])
+			if getSetting('allyear') == 'true': list.append([index,jsondata['title']+' ('+Year[0]+')',tmdb_image+jsondata['poster_path'],informacao,ttcode[0],Year[0]])
+			elif int(Year[0]) >= int(getSetting('minyear')) and int(Year[0]) <= int(getSetting('maxyear')): list.append([index,jsondata['title']+' ('+Year[0]+')',tmdb_image+jsondata['poster_path'],informacao,ttcode[0],Year[0]])
 		except:
 			jsonpage = abrir_url('http://www.omdbapi.com/?plot=short&r=json&i=tt'+str(ttcode[0]))
 			jsondata = json.loads(jsonpage)
@@ -79,8 +79,8 @@ def populatelist(results,list):
 			duration = re.findall('(\d) h', jsondata['Runtime'], re.DOTALL)
 			if duration: dur = int(duration[0])*60
 			informacao = {"code": jsondata['imdbID'], "title": jsondata['Title'], "originaltitle": jsondata['Title'], "year": jsondata['Year'], "rating": jsondata['imdbRating'], "plot": jsondata['Plot'] , "genre": jsondata['Genre'], "director": jsondata['Director'], "writer": jsondata['Writer'], "cast": actors, "votes": jsondata['imdbVotes'], "mpaa": jsondata['Rated'], "duration": dur}
-			if getSetting('allyear') == 'true': list.append([index,jsondata['Title']+' ('+jsondata['Year']+')',jsondata['Poster'],informacao])
-			elif int(jsondata['Year']) >= int(getSetting('minyear')) and int(jsondata['Year']) <= int(getSetting('maxyear')): list.append([index,jsondata['Title']+' ('+jsondata['Year']+')',jsondata['Poster'],informacao])
+			if getSetting('allyear') == 'true': list.append([index,jsondata['Title']+' ('+jsondata['Year']+')',jsondata['Poster'],informacao,ttcode[0],jsondata['Year']])
+			elif int(jsondata['Year']) >= int(getSetting('minyear')) and int(jsondata['Year']) <= int(getSetting('maxyear')): list.append([index,jsondata['Title']+' ('+jsondata['Year']+')',jsondata['Poster'],informacao,ttcode[0],jsondata['Year']])
 
 def getimdblinks(url,results,order):
 	try:
@@ -113,8 +113,8 @@ def abrir_url(url, encoding='utf-8'):
     if encoding != 'utf-8': link = link.decode(encoding).encode('utf-8')
     return link
 	
-def addDir(name,url,mode,iconimage,pasta,total,informacao,index):
-	u=sys.argv[0]+"?url="+urllib.quote_plus(url)+"&mode="+str(mode)+"&name="+urllib.quote_plus(name.encode('ascii', 'xmlcharrefreplace'))+"&index="+str(index)
+def addDir(name,url,mode,iconimage,pasta,total,informacao,index,imdb_id,year):
+	u=sys.argv[0]+"?url="+urllib.quote_plus(url)+"&mode="+str(mode)+"&name="+urllib.quote_plus(name.encode('ascii', 'xmlcharrefreplace'))+"&index="+str(index)+"&imdb_id="+str(imdb_id)+"&year="+str(year)
 	ok=True
 	context = []
 	context.append(('Ver Trailer', 'RunPlugin(%s?mode=1&url=%s&name=%s)' % (sys.argv[0],urllib.quote_plus(url),name)))
@@ -127,6 +127,11 @@ def addDir(name,url,mode,iconimage,pasta,total,informacao,index):
 
 def getKey(item):
 	return item[0]
+
+def playparser(name, url, imdb_id, year):
+	item = xbmcgui.ListItem(path=url)
+	item.setProperty("IsPlayable", "true")
+	xbmc.Player().play('plugin://plugin.video.genesis/?action=play&name='+name+'&title='+name+'&year='+year+'&imdb='+imdb_id+'&url='+url, item)
 
 #trailer,sn
 def trailer(name, url):
@@ -373,6 +378,8 @@ name=None
 mode=None
 iconimage=None
 index=None
+imdb_id=None
+year=None
 
 try: url=urllib.unquote_plus(params["url"])
 except: pass
@@ -384,14 +391,21 @@ try: iconimage=urllib.unquote_plus(params["iconimage"])
 except: pass
 try: index=urllib.unquote_plus(params["index"])
 except: pass
+try: imdb_id=urllib.unquote_plus(params["imdb_id"])
+except: pass
+try: year=urllib.unquote_plus(params["year"])
+except: pass
 
 print "Mode: "+str(mode)
 print "URL: "+str(url)
 print "Name: "+str(name)
 print "Iconimage: "+str(iconimage)
 print "Index: "+str(index)
+print "imdb_id: "+str(imdb_id)
+print "year: "+str(year)
 
 if mode==None or url==None or len(url)<1: MAIN(index)
 elif mode==1: trailer(name,url)
+elif mode==2: playparser(name,url,imdb_id,year)
 elif mode==5: xbmcgui.Dialog().ok('Cache',basic.removecache(cachePath))
 xbmcplugin.endOfDirectory(int(sys.argv[1]))
