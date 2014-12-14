@@ -32,7 +32,7 @@ def MAIN(index):
 	except: 
 		ranging = 1
 		open(sitecachefile, 'w').close()
-	for i in range(ranging, ranging+5):
+	for i in range(ranging, ranging+int(getSetting('pages-num'))):
 		for site in sites: threads.append(threading.Thread(name=site+str(i),target=getimdblinks,args=(site+str(i)+'/',results,i*100, )))
 	ranging = i
 	[i.start() for i in threads]
