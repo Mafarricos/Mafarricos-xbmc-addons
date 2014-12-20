@@ -43,14 +43,14 @@ def getlinks(url,results,order,Source=None):
 		soup = BeautifulSoup(html_page)
 		if Source == 'IMDB':
 			for link in soup.findAll('a', attrs={'href': re.compile("^/title/.+?/\?ref_=.+?_ov_tt")}):
-				if '?' in link.get('href'): cleanlink = link.get('href').split("?")[0].split("title")[1].replace('/','')
-				else: cleanlink = link.get('href').split("title")[1].replace('/','')
+				if '?' in link.get('href'): cleanlink = link.get('href').split("?")[0].split("title")[1].replace('/','').replace('awards','')
+				else: cleanlink = link.get('href').split("title")[1].replace('/','').replace('awards','')
 				results.append([order, cleanlink])
 				order += 1			
 		else:
 			for link in soup.findAll('a', attrs={'href': re.compile("^http://.+?/title/")}):
-				if '?' in link.get('href'): cleanlink = link.get('href').split("?")[0].split("/title/")[1].replace('/','')
-				else: cleanlink = link.get('href').split("title")[1].replace('/','')
+				if '?' in link.get('href'): cleanlink = link.get('href').split("?")[0].split("/title/")[1].replace('/','').replace('awards','')
+				else: cleanlink = link.get('href').split("title")[1].replace('/','').replace('awards','')
 				results.append([order, cleanlink])
 				order += 1
 		basic.log(u"imdb.getlinks results: %s" % results)

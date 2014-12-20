@@ -6,6 +6,7 @@
 import os,json,urllib2,xbmcaddon,xbmc
 __name__	= xbmcaddon.Addon().getAddonInfo("id")
 debug 		= xbmcaddon.Addon().getSetting('debug_mode')
+language	= xbmcaddon.Addon().getLocalizedString
 
 def getKey(item):
 	return item[0]

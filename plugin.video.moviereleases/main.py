@@ -178,7 +178,24 @@ def whattoplay(originalname,url,imdb_id,year):
 	else:
 		if getSetting("playwhat") == 'Trailer': youtube.playtrailer(url,originalname)
 		else: addonsresolver.custom_choice(originalname,url,imdb_id,year)
-		
+	
+def playcount_movies(title, year, imdb, watched):
+	try:
+		from metahandler import metahandlers
+		metaget = metahandlers.MetaData(preparezip=False)
+		metaget.get_meta('movie', title ,year=year)
+		metaget.change_watched('movie', '', imdb, season='', episode='', year='', watched=watched)
+	except: pass
+	try:
+		if (links.link().trakt_user == '' or links.link().trakt_password == ''): raise Exception()
+		if not imdb.startswith('tt'): imdb = 'tt' + imdb
+		if watched == 7: url = links.link().trakt_seen
+		else: url = links.link().trakt_unseen
+		post = {"movies": [{"imdb_id": imdb}], "username": links.link().trakt_user, "password": links.link().trakt_password}
+		result = basic.open_url(url, '', post=json.dumps(post))
+		print result
+	except: pass
+			
 def get_params():
         param=[]
         paramstring=sys.argv[2]

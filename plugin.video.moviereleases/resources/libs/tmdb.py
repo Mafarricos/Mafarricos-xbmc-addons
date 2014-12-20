@@ -57,7 +57,9 @@ def searchmovie(id,cachePath):
 	try: jdef = json.loads(jsonpage)
 	except:
 		if 'tt' in str(id):
-			try: jdef = omdbapi.searchmovie(str(id),cachePath)
+			try: 
+				jdef = omdbapi.searchmovie(str(id),cachePath)
+				return jdef
 			except: return False
 		else: return False
 	if LANG <> 'en':

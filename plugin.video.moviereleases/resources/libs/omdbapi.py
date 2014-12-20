@@ -50,6 +50,7 @@ def searchmovie(id,cachePath,cache=True):
 	fanart = ''
 	trailer = ''
 	year = ''
+	dur = 0
 	videocache = os.path.join(cachePath,str(id))	
 	if cache:
 		if getSetting("cachesites") == 'true' and os.path.isfile(videocache): return json.loads(basic.readfiletoJSON(videocache))
@@ -66,9 +67,10 @@ def searchmovie(id,cachePath,cache=True):
 	director = jdef['Director']
 	writer = jdef['Writer']
 	duration = re.findall('(\d+) min', jdef['Runtime'], re.DOTALL)
-	if duration: dur = duration[0]
-	duration = re.findall('(\d) h', jdef['Runtime'], re.DOTALL)
-	if duration: dur = int(duration[0])*60	
+	if duration: dur = int(duration[0])
+	else: 
+		duration = re.findall('(\d) h', jdef['Runtime'], re.DOTALL)
+		if duration: dur = int(duration[0])*60
 	response = {
 		"label": '%s (%s)' % (title,year),
 		"originallabel": '%s (%s)' % (title,year),
@@ -81,13 +83,13 @@ def searchmovie(id,cachePath,cache=True):
 			"year": year,
 			"rating": jdef['imdbRating'], 
 			"cast": listcast,
-			"castandrole": director,
-			"director": plot,
+			"castandrole": listcast,
+			"director": director,
 			"plot": plot,
 			"plotoutline": plot,
 			"title": title,
 			"originaltitle": title,
-			"duration": duration,
+			"duration": dur,
 			"studio": '',
 			"tagline": tagline,
 			"writer": writer,
@@ -98,6 +100,19 @@ def searchmovie(id,cachePath,cache=True):
 			"trailer": ''
 			}
 		}
+	try:
+		from metahandler import metahandlers
+		metaget = metahandlers.MetaData(preparezip=False)
+	except: pass
+	try:
+		playcount = metaget._get_watched('movie', jdef['imdb_id'], '', '')
+		if playcount == 7: response.update({'playcount': 1, 'overlay': 7})
+		else: response.update({'playcount': 0, 'overlay': 6})
+	except: pass
+	try:
+		playcount = [i for i in indicators if i['imdb_id'] == jdef['imdb_id']][0]
+		response.update({'playcount': 1, 'overlay': 7})
+	except: pass
 	if cache:
 		if getSetting("cachesites") == 'true' and not os.path.isfile(videocache): basic.writefile(videocache,'w',json.dumps(response))
-	return response		
+	return response
