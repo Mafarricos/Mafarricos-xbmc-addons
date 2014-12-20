@@ -100,19 +100,15 @@ def searchmovie(id,cachePath,cache=True):
 			"trailer": ''
 			}
 		}
-	try:
-		from metahandler import metahandlers
-		metaget = metahandlers.MetaData(preparezip=False)
-	except: pass
-	try:
-		playcount = metaget._get_watched('movie', jdef['imdb_id'], '', '')
-		if playcount == 7: response.update({'playcount': 1, 'overlay': 7})
-		else: response.update({'playcount': 0, 'overlay': 6})
-	except: pass
-	try:
-		playcount = [i for i in indicators if i['imdb_id'] == jdef['imdb_id']][0]
-		response.update({'playcount': 1, 'overlay': 7})
-	except: pass
+	#try:
+	#	from metahandler import metahandlers
+	#	metaget = metahandlers.MetaData(preparezip=False)
+	#except: pass
+	#try:
+	#	playcount = metaget._get_watched('movie', jdef['imdb_id'], '', '')
+	#	if playcount == 7: response.update({'playcount': 1, 'overlay': 7})
+	#	else: response.update({'playcount': 0, 'overlay': 6})
+	#except: pass
 	if cache:
 		if getSetting("cachesites") == 'true' and not os.path.isfile(videocache): basic.writefile(videocache,'w',json.dumps(response))
 	return response

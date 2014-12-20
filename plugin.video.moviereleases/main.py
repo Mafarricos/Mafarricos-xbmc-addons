@@ -9,8 +9,12 @@ from resources.libs import links,tmdb,imdb,youtube,basic
 AddonsResolver = True
 try: import addonsresolver
 except BaseException as e:
-	basic.log(u"main.AddonsResolver ##Error: %s" % str(e)) 
+	basic.log(u"main.AddonsResolver ##Error: %s" % str(e))
 	AddonsResolver = False
+try:
+	from metahandler import metahandlers
+	metaget = metahandlers.MetaData(preparezip=False)
+except: pass
 
 addonName           = xbmcaddon.Addon().getAddonInfo("name")
 addonVersion        = xbmcaddon.Addon().getAddonInfo("version")
@@ -35,7 +39,8 @@ def MAIN():
 
 def ToolsMenu():
 	addDir(language(30005),'CleanCache',8,'',False,2,'',0,'','','')
-	if AddonsResolver: addDir(language(30006),'Settings',10,'',False,2,'',0,'','','')
+	if AddonsResolver: addDir(language(30006),'script.module.addonsresolver',10,'',False,2,'',0,'','','')
+	addDir(language(30068),'script.module.metahandler',10,'',False,2,'',0,'','','')
 
 def IMDBmenu():
 	addDir(language(30007),'top250',11,'',True,8,'','','','','')
@@ -144,21 +149,14 @@ def addDir(name,url,mode,poster,pasta,total,info,index,imdb_id,year,originalname
 	u=sys.argv[0]+"?url="+urllib.quote_plus(url)+"&mode="+str(mode)+"&name="+urllib.quote_plus(name.encode('ascii','xmlcharrefreplace'))+"&originalname="+urllib.quote_plus(originalname.encode('ascii','xmlcharrefreplace'))+"&index="+str(index)+"&imdb_id="+str(imdb_id)+"&year="+str(year)
 	ok=True
 	context = []
+	playcount = 0
 	liz=xbmcgui.ListItem(name, iconImage=poster, thumbnailImage=poster)
 	liz.setProperty('fanart_image',fanart)
-	try:
-		from metahandler import metahandlers
-		metaget = metahandlers.MetaData(preparezip=False)
-	except: pass
 	try:
 		playcount = metaget._get_watched('movie', imdb_id, '', '')
 		if playcount == 7: info.update({'playcount': 1, 'overlay': 7})
 		else: info.update({'playcount': 0, 'overlay': 6})
 	except: pass
-	try:
-		playcount = [i for i in indicators if i['imdb_id'] == imdb_id][0]
-		info.update({'playcount': 1, 'overlay': 7})
-	except: pass		
 	if info <> '': 
 		liz.setInfo( type="Video", infoLabels=info )
 		try:
@@ -166,6 +164,8 @@ def addDir(name,url,mode,poster,pasta,total,info,index,imdb_id,year,originalname
 			context.append((language(30019), 'RunPlugin(%s?mode=1&url=%s&name=%s)' % (sys.argv[0],trailer,originalname)))
 		except: pass
 		context.append((language(30020), 'Action(Info)'))
+	if playcount == 7: context.append((language(30064), 'RunPlugin(%s?mode=13&url=%s&originalname=%s&year=%s&imdb_id=%s)' % (sys.argv[0],url,originalname,year,imdb_id)))
+	else: context.append((language(30063), 'RunPlugin(%s?mode=12&url=%s&originalname=%s&year=%s&imdb_id=%s)' % (sys.argv[0],url,originalname,year,imdb_id)))
 	liz.addContextMenuItems(context, replaceItems=False)
 	ok = xbmcplugin.addDirectoryItem(handle=int(sys.argv[1]),url=u,listitem=liz,isFolder=pasta,totalItems=total)
 	xbmcplugin.setContent(int(sys.argv[1]), 'movies')
@@ -180,22 +180,24 @@ def whattoplay(originalname,url,imdb_id,year):
 		else: addonsresolver.custom_choice(originalname,url,imdb_id,year)
 	
 def playcount_movies(title, year, imdb, watched):
+	title = title.split(' (')[0]
+	basic.log(u"main.playcount_movies %s, %s, %s, %s" % (title, year, imdb, watched))
 	try:
-		from metahandler import metahandlers
-		metaget = metahandlers.MetaData(preparezip=False)
 		metaget.get_meta('movie', title ,year=year)
 		metaget.change_watched('movie', '', imdb, season='', episode='', year='', watched=watched)
 	except: pass
 	try:
-		if (links.link().trakt_user == '' or links.link().trakt_password == ''): raise Exception()
-		if not imdb.startswith('tt'): imdb = 'tt' + imdb
-		if watched == 7: url = links.link().trakt_seen
-		else: url = links.link().trakt_unseen
-		post = {"movies": [{"imdb_id": imdb}], "username": links.link().trakt_user, "password": links.link().trakt_password}
-		result = basic.open_url(url, '', post=json.dumps(post))
-		print result
+		if getSetting("trakt_sync") == 'true':	
+			if (links.link().trakt_user == '' or links.link().trakt_password == ''): raise Exception()
+			if not imdb.startswith('tt'): imdb = 'tt' + imdb
+			if watched == 7: url = links.link().trakt_seen
+			else: url = links.link().trakt_unseen
+			post = {"movies": [{"imdb_id": imdb}], "username": links.link().trakt_user, "password": links.link().trakt_password}
+			result = basic.open_url(url, post=json.dumps(post))
+			basic.log(u"main.playcount_movies trakt result %s" % (result))
 	except: pass
-			
+	xbmc.executebuiltin("Container.Refresh")
+	
 def get_params():
         param=[]
         paramstring=sys.argv[2]
@@ -257,6 +259,8 @@ elif mode==6: TMDBmenu()
 elif mode==7: TMDBlist(index,url)
 elif mode==8: xbmcgui.Dialog().ok('Cache',basic.removecache(cachePath))
 elif mode==9: ToolsMenu()
-elif mode==10: basic.settings_open('script.module.addonsresolver')
+elif mode==10: basic.settings_open(url)
 elif mode==11: IMDBlist2(index,url,originalname)
+elif mode==12: playcount_movies(originalname, year, imdb_id, 7)
+elif mode==13: playcount_movies(originalname, year, imdb_id, 6)
 xbmcplugin.endOfDirectory(int(sys.argv[1]))

@@ -16,15 +16,15 @@ def cleanTitle(title):
 	title = title.strip()
 	return title
 
-def open_url(url, encoding='utf-8'):
+def open_url(url,post=None):
 	try:
-		req = urllib2.Request(url)
+		if post == None: req = urllib2.Request(url)
+		else: req = urllib2.Request(url,post)
 		req.add_header('User-Agent', 'Mozilla/5.0 (Windows NT 6.1; Win64; x64; rv:10.0a1) Gecko/20111029 Firefox/10.0a1')
 		req.add_header('Accept', 'text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8')
 		response = urllib2.urlopen(req)
 		link=response.read()
 		response.close()
-		if encoding != 'utf-8': link = link.decode(encoding).encode('utf-8')
 		return link
 	except BaseException as e: log(u"open_url ERROR: %s - %s" % (str(url),str(e)))
 	

@@ -10,6 +10,7 @@
 		<setting type="lsep" label="Trakt"/>
 		<setting id="trakt_user" type="text" label="30066" default=""/>
 		<setting id="trakt_password" type="text" option="hidden" label="30067" default=""/>
+		<setting id="trakt_sync" type="bool" label="30069" default="true"/>		
 	</category>		
     <category label="30028">
 		<setting id="allyear" type="bool" default="true" label="30029"/>		

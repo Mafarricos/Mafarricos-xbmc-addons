@@ -2,6 +2,9 @@
 # by Mafarricos
 # email: MafaStudios@gmail.com
 # This program is free software: GNU General Public License
+import xbmcaddon
+
+getSetting          = xbmcaddon.Addon().getSetting
 
 class link:
 	def __init__(self):
@@ -39,3 +42,9 @@ class link:
 		self.imdb_api_search = 'http://www.imdb.com/xml/find?json=1&nr=1&tt=on&q=%s'
 		self.imdb_years = 'http://akas.imdb.com/search/title?title_type=feature,tv_movie&sort=boxoffice_gross_us&count=30&start=%s&year=%s,%s'
 		self.imdb_genre = 'http://www.imdb.com/chart/'
+		
+		self.trakt_base = 'http://api.trakt.tv'
+		self.trakt_key = base64.urlsafe_b64decode('Nzc0ZmU3MTY3YjM4ODUwNzkxM2E5MzlkNmQwMzhmOTI=')
+		self.trakt_user, self.trakt_password = getSetting("trakt_user"), getSetting("trakt_password")
+		self.trakt_unseen = 'http://api.trakt.tv/movie/unseen/%s' % self.trakt_key
+		self.trakt_seen = 'http://api.trakt.tv/movie/seen/%s' % self.trakt_key

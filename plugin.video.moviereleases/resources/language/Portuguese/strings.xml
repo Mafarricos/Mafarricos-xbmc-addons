@@ -63,7 +63,11 @@
 	<string id="30060">Site 13</string>
 	<string id="30061">Site 14</string>
 	<string id="30062">Site 15</string>
+	<string id="30063">Marcar como Visto</string>
+	<string id="30064">Marcar como Não Visto</string>
 	<string id="30065">Contas</string>
 	<string id="30066">Utilizador</string>
-	<string id="30067">Password</string>	
+	<string id="30067">Password</string>
+	<string id="30068">Definições do MetaHandler</string>
+	<string id="30069">Sincronizar Vistos com Trakt</string>
 </strings>
