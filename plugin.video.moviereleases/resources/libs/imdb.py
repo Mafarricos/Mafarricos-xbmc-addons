@@ -33,7 +33,7 @@ def getgenre(url):
 	htmlpage = basic.open_url(url)	
 	found = re.findall('<h3>Top Movies by Genre</h3>.+?</html>',htmlpage, re.DOTALL)
 	newfound = re.findall('<a href="/genre/(.+?)\?',found[0], re.DOTALL)
-	choose=genrechoice('Seleccione o Género',newfound)
+	choose=genrechoice(language(30021).encode('utf-8'),newfound)
 	if choose > -1:	return newfound[choose]
 	
 def getlinks(url,results,order,Source=None):

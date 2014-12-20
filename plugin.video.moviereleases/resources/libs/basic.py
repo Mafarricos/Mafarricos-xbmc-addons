@@ -65,7 +65,7 @@ def removecache(cachePath):
 		for root,dir,files in os.walk(cachePath):
 			for f in files:
 				if not '_cache' in f: os.unlink(os.path.join(root, f))
-		return 'Eliminação Completa.'
+		return language(30022).encode('utf-8')
 	except BaseException as e: log(u"removecache ERROR: %s" % (str(e)))
 
 def get_api_language():

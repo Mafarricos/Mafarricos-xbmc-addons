@@ -21,43 +21,44 @@ cachePath			= os.path.join(dataPath,'cache')
 sitesfile 			= os.path.join(os.path.join(addonPath, 'resources'),'sites.txt')
 sitecachefile 		= os.path.join(cachePath,'_cache.txt')
 getSetting          = xbmcaddon.Addon().getSetting
+language            = xbmcaddon.Addon().getLocalizedString
 
 if not os.path.exists(dataPath): os.makedirs(dataPath)
 if not os.path.exists(cachePath): os.makedirs(cachePath)
 
 def MAIN():
-	addDir('Latest Releases','Latest Releases',3,'',True,4,'',0,'','','')
-	addDir('TMDB','TMDB',6,'',True,4,'',0,'','','')	
-	addDir('IMDB','IMDB',4,'',True,4,'',0,'','','')
-	addDir('Search Movie','search',7,'',True,4,'',0,'','','')	
-	addDir('Tools','Tools',9,'',True,4,'',0,'','','')
+	addDir(language(30000),'LatestReleases',3,'',True,4,'',0,'','','')
+	addDir(language(30001),'TMDB',6,'',True,4,'',0,'','','')	
+	addDir(language(30002),'IMDB',4,'',True,4,'',0,'','','')
+	addDir(language(30003),'search',7,'',True,4,'',0,'','','')	
+	addDir(language(30004),'Tools',9,'',True,4,'',0,'','','')
 
 def ToolsMenu():
-	addDir('Clean Cache','Clean Cache',8,'',False,2,'',0,'','','')
-	if AddonsResolver: addDir('AddonsResolver Settings','Settings',10,'',False,2,'',0,'','','')
+	addDir(language(30005),'CleanCache',8,'',False,2,'',0,'','','')
+	if AddonsResolver: addDir(language(30006),'Settings',10,'',False,2,'',0,'','','')
 
 def IMDBmenu():
-	addDir('Top 250','top250',11,'',True,8,'','','','','')
-	addDir('Bottom 100','bot100',11,'',True,8,'','','','','')	
-	addDir('In Theaters','theaters',11,'',True,8,'','','','','')
-	addDir('Comming Soon','comming_soon',11,'',True,8,'','','','','')
-	addDir('US Box Office','boxoffice',11,'',True,8,'',1,'','','')
-	addDir('Most Voted','most_voted',11,'',True,8,'',1,'','','')
-	addDir('Oscars','oscars',11,'',True,8,'',1,'','','')
-	addDir('Popular','popular',11,'',True,8,'',1,'','','')
-	addDir('Popular by Genre','popularbygenre',11,'',True,8,'',1,'','','')	
+	addDir(language(30007),'top250',11,'',True,8,'','','','','')
+	addDir(language(30008),'bot100',11,'',True,8,'','','','','')	
+	addDir(language(30009),'theaters',11,'',True,8,'','','','','')
+	addDir(language(30010),'comming_soon',11,'',True,8,'','','','','')
+	addDir(language(30011),'boxoffice',11,'',True,8,'',1,'','','')
+	addDir(language(30012),'most_voted',11,'',True,8,'',1,'','','')
+	addDir(language(30013),'oscars',11,'',True,8,'',1,'','','')
+	addDir(language(30014),'popular',11,'',True,8,'',1,'','','')
+	addDir(language(30015),'popularbygenre',11,'',True,8,'',1,'','','')	
 	
 def TMDBmenu():
-	addDir('In Theaters','Theaters',7,'',True,5,'',1,'','','')
-	addDir('Upcoming','Upcoming',7,'',True,5,'',1,'','','')
-	addDir('Popular','Popular',7,'',True,5,'',1,'','','')
-	addDir('Top Rated','TopRated',7,'',True,5,'',1,'','','')
-	addDir('Discover by popularity','discoverpop',7,'',True,5,'',1,'','','')	
+	addDir(language(30009),'Theaters',7,'',True,5,'',1,'','','')
+	addDir(language(30010),'Upcoming',7,'',True,5,'',1,'','','')
+	addDir(language(30014),'Popular',7,'',True,5,'',1,'','','')
+	addDir(language(30012),'TopRated',7,'',True,5,'',1,'','','')
+	addDir(language(30016),'discoverpop',7,'',True,5,'',1,'','','')	
 
 def TMDBlist(index,url):
 	listdirs = []
 	if url == 'search':
-		keyb = xbmc.Keyboard('', 'Escreva o parâmetro de pesquisa')
+		keyb = xbmc.Keyboard('', language(30017))
 		keyb.doModal()
 		if (keyb.isConfirmed()):
 			search = keyb.getText()
@@ -69,7 +70,7 @@ def TMDBlist(index,url):
 	elif url == 'Upcoming': listdirs = tmdb.listmovies(links.link().tmdb_upcoming % (index),cachePath)
 	elif url == 'TopRated': listdirs = tmdb.listmovies(links.link().tmdb_top_rated % (index),cachePath)
 	for j in listdirs: addDir(j['label'],j['imdbid'],2,j['poster'],False,len(listdirs)+1,j['info'],'',j['imdbid'],j['year'],j['originallabel'],j['fanart_image'])
-	if url <> 'search': addDir('Next>>',url,7,'',True,len(listdirs)+1,'',int(index)+1,'','','')
+	if url <> 'search': addDir(language(30018)+'>>',url,7,'',True,len(listdirs)+1,'',int(index)+1,'','','')
 
 def IMDBlist2(index,url,originalname):
 	listdirs = []
@@ -86,8 +87,8 @@ def IMDBlist2(index,url,originalname):
 		listdirs = imdb.listmovies(links.link().imdb_popularbygenre % (index,originalname),cachePath)	
 	for j in listdirs: addDir(j['label'],j['imdbid'],2,j['poster'],False,len(listdirs)+1,j['info'],'',j['imdbid'],j['year'],j['originallabel'],j['fanart_image'])
 	if url <> 'top250' and url <> 'bot100' and url <> 'theaters' and url <> 'comming_soon': 
-		if url == 'popularbygenre': addDir('Next>>',url,11,'',True,len(listdirs)+1,'',int(index)+30,'','',originalname,'')
-		else: addDir('Next>>',url,11,'',True,len(listdirs)+1,'',int(index)+30,'','','','')
+		if url == 'popularbygenre': addDir(language(30018)+'>>',url,11,'',True,len(listdirs)+1,'',int(index)+30,'','',originalname,'')
+		else: addDir(language(30018)+'>>',url,11,'',True,len(listdirs)+1,'',int(index)+30,'','','','')
 	
 def IMDBlist(name,url):
 	results = imdb.getlinks(url,[],1,'IMDB')
@@ -112,7 +113,7 @@ def latestreleases(index):
 	[i.start() for i in threads]
 	[i.join() for i in threads]
 	populateDir(results,ranging,True)
-	addDir('Next>>','Next>>',3,'',True,1,'',ranging,'','','')		
+	addDir(language(30018)+'>>','Next',3,'',True,1,'',ranging,'','','')		
 
 def populateDir(results,ranging,cache=False):
 	unique_stuff = []
@@ -145,7 +146,6 @@ def addDir(name,url,mode,poster,pasta,total,info,index,imdb_id,year,originalname
 	context = []
 	liz=xbmcgui.ListItem(name, iconImage=poster, thumbnailImage=poster)
 	liz.setProperty('fanart_image',fanart)
-
 	try:
 		from metahandler import metahandlers
 		metaget = metahandlers.MetaData(preparezip=False)
@@ -158,15 +158,14 @@ def addDir(name,url,mode,poster,pasta,total,info,index,imdb_id,year,originalname
 	try:
 		playcount = [i for i in indicators if i['imdb_id'] == imdb_id][0]
 		info.update({'playcount': 1, 'overlay': 7})
-	except: pass	
-		
+	except: pass		
 	if info <> '': 
 		liz.setInfo( type="Video", infoLabels=info )
 		try:
 			trailer = info['trailer'].split('videoid=')[1]
-			context.append(('Ver Trailer', 'RunPlugin(%s?mode=1&url=%s&name=%s)' % (sys.argv[0],trailer,originalname)))
+			context.append((language(30019), 'RunPlugin(%s?mode=1&url=%s&name=%s)' % (sys.argv[0],trailer,originalname)))
 		except: pass
-		context.append(('Informação', 'Action(Info)'))
+		context.append((language(30020), 'Action(Info)'))
 	liz.addContextMenuItems(context, replaceItems=False)
 	ok = xbmcplugin.addDirectoryItem(handle=int(sys.argv[1]),url=u,listitem=liz,isFolder=pasta,totalItems=total)
 	xbmcplugin.setContent(int(sys.argv[1]), 'movies')
