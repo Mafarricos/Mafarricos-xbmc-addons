@@ -50,6 +50,8 @@ def searchmovie(id,cachePath):
 	poster = ''
 	fanart = ''
 	duration = ''
+	temptitle = ''
+	originaltitle = ''
 	videocache = os.path.join(cachePath,str(id))
 	if getSetting("cachesites") == 'true' and os.path.isfile(videocache): return json.loads(basic.readfiletoJSON(videocache))
 	jsonpage = basic.open_url(links.link().tmdb_info_default % (id))
@@ -66,7 +68,8 @@ def searchmovie(id,cachePath):
 		try:
 			jsonpage = basic.open_url(links.link().tmdb_info % (id,LANG))
 			j = json.loads(jsonpage)
-			title = j['title']
+			temptitle = j['title'].encode('ascii','ignore')
+			if temptitle <> '': title = j['title']
 			fanart = links.link().tmdb_backdropbase % (j["backdrop_path"])
 			poster = links.link().tmdb_posterbase % (j["poster_path"])
 			for g in j['genres']: listgenre.append(g['name'])
@@ -78,7 +81,11 @@ def searchmovie(id,cachePath):
 			fanart = j["backdrop_path"]
 			poster = j["poster_path"]
 		except: pass
-	if not title: title = jdef['title']		
+	temptitle = jdef['title'].encode('ascii','ignore')
+	if temptitle <> '':
+		if not title: title = jdef['title']
+	originaltitle = jdef['original_title'].encode('ascii','ignore')
+	if temptitle == '': originaltitle = jdef['title']
 	if not poster: poster = jdef['poster_path']
 	if not fanart: fanart = jdef['backdrop_path']
 	if not fanart: fanart = poster
@@ -89,7 +96,7 @@ def searchmovie(id,cachePath):
 		genre = ', '.join(listgenre)
 	if not plot: plot = jdef['overview']
 	if not tagline: tagline = jdef['tagline']
-	try: trailer = "plugin://plugin.video.youtube/?action=play_video&videoid=%s" % (jdef['trailers']['youtube'][0]['source'])
+	try: trailer = links.link().youtube_plugin % (jdef['trailers']['youtube'][0]['source'])
 	except: trailer = ''
 	try: year = jdef["release_date"].split("-")[0]
 	except: year = ''
@@ -130,7 +137,7 @@ def searchmovie(id,cachePath):
 		if not genre: genre = altsearch['info']['genre']		
 	response = {
 		"label": '%s (%s)' % (title,year),
-		"originallabel": '%s (%s)' % (jdef['original_title'],year),		
+		"originallabel": '%s (%s)' % (originaltitle,year),		
 		"poster": poster,
 		"fanart_image": fanart,
 		"imdbid": jdef['imdb_id'],
@@ -145,7 +152,7 @@ def searchmovie(id,cachePath):
 			"plot": plot,
 			"plotoutline": plot,
 			"title": title,
-			"originaltitle": jdef['original_title'],
+			"originaltitle": originaltitle,
 			"duration": duration,
 			"studio": studio,
 			"tagline": tagline,
