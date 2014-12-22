@@ -147,8 +147,8 @@ def latestreleases(index):
 	[i.start() for i in threads]
 	[i.join() for i in threads]	
 	populateDir(results,ranging,True)
-	addDir(language(30018)+'>>','Next',3,'',True,1,'',ranging,'','','')		
-	movies_view()	
+	addDir(language(30018)+'>>','Next',3,'',True,1,'',ranging,'','','')
+	movies_view()
 	elapsedTime = '%s %.2f seconds' % ('Carregado em ', (time.time() - a))     
 	basic.infoDialog(elapsedTime)
 
@@ -200,7 +200,6 @@ def addDir(name,url,mode,poster,pasta,total,info,index,imdb_id,year,originalname
 	else: context.append((language(30063), 'RunPlugin(%s?mode=12&url=%s&originalname=%s&year=%s&imdb_id=%s)' % (sys.argv[0],url,originalname,year,imdb_id)))
 	liz.addContextMenuItems(context, replaceItems=False)
 	ok = xbmcplugin.addDirectoryItem(handle=int(sys.argv[1]),url=u,listitem=liz,isFolder=pasta,totalItems=total)
-	#xbmcplugin.setContent(int(sys.argv[1]), 'movies')
 	return ok
 
 def menus_view():
@@ -210,7 +209,7 @@ def menus_view():
 	return
 
 def movies_view():
-	xbmcplugin.setContent(int(sys.argv[1]), 'Movies')
+	xbmcplugin.setContent(int(sys.argv[1]), 'movies')
 	setting = getSetting('movies-view')
 	if setting == "0": xbmc.executebuiltin("Container.SetViewMode(50)")
 	elif setting == "1": xbmc.executebuiltin("Container.SetViewMode(51)")
@@ -220,7 +219,7 @@ def movies_view():
 	elif setting == "5": xbmc.executebuiltin("Container.SetViewMode(504)")
 	elif setting == "6": xbmc.executebuiltin("Container.SetViewMode(503)")
 	elif setting == "7": xbmc.executebuiltin("Container.SetViewMode(515)")
-	xbmcplugin.setContent(int(sys.argv[1]), 'Movies')
+	xbmcplugin.setContent(int(sys.argv[1]), 'movies')
 	return
 
 def whattoplay(originalname,url,imdb_id,year):

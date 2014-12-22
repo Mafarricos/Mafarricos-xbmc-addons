@@ -9,6 +9,7 @@ addonName	= xbmcaddon.Addon().getAddonInfo("name")
 debug 		= xbmcaddon.Addon().getSetting('debug_mode')
 addonPath   = xbmcaddon.Addon().getAddonInfo("path")
 language	= xbmcaddon.Addon().getLocalizedString
+getSetting	= xbmcaddon.Addon().getSetting
 
 def getKey(item):
 	return item[0]
@@ -66,6 +67,39 @@ def writefile(file,mode,string):
 	writes.write(string)
 	writes.close()
 
+def library_movie_add(originalname, url, imdb_id, year):
+	return ''
+#        try:
+#            if getSetting("check_library") == 'true': filter = xbmc.executeJSONRPC('{"jsonrpc": "2.0", "method": "VideoLibrary.GetMovies", "params": {"filter":{"or": [{"field": "year", "operator": "is", "value": "%s"}, {"field": "year", "operator": "is", "value": "%s"}, {"field": "year", "operator": "is", "value": "%s"}]}, "properties" : ["imdbnumber"]}, "id": 1}' % (year, str(int(year)+1), str(int(year)-1)))
+#            filter = unicode(filter, 'utf-8', errors='ignore')
+#            filter = json.loads(filter)['result']['movies']
+#            filter = [i for i in filter if imdb in i['imdbnumber']][0]
+#        except:
+#            filter = []
+#
+#        try:
+#            if not filter == []: return
+#            if not xbmcvfs.exists(movieLibrary): xbmcvfs.mkdir(movieLibrary)
+#
+#            sysname, systitle, sysyear, sysimdb, sysurl = urllib.quote_plus(name), urllib.quote_plus(title), urllib.quote_plus(year), urllib.quote_plus(imdb), urllib.quote_plus(url)
+#            content = '%s?mode=2&originalname=%s&year=%s&imdb_id=%s&url=%s' % (sys.argv[0], originalname, year, imdb_id, url)
+#
+#            enc_name = name.translate(None, '\/:*?"<>|').strip('.')
+#            folder = os.path.join(movieLibrary, enc_name)
+#            if not xbmcvfs.exists(folder): xbmcvfs.mkdir(folder)
+
+#            stream = os.path.join(folder, enc_name + '.strm')
+#            file = xbmcvfs.File(stream, 'w')
+#            file.write(str(content))
+#            file.close()
+#        except:
+#            return
+
+
+#	index().infoDialog(language(30309).encode("utf-8"), name)
+#	if getSetting("update_library") == 'true' and not xbmc.getCondVisibility('Library.IsScanningVideo'):
+#		xbmc.executebuiltin('UpdateLibrary(video)')
+		
 def progressbar(progress,f,totalpass,message,message2=None,message3=None,normal=False):
 	if normal: percent = int( ( f / float(totalpass) ) * 100)
 	else: percent = int( ( int(totalpass)-f / float(totalpass) ) * 100)
