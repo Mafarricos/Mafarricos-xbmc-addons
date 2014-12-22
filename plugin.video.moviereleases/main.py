@@ -3,7 +3,7 @@
 # email: MafaStudios@gmail.com
 # This program is free software: GNU General Public License
 
-import xbmcplugin,xbmcgui,xbmc,xbmcaddon,os,threading,re,urllib,json
+import xbmcplugin,xbmcgui,xbmc,xbmcaddon,os,threading,re,urllib,json,time
 from BeautifulSoup import BeautifulSoup
 from resources.libs import links,tmdb,imdb,youtube,basic
 AddonsResolver = True
@@ -101,24 +101,50 @@ def IMDBlist(name,url):
 	
 def latestreleases(index):
 	sites = []
-	for i in range(1, 15):
-		if getSetting("site"+str(i)+"on") == 'true': sites.append(getSetting("site"+str(i)))
 	threads = []
-	f = 0	
 	results = []
+	f = 1
+	paging = 1	
+	for i in range(1, 15):
+		siteon = getSetting("site"+str(i)+"on")	
+		site = getSetting("site"+str(i))
+		pageind = getSetting("site"+str(i)+"pag").replace('/','')
+		seclist = []
+		if siteon == 'true' and site <> '' and pageind <> '':
+			sections = getSetting("site"+str(i)+"sec")
+			if sections <> '':
+				seclist = sections.split('|')
+				for section in seclist: sites.append(site+section+'/'+pageind+'/')
+			else: sites.append(site+pageind+'/')		
+	for i in range(1, 5):
+		siteon = getSetting("custsite"+str(i)+"on")	
+		site = getSetting("custsite"+str(i))
+		pageind = getSetting("custsite"+str(i)+"pag").replace('/','')
+		seclist = []
+		if siteon == 'true' and site <> '' and pageind <> '':
+			sections = getSetting("custsite"+str(i)+"sec")	
+			if sections <> '':
+				seclist = sections.split('|')
+				for section in seclist: sites.append(site+section+'/'+pageind+'/')
+			else: sites.append(site+pageind+'/')
 	try: ranging = int(index)+1
-	except: 
-		ranging = 1
+	except: ranging = 1
 	if ranging ==1: open(sitecachefile, 'w').close()
+	totalpass = int(getSetting('pages-num')) * len(sites)
+	progress = xbmcgui.DialogProgress()
+	a = time.time()
 	for i in range(ranging, ranging+int(getSetting('pages-num'))):
-		for site in sites: 
-			f = f + 1
+		for site in sites:
 			threads.append(threading.Thread(name=site+str(i),target=imdb.getlinks,args=(site+str(i)+'/',results,f*100, )))
+			f += 1
 	ranging = i
 	[i.start() for i in threads]
 	[i.join() for i in threads]
+		
 	populateDir(results,ranging,True)
 	addDir(language(30018)+'>>','Next',3,'',True,1,'',ranging,'','','')		
+	elapsedTime = '%s %.2f seconds' % ('Carregado em ', (time.time() - a))     
+	basic.infoDialog(elapsedTime)
 
 def populateDir(results,ranging,cache=False):
 	unique_stuff = []

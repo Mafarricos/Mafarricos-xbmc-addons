@@ -12,22 +12,24 @@ getSetting 		= selfAddon.getSetting
 installfolder 	= xbmc.translatePath('special://home/addons')
 
 def ytssearch(imdb_id,returnmagnets=False):
-	quality = []
-	magnet = []
-	yts = basic.open_url(links.link().yts_search % (imdb_id))
-	jtys = json.loads(yts)
-	if 'No movies found' in str(jtys): return '',''
-	for j in jtys["MovieList"]:
-		quality.append('%s (Seeds: %s Peers: %s Size: %s)' %(j["Quality"],j["TorrentSeeds"],j["TorrentPeers"],j["Size"]))
-		magnet.append(j["TorrentMagnetUrl"])
-	if returnmagnets == False:
-		qualitychoice = xbmcgui.Dialog().select		
-		choose=qualitychoice('Seleccione a Qualidade',quality)
-		if choose > -1:
-			return magnet[choose]
-	else:
-		return quality,magnet
-		
+	try:
+		quality = []
+		magnet = []
+		yts = basic.open_url(links.link().yts_search % (imdb_id))
+		jtys = json.loads(yts)
+		if 'No movies found' in str(jtys): return '',''
+		for j in jtys["MovieList"]:
+			quality.append('%s (Seeds: %s Peers: %s Size: %s)' %(j["Quality"],j["TorrentSeeds"],j["TorrentPeers"],j["Size"]))
+			magnet.append(j["TorrentMagnetUrl"])
+		if returnmagnets == False:
+			qualitychoice = xbmcgui.Dialog().select		
+			choose=qualitychoice('Seleccione a Qualidade',quality)
+			if choose > -1:
+				return magnet[choose]
+		else:
+			return quality,magnet
+	except BaseException as e: print '##ERROR-addonsresolver:ytssearch: '+str(imdb_id)+' '+str(e)
+	
 def ratosearch(imdb_id):
 	ratos = basic.open_url(links.link().rato_search % (imdb_id))
 	try: siterato = re.compile('<span class="more-btn"><a href="(.+?)" >Ver Agora</a>').findall(ratos)[0]

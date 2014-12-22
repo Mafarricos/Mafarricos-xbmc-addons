@@ -49,13 +49,12 @@ def searchmovie(id,cachePath):
 	credits = ''
 	poster = ''
 	fanart = ''
-	duration = ''
 	temptitle = ''
 	originaltitle = ''
 	videocache = os.path.join(cachePath,str(id))
 	if getSetting("cachesites") == 'true' and os.path.isfile(videocache): return json.loads(basic.readfiletoJSON(videocache))
 	jsonpage = basic.open_url(links.link().tmdb_info_default % (id))
-	if not jsonpage: jsonpage = basic.open_url(links.link().tmdb_info_default_alt % (id))
+	#if not jsonpage: jsonpage = basic.open_url(links.link().tmdb_info_default_alt % (id))
 	try: jdef = json.loads(jsonpage)
 	except:
 		if 'tt' in str(id):
@@ -68,7 +67,7 @@ def searchmovie(id,cachePath):
 		try:
 			jsonpage = basic.open_url(links.link().tmdb_info % (id,LANG))
 			j = json.loads(jsonpage)
-			temptitle = j['title'].encode('ascii','ignore')
+			temptitle = j['title'].encode('ascii','ignore').replace(' ','')
 			if temptitle <> '': title = j['title']
 			fanart = links.link().tmdb_backdropbase % (j["backdrop_path"])
 			poster = links.link().tmdb_posterbase % (j["poster_path"])
@@ -81,7 +80,7 @@ def searchmovie(id,cachePath):
 			fanart = j["backdrop_path"]
 			poster = j["poster_path"]
 		except: pass
-	temptitle = jdef['title'].encode('ascii','ignore')
+	temptitle = jdef['title'].encode('ascii','ignore').replace(' ','')
 	if temptitle <> '':
 		if not title: title = jdef['title']
 	originaltitle = jdef['original_title'].encode('ascii','ignore')
@@ -122,9 +121,9 @@ def searchmovie(id,cachePath):
 			writer = crew['name']
 			break
 	duration = jdef['runtime']
-	if not poster and jdef['imdb_id']:
+	if not poster or duration == 0 and jdef['imdb_id']:
 		altsearch = omdbapi.searchmovie(jdef['imdb_id'],cachePath,False)
-		poster = altsearch['poster']
+		if not poster: poster = altsearch['poster']
 		if not fanart: fanart = poster
 		if not plot: plot = altsearch['info']['plot']
 		if not tagline: tagline = altsearch['info']['plot']	
@@ -134,7 +133,7 @@ def searchmovie(id,cachePath):
 		if not duration: duration = altsearch['info']['duration']
 		if not writer: writer = altsearch['info']['writer']
 		if not director: director = altsearch['info']['director']		
-		if not genre: genre = altsearch['info']['genre']		
+		if not genre: genre = altsearch['info']['genre']
 	response = {
 		"label": '%s (%s)' % (title,year),
 		"originallabel": '%s (%s)' % (originaltitle,year),		

@@ -56,13 +56,14 @@ def searchmovie(id,cachePath,cache=True):
 		if getSetting("cachesites") == 'true' and os.path.isfile(videocache): return json.loads(basic.readfiletoJSON(videocache))
 	jsonpage = basic.open_url(links.link().omdbapi_info % (id))
 	jdef = json.loads(jsonpage)
-	title = jdef['Title']		
+	title = jdef['Title']
 	poster = jdef['Poster']
 	fanart = poster
 	genre = jdef['Genre']
 	plot = jdef['Plot']
 	tagline = plot
-	year = jdef['Year']
+	try: year = re.findall('(\d+)', jdef['Year'], re.DOTALL)[0]
+	except: year = jdef['Year']
 	listcast = jdef['Actors'].split(', ')
 	director = jdef['Director']
 	writer = jdef['Writer']

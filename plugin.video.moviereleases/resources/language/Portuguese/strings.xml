@@ -33,21 +33,10 @@
 	<string id="30030">Ano Máximo</string>
 	<string id="30031">Ano Mínimo</string>
 	<string id="30032">Páginas para Listas</string>
-	<string id="30033">Site 1 Activo</string>
-	<string id="30034">Site 2 Activo</string>
-	<string id="30035">Site 3 Activo</string>
-	<string id="30036">Site 4 Activo</string>
-	<string id="30037">Site 5 Activo</string>
-	<string id="30038">Site 6 Activo</string>
-	<string id="30039">Site 7 Activo</string>
-	<string id="30040">Site 8 Activo</string>
-	<string id="30041">Site 9 Activo</string>
-	<string id="30042">Site 10 Activo</string>
-	<string id="30043">Site 11 Activo</string>
-	<string id="30044">Site 12 Activo</string>
-	<string id="30045">Site 13 Activo</string>
-	<string id="30046">Site 14 Activo</string>
-	<string id="30047">Site 15 Activo</string>
+	<string id="30033">Endereço</string>
+	<string id="30034">Activo</string>
+	<string id="30035">Identificador de Página</string>
+	<string id="30036">Categorias</string>
 	<string id="30048">Site 1</string>
 	<string id="30049">Site 2</string>
 	<string id="30050">Site 3</string>
@@ -70,4 +59,8 @@
 	<string id="30067">Password</string>
 	<string id="30068">Definições do MetaHandler</string>
 	<string id="30069">Sincronizar Vistos com Trakt</string>
+	<string id="30070">A Obter dados...</string>
+	<string id="30071">Site: %s - Página: %s</string>
+	<string id="30072">Total: (%s/%s)</string>
+	<string id="30073">Últimos Lançamentos (Indexadores pessoais)</string>	
 </strings>

@@ -3,9 +3,11 @@
 # email: MafaStudios@gmail.com
 # This program is free software: GNU General Public License
 
-import os,json,urllib2,xbmcaddon,xbmc
+import os,json,urllib2,xbmcaddon,xbmc,xbmcgui
 __name__	= xbmcaddon.Addon().getAddonInfo("id")
+addonName	= xbmcaddon.Addon().getAddonInfo("name")
 debug 		= xbmcaddon.Addon().getSetting('debug_mode')
+addonPath   = xbmcaddon.Addon().getAddonInfo("path")
 language	= xbmcaddon.Addon().getLocalizedString
 
 def getKey(item):
@@ -15,19 +17,22 @@ def cleanTitle(title):
 	title = title.replace("&lt;", "<").replace("&gt;", ">").replace("&amp;", "&").replace("&#39;", "'").replace("&quot;", "\"").replace("&ndash;", "-").replace('"',"").replace("’","'")
 	title = title.strip()
 	return title
-
+	
 def open_url(url,post=None):
-	try:
-		if post == None: req = urllib2.Request(url)
-		else: req = urllib2.Request(url,post)
-		req.add_header('User-Agent', 'Mozilla/5.0 (Windows NT 6.1; Win64; x64; rv:10.0a1) Gecko/20111029 Firefox/10.0a1')
-		req.add_header('Accept', 'text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8')
+	if post == None: req = urllib2.Request(url)
+	else: req = urllib2.Request(url,post)
+	req.add_header('User-Agent', 'Mozilla/5.0 (Windows NT 6.1; Win64; x64; rv:10.0a1) Gecko/20111029 Firefox/10.0a1')
+	req.add_header('Accept', 'text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8')
+	try: 
 		response = urllib2.urlopen(req)
 		link=response.read()
 		response.close()
-		return link
-	except BaseException as e: log(u"open_url ERROR: %s - %s" % (str(url),str(e)))
-	
+		return link		
+	except BaseException as e: log(u"open_url ERROR: %s - %s" % (str(url),str(e).decode('ascii','ignore')))		
+	except urllib2.HTTPError, e: log(u"open_url HTTPERROR: %s - %s" % (str(url),str(e.code)))
+	except urllib2.URLError, e: log(u"open_url URLERROR: %s - %s" % (str(url),str(e.reason)))
+	except httplib.HTTPException, e: log(u"open_url HTTPException: %s" % (str(url)))
+		
 def listsites(sitesfile):
 	list = []
 	ins = open(sitesfile, "r" )	
@@ -60,6 +65,20 @@ def writefile(file,mode,string):
 	writes = open(file, mode)
 	writes.write(string)
 	writes.close()
+
+def progressbar(progress,f,totalpass,message,message2=None,message3=None,normal=False):
+	if normal: percent = int( ( f / float(totalpass) ) * 100)
+	else: percent = int( ( int(totalpass)-f / float(totalpass) ) * 100)
+	print '##eei',f,totalpass
+	progress.update( percent, message, message2, message3 )
+	if progress.iscanceled():
+		progress.close()
+		xbmcgui.Dialog().ok('ERROR','Cancelled.')
+		return ''
+
+def infoDialog(str, header=addonName):
+	try: xbmcgui.Dialog().notification(header, str, addonPath+'icon.png', 3000, sound=False)
+	except: xbmc.executebuiltin("Notification(%s,%s, 3000, %s)" % (header, str, addonPath+'icon.png'))
 
 def removecache(cachePath):
 	try:
