@@ -36,12 +36,14 @@ def MAIN():
 	addDir(language(30002),'IMDB',4,'',True,4,'',0,'','','')
 	addDir(language(30003),'search',7,'',True,4,'',0,'','','')	
 	addDir(language(30004),'Tools',9,'',True,4,'',0,'','','')
-
+	menus_view()
+	
 def ToolsMenu():
 	addDir(language(30005),'CleanCache',8,'',False,2,'',0,'','','')
 	if AddonsResolver: addDir(language(30006),'script.module.addonsresolver',10,'',False,2,'',0,'','','')
 	addDir(language(30068),'script.module.metahandler',10,'',False,2,'',0,'','','')
-
+	menus_view()
+	
 def IMDBmenu():
 	addDir(language(30007),'top250',11,'',True,8,'','','','','')
 	addDir(language(30008),'bot100',11,'',True,8,'','','','','')	
@@ -52,6 +54,7 @@ def IMDBmenu():
 	addDir(language(30013),'oscars',11,'',True,8,'',1,'','','')
 	addDir(language(30014),'popular',11,'',True,8,'',1,'','','')
 	addDir(language(30015),'popularbygenre',11,'',True,8,'',1,'','','')	
+	menus_view()
 	
 def TMDBmenu():
 	addDir(language(30009),'Theaters',7,'',True,5,'',1,'','','')
@@ -59,7 +62,8 @@ def TMDBmenu():
 	addDir(language(30014),'Popular',7,'',True,5,'',1,'','','')
 	addDir(language(30012),'TopRated',7,'',True,5,'',1,'','','')
 	addDir(language(30016),'discoverpop',7,'',True,5,'',1,'','','')	
-
+	menus_view()
+	
 def TMDBlist(index,url):
 	listdirs = []
 	if url == 'search':
@@ -76,7 +80,8 @@ def TMDBlist(index,url):
 	elif url == 'TopRated': listdirs = tmdb.listmovies(links.link().tmdb_top_rated % (index),cachePath)
 	for j in listdirs: addDir(j['label'],j['imdbid'],2,j['poster'],False,len(listdirs)+1,j['info'],'',j['imdbid'],j['year'],j['originallabel'],j['fanart_image'])
 	if url <> 'search': addDir(language(30018)+'>>',url,7,'',True,len(listdirs)+1,'',int(index)+1,'','','')
-
+	movies_view()
+	
 def IMDBlist2(index,url,originalname):
 	listdirs = []
 	if url == 'top250': listdirs = imdb.listmovies(links.link().imdb_top250,cachePath)
@@ -94,6 +99,7 @@ def IMDBlist2(index,url,originalname):
 	if url <> 'top250' and url <> 'bot100' and url <> 'theaters' and url <> 'comming_soon': 
 		if url == 'popularbygenre': addDir(language(30018)+'>>',url,11,'',True,len(listdirs)+1,'',int(index)+30,'','',originalname,'')
 		else: addDir(language(30018)+'>>',url,11,'',True,len(listdirs)+1,'',int(index)+30,'','','','')
+	movies_view()
 	
 def IMDBlist(name,url):
 	results = imdb.getlinks(url,[],1,'IMDB')
@@ -139,10 +145,10 @@ def latestreleases(index):
 			f += 1
 	ranging = i
 	[i.start() for i in threads]
-	[i.join() for i in threads]
-		
+	[i.join() for i in threads]	
 	populateDir(results,ranging,True)
 	addDir(language(30018)+'>>','Next',3,'',True,1,'',ranging,'','','')		
+	movies_view()	
 	elapsedTime = '%s %.2f seconds' % ('Carregado em ', (time.time() - a))     
 	basic.infoDialog(elapsedTime)
 
@@ -194,8 +200,28 @@ def addDir(name,url,mode,poster,pasta,total,info,index,imdb_id,year,originalname
 	else: context.append((language(30063), 'RunPlugin(%s?mode=12&url=%s&originalname=%s&year=%s&imdb_id=%s)' % (sys.argv[0],url,originalname,year,imdb_id)))
 	liz.addContextMenuItems(context, replaceItems=False)
 	ok = xbmcplugin.addDirectoryItem(handle=int(sys.argv[1]),url=u,listitem=liz,isFolder=pasta,totalItems=total)
-	xbmcplugin.setContent(int(sys.argv[1]), 'movies')
+	#xbmcplugin.setContent(int(sys.argv[1]), 'movies')
 	return ok
+
+def menus_view():
+	setting = getSetting('menu-view')
+	if setting =="0": xbmc.executebuiltin("Container.SetViewMode(50)")
+	elif setting =="1": xbmc.executebuiltin("Container.SetViewMode(51)")
+	return
+
+def movies_view():
+	xbmcplugin.setContent(int(sys.argv[1]), 'Movies')
+	setting = getSetting('movies-view')
+	if setting == "0": xbmc.executebuiltin("Container.SetViewMode(50)")
+	elif setting == "1": xbmc.executebuiltin("Container.SetViewMode(51)")
+	elif setting == "2": xbmc.executebuiltin("Container.SetViewMode(500)")
+	elif setting == "3": xbmc.executebuiltin("Container.SetViewMode(501)")
+	elif setting == "4": xbmc.executebuiltin("Container.SetViewMode(508)")
+	elif setting == "5": xbmc.executebuiltin("Container.SetViewMode(504)")
+	elif setting == "6": xbmc.executebuiltin("Container.SetViewMode(503)")
+	elif setting == "7": xbmc.executebuiltin("Container.SetViewMode(515)")
+	xbmcplugin.setContent(int(sys.argv[1]), 'Movies')
+	return
 
 def whattoplay(originalname,url,imdb_id,year):
 	try: url = xbmc.getInfoLabel('ListItem.Trailer').split('videoid=')[1]
