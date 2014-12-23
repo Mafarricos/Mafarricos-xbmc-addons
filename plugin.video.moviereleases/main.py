@@ -39,9 +39,9 @@ def MAIN():
 	menus_view()
 	
 def ToolsMenu():
-	addDir(language(30005),'CleanCache',8,'',False,3,'',0,'','','')
-	if AddonsResolver: addDir(language(30006),'script.module.addonsresolver',10,'',False,3,'',0,'','','')
-	addDir(language(30068),'script.module.metahandler',10,'',False,3,'',0,'','','')
+	addDir(language(30005),'CleanCache',8,'',False,2,'',0,'','','')
+	if AddonsResolver: addDir(language(30006),'script.module.addonsresolver',10,'',False,2,'',0,'','','')
+	addDir(language(30068),'script.module.metahandler',10,'',False,2,'',0,'','','')
 	menus_view()
 	
 def IMDBmenu():
@@ -78,7 +78,7 @@ def TMDBlist(index,url):
 	elif url == 'Popular': listdirs = tmdb.listmovies(links.link().tmdb_popular % (index),cachePath)
 	elif url == 'Upcoming': listdirs = tmdb.listmovies(links.link().tmdb_upcoming % (index),cachePath)
 	elif url == 'TopRated': listdirs = tmdb.listmovies(links.link().tmdb_top_rated % (index),cachePath)
-	for j in listdirs: addDir(j['label'],j['info']['trailer'],2,j['poster'],False,len(listdirs)+1,j['info'],'',j['imdbid'],j['year'],j['originallabel'],j['fanart_image'])
+	for j in listdirs: addDir(j['label'],j['imdbid'],2,j['poster'],False,len(listdirs)+1,j['info'],'',j['imdbid'],j['year'],j['originallabel'],j['fanart_image'])
 	if url <> 'search': addDir(language(30018)+'>>',url,7,'',True,len(listdirs)+1,'',int(index)+1,'','','')
 	movies_view()
 	
@@ -95,7 +95,7 @@ def IMDBlist2(index,url,originalname):
 	elif url == 'popularbygenre': 
 		if index == '1': originalname = imdb.getgenre(links.link().imdb_genre)
 		listdirs = imdb.listmovies(links.link().imdb_popularbygenre % (index,originalname),cachePath)	
-	for j in listdirs: addDir(j['label'],j['info']['trailer'],2,j['poster'],False,len(listdirs)+1,j['info'],'',j['imdbid'],j['year'],j['originallabel'],j['fanart_image'])
+	for j in listdirs: addDir(j['label'],j['imdbid'],2,j['poster'],False,len(listdirs)+1,j['info'],'',j['imdbid'],j['year'],j['originallabel'],j['fanart_image'])
 	if url <> 'top250' and url <> 'bot100' and url <> 'theaters' and url <> 'comming_soon': 
 		if url == 'popularbygenre': addDir(language(30018)+'>>',url,11,'',True,len(listdirs)+1,'',int(index)+30,'','',originalname,'')
 		else: addDir(language(30018)+'>>',url,11,'',True,len(listdirs)+1,'',int(index)+30,'','','','')
@@ -171,11 +171,11 @@ def populateDir(results,ranging,cache=False):
 		if cache:
 			if lists['label'].encode('utf-8') not in str(linecache):
 				basic.writefile(sitecachefile,"a",'::pageindex::'+str(ranging)+'::'+lists['label'].encode('utf-8')+'::\n')
-				if (getSetting('allyear') == 'true') or ((getSetting('allyear') == 'false') and (int(lists['info']['year']) >= int(getSetting('minyear')) and int(lists['info']['year']) <= int(getSetting('maxyear')))): addDir(lists['label'],j['info']['trailer'],2,lists['poster'],False,len(result)+1,lists['info'],ranging,lists['imdbid'],lists['year'],lists['originallabel'],lists['fanart_image'])
+				if (getSetting('allyear') == 'true') or ((getSetting('allyear') == 'false') and (int(lists['info']['year']) >= int(getSetting('minyear')) and int(lists['info']['year']) <= int(getSetting('maxyear')))): addDir(lists['label'],lists['imdbid'],2,lists['poster'],False,len(result)+1,lists['info'],ranging,lists['imdbid'],lists['year'],lists['originallabel'],lists['fanart_image'])
 			elif '::pageindex::'+str(ranging)+'::'+lists['label'].encode('utf-8') in str(linecache): 
-				if (getSetting('allyear') == 'true') or ((getSetting('allyear') == 'false') and (int(lists['info']['year']) >= int(getSetting('minyear')) and int(lists['info']['year']) <= int(getSetting('maxyear')))): addDir(lists['label'],j['info']['trailer'],2,lists['poster'],False,len(result)+1,lists['info'],ranging,lists['imdbid'],lists['year'],lists['originallabel'],lists['fanart_image'])
+				if (getSetting('allyear') == 'true') or ((getSetting('allyear') == 'false') and (int(lists['info']['year']) >= int(getSetting('minyear')) and int(lists['info']['year']) <= int(getSetting('maxyear')))): addDir(lists['label'],lists['imdbid'],2,lists['poster'],False,len(result)+1,lists['info'],ranging,lists['imdbid'],lists['year'],lists['originallabel'],lists['fanart_image'])
 		else:
-			if (getSetting('allyear') == 'true') or ((getSetting('allyear') == 'false') and (int(lists['info']['year']) >= int(getSetting('minyear')) and int(lists['info']['year']) <= int(getSetting('maxyear')))): addDir(lists['label'],j['info']['trailer'],2,lists['poster'],False,len(result)+1,lists['info'],ranging,lists['imdbid'],lists['year'],lists['originallabel'],lists['fanart_image'])
+			if (getSetting('allyear') == 'true') or ((getSetting('allyear') == 'false') and (int(lists['info']['year']) >= int(getSetting('minyear')) and int(lists['info']['year']) <= int(getSetting('maxyear')))): addDir(lists['label'],lists['imdbid'],2,lists['poster'],False,len(result)+1,lists['info'],ranging,lists['imdbid'],lists['year'],lists['originallabel'],lists['fanart_image'])
 	
 def addDir(name,url,mode,poster,pasta,total,info,index,imdb_id,year,originalname,fanart=None):
 	u=sys.argv[0]+"?url="+urllib.quote_plus(url)+"&mode="+str(mode)+"&name="+urllib.quote_plus(name.encode('ascii','xmlcharrefreplace'))+"&originalname="+urllib.quote_plus(originalname.encode('ascii','xmlcharrefreplace'))+"&index="+str(index)+"&imdb_id="+str(imdb_id)+"&year="+str(year)
@@ -191,7 +191,10 @@ def addDir(name,url,mode,poster,pasta,total,info,index,imdb_id,year,originalname
 	except: pass
 	if info <> '': 
 		liz.setInfo( type="Video", infoLabels=info )
-		context.append((language(30019), 'RunPlugin(%s?mode=1&url=%s&name=%s)' % (sys.argv[0],url,originalname)))
+		try:
+			trailer = info['trailer'].split('videoid=')[1]
+			context.append((language(30019), 'RunPlugin(%s?mode=1&url=%s&name=%s)' % (sys.argv[0],trailer,originalname)))
+		except: pass
 		context.append((language(30020), 'Action(Info)'))
 	if playcount == 7: context.append((language(30064), 'RunPlugin(%s?mode=13&url=%s&originalname=%s&year=%s&imdb_id=%s)' % (sys.argv[0],url,originalname,year,imdb_id)))
 	else: context.append((language(30063), 'RunPlugin(%s?mode=12&url=%s&originalname=%s&year=%s&imdb_id=%s)' % (sys.argv[0],url,originalname,year,imdb_id)))
@@ -220,8 +223,8 @@ def movies_view():
 	return
 
 def whattoplay(originalname,url,imdb_id,year):
-	print '#teste',url
-	if not url.split('videoid=')[1] or not xbmc.getInfoLabel('ListItem.Trailer').split('videoid=')[1]: url = youtube.searchtrailer(originalname)
+	try: url = xbmc.getInfoLabel('ListItem.Trailer').split('videoid=')[1]
+	except: url = ''
 	if AddonsResolver == False: youtube.playtrailer(url,originalname)
 	else:
 		if getSetting("playwhat") == 'Trailer': youtube.playtrailer(url,originalname)
