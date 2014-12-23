@@ -3,31 +3,137 @@
 # it under the terms of version 2 of the GNU General Public License as
 # published by the Free Software Foundation.
 # MafaStudios@gmail.com
-import re,xbmcgui,xbmcaddon,xbmc,os,urllib,json
+import re,xbmcgui,xbmcaddon,xbmc,os,urllib,json,xbmcplugin
 import basic,links
 
 addon_id 		= 'script.module.addonsresolver'
 selfAddon 		= xbmcaddon.Addon(id=addon_id)
 getSetting 		= selfAddon.getSetting
+setSetting 		= selfAddon.setSetting
 installfolder 	= xbmc.translatePath('special://home/addons')
+dummy_file		= os.path.join(xbmc.translatePath('special://home/addons/script.module.addonsresolver'), 'dummyclip.mp4')
+dataPath		= os.path.join(xbmc.translatePath('special://temp'),'temp.strm')
+language		= selfAddon.getLocalizedString
 
-def ytssearch(imdb_id,returnmagnets=False):
+def initsettings():
+	if not os.path.exists(os.path.join(installfolder,links.link().genesis_id)) and getSetting("genesis_enabled") == 'true': setSetting("genesis_enabled",'false')
+	if not os.path.exists(os.path.join(installfolder,links.link().rato_id)) and getSetting("rato_enabled") == 'true': setSetting("rato_enabled",'false')
+	if not os.path.exists(os.path.join(installfolder,links.link().wt_id)) and getSetting("wt_enabled") == 'true': setSetting("wt_enabled",'false')
+	if not os.path.exists(os.path.join(installfolder,links.link().sdp_id)) and getSetting("sdp_enabled") == 'true': setSetting("sdp_enabled",'false')
+	if not os.path.exists(os.path.join(installfolder,links.link().kmediatorrent_id)) and getSetting("kmediatorrent_enabled") == 'true': setSetting("kmediatorrent_enabled",'false')
+	if not os.path.exists(os.path.join(installfolder,links.link().stream_id)) and getSetting("stream_enabled") == 'true': setSetting("stream_enabled",'false')
+
+def play(link,external):
+	basic.writefile(dataPath,'w',link)
+	link = basic.readoneline(dataPath)
+	if external <> 'external': xbmc.Player().play(link)
+	else:
+		playlist = xbmc.PlayList(xbmc.PLAYLIST_VIDEO)
+		playlist.clear()
+		playlist.add(dummy_file)
+		playlist.add(link)
+		xbmc.Player().play(playlist)
+		xbmc.executebuiltin("XBMC.ActivateWindow(12005)")
+		xbmc.executebuiltin("XBMC.PlayerControl(Play)")
+	#old
+	#if 'Sites_dos_Portugas' in link: xbmc.Player().play(link)
+	#else:
+	#	playlist = xbmc.PlayList(xbmc.PLAYLIST_VIDEO)
+	#	playlist.clear()
+	#	if external == 'external': playlist.add(dummy_file)
+	#	playlist.add(link)
+	#	xbmc.Player().play(playlist)
+	#	xbmc.executebuiltin("XBMC.ActivateWindow(12005)")
+	#	if external == 'external': xbmc.executebuiltin("XBMC.PlayerControl(Play)")
+
+def custom_choice(name,url,imdb_id,year):
+	initsettings()
+	fromwhere = url
+	choose1 = False
+	addonchoice = xbmcgui.Dialog().select
+	qualitychoice = xbmcgui.Dialog().select
+	playlink = []
+	playurl = ''
+	addons = []
+	siterato = ''
+	sitewt = ''
+	magnet = ''
+	see = language(30002)
+	print see
+	if getSetting("genesis_enabled") == 'true':
+		addons.append(see % 'Genesis')
+		playurl = links.link().genesis_play % (urllib.quote_plus(name),urllib.quote_plus(name),year,imdb_id.strip('tt'),url)
+		playlink.append(playurl)
+	if getSetting("rato_enabled") == 'true': 
+		url = ratosearch(imdb_id)
+		if url:
+			addons.append(see % 'RatoTV')
+			playurl = links.link().rato_play % (urllib.quote_plus(url),urllib.quote_plus(name))
+			playlink.append(playurl)
+	if getSetting("wt_enabled") == 'true':
+		url = wtsearch(name)
+		if url:
+			addons.append(see % 'WarezTuga')
+			playurl = links.link().wt_play % (urllib.quote_plus(url),urllib.quote_plus(name))
+			playlink.append(playurl)
+	if getSetting("sdp_enabled") == 'true':
+		addons.append(see % 'Sites_dos_Portugas')
+		playurl= links.link().sdp_search % (imdb_id,urllib.quote_plus(name.replace(' ('+year+')','')))
+		playlink.append(playurl)
+	if getSetting("kmediatorrent_enabled") == 'true' or getSetting("stream_enabled") == 'true': qual,magnet = ytssearch(imdb_id)
+	if getSetting("kmediatorrent_enabled") == 'true':
+		if magnet:
+			addons.append(see % 'KMediaTorrent')
+			playurl = links.link().kmediatorrent_play
+			playlink.append(playurl)
+	if getSetting("stream_enabled") == 'true':
+		if magnet:
+			addons.append(see % 'Stream')
+			playurl = links.link().stream_play
+			playlink.append(playurl)
+	if getSetting("pref_addon") == '-':
+		if len(addons) == 0: 
+			basic.infoDialog(language(30003))
+			choose1 = -1
+		else: choose1=addonchoice(language(30004),addons)
+	else: 
+		index = 0
+		for addon in addons:	
+			if getSetting("pref_addon").lower() in addon.lower():
+				choose1 = index
+				break
+			index += 1
+		if not choose1:
+			if len(addons) == 0: 
+				basic.infoDialog(language(30003))
+				choose1 = -1			
+			else: choose1=addonchoice(language(30004),addons)
+	if choose1 > -1:
+		if 'kmediatorrent' in addons[choose1].lower() or 'stream' in addons[choose1].lower():
+			q = []
+			m = []
+			for q1 in qual: q.append(qual)
+			for m1 in magnet: m.append(magnet)
+			choose2=qualitychoice(language(30005),qual)
+			if choose2 > -1:
+				if 'kmediatorrent' in addons[choose1].lower(): playlink[choose1] = playlink[choose1] % (urllib.quote_plus(magnet[choose2]))
+				elif 'stream' in addons[choose1].lower(): playlink[choose1] = playlink[choose1] % (urllib.quote_plus(magnet[choose2]))
+				play(playlink[choose1],fromwhere)
+		else: play(playlink[choose1],fromwhere)
+
+def ytssearch(imdb_id):
 	try:
 		quality = []
 		magnet = []
-		yts = basic.open_url(links.link().yts_search % (imdb_id))
-		jtys = json.loads(yts)
+		try:
+			yts = basic.open_url(links.link().yts_search % (imdb_id))
+			jtys = json.loads(yts)
+		except: return '',''
 		if 'No movies found' in str(jtys): return '',''
 		for j in jtys["MovieList"]:
-			quality.append('%s (Seeds: %s Peers: %s Size: %s)' %(j["Quality"],j["TorrentSeeds"],j["TorrentPeers"],j["Size"]))
+			quality.append(language(30006) % (j["Quality"],j["TorrentSeeds"],j["TorrentPeers"],j["Size"]))
 			magnet.append(j["TorrentMagnetUrl"])
-		if returnmagnets == False:
-			qualitychoice = xbmcgui.Dialog().select		
-			choose=qualitychoice('Seleccione a Qualidade',quality)
-			if choose > -1:
-				return magnet[choose]
-		else:
-			return quality,magnet
+		return quality,magnet
 	except BaseException as e: print '##ERROR-addonsresolver:ytssearch: '+str(imdb_id)+' '+str(e)
 	
 def ratosearch(imdb_id):
@@ -43,68 +149,3 @@ def wtsearch(name):
 		sitewt = links.link().wt_base % (sitewt)
 	except: sitewt = False
 	return sitewt
-	
-def playparser(name, url, imdb_id, year, addon):
-	if 'kmediatorrent' or 'stream' in addon: item = xbmcgui.ListItem(path=imdb_id)
-	else: item = xbmcgui.ListItem(path=url)
-	item.setProperty("IsPlayable", "true")
-	if 'genesis' in addon: xbmc.Player().play(links.link().genesis_play % (urllib.quote_plus(name),urllib.quote_plus(name),year,imdb_id.strip('tt'),url), item)
-	elif 'rato' in addon: xbmc.Player().play(links.link().rato_play % (url,name), item)
-	elif 'wt' in addon: 
-		xbmc.Player().play(links.link().wt_play % (urllib.quote_plus(url),urllib.quote_plus(name)), item)	
-	elif 'portugas' in addon.lower(): xbmc.Player().play(links.link().sdp_search % (imdb_id,urllib.quote_plus(name.replace('('+year+')',''))))
-	elif 'kmediatorrent' in addon.lower():
-		qualitychoice = xbmcgui.Dialog().select
-		q = []
-		m = []
-		for qual,magnet in url:
-			q = qual
-			m = magnet
-		choose=qualitychoice('Seleccione a Qualidade',q)
-		url = links.link().kmediatorrent_play % (urllib.quote_plus(m[choose]))
-		if choose > -1:	xbmc.Player().play(url,item)		
-	elif 'stream' in addon.lower():
-		qualitychoice = xbmcgui.Dialog().select
-		q = []
-		m = []
-		for qual,magnet in url:
-			q = qual
-			m = magnet
-		choose=qualitychoice('Seleccione a Qualidade',q)
-		url = links.link().stream_play % (urllib.quote_plus(m[choose]))
-		if choose > -1:	xbmc.Player().play(url,item)
-
-def custom_choice(name,url,imdb_id,year):
-	if getSetting("pref_addon") <> '-':
-		if 'rato' in getSetting("pref_addon").lower(): url = ratosearch(imdb_id)
-		if 'wt' in getSetting("pref_addon").lower(): url = wtsearch(name)
-		if 'kmediatorrent' or 'stream' in getSetting("pref_addon").lower(): url = ytssearch(imdb_id)
-		if url: playparser(name,url,imdb_id,year,getSetting("pref_addon").lower())
-	else:
-		addonchoice = xbmcgui.Dialog().select
-		addons = []
-		siterato = ''
-		sitewt = ''
-		magnet = ''
-		see = 'Ver no %s'
-		if getSetting("genesis_enabled") == 'true' and os.path.exists(os.path.join(installfolder,links.link().genesis_id)): addons.append(see % (links.link().genesis_id.split('.')[2]))
-		if getSetting("rato_enabled") == 'true' and os.path.exists(os.path.join(installfolder,links.link().rato_id)):
-			siterato = ratosearch(imdb_id)
-			if siterato: addons.append(see % (links.link().rato_id.split('.')[2]))
-		if getSetting("wt_enabled") == 'true' and os.path.exists(os.path.join(installfolder,links.link().wt_id)):
-			sitewt = wtsearch(name)
-			if sitewt: addons.append(see % (links.link().wt_id.split('.')[2]))
-		if (getSetting("kmediatorrent_enabled") == 'true' and os.path.exists(os.path.join(installfolder,links.link().kmediatorrent_id))) or (getSetting("stream_enabled") == 'true' and os.path.exists(os.path.join(installfolder,links.link().stream_id))):
-			qual,magnet = ytssearch(imdb_id,True)
-			if magnet: 
-				addons.append(see % (links.link().kmediatorrent_id.split('.')[2]))
-				addons.append(see % (links.link().stream_id.split('.')[2]))				
-		if getSetting("sdp_enabled") == 'true' and os.path.exists(os.path.join(installfolder,links.link().sdp_id)): addons.append(see % (links.link().sdp_id.split('.')[2]))
-		choose=addonchoice('Seleccione o addon',addons)
-		if choose > -1:
-			if 'rato' in addons[choose]: url = siterato
-			if 'wt' in addons[choose]: url = sitewt
-			if 'kmediatorrent' in addons[choose] or 'stream' in addons[choose]: 
-				url = []
-				url.append([qual,magnet])			
-			playparser(name,url,imdb_id,year,addons[choose])

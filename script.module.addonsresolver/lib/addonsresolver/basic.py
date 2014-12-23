@@ -3,7 +3,9 @@
 # email: MafaStudios@gmail.com
 # This program is free software: GNU General Public License
 
-import urllib2
+import urllib2,xbmcaddon,xbmcgui
+addonName	= xbmcaddon.Addon().getAddonInfo("name")
+addonPath   = xbmcaddon.Addon().getAddonInfo("path")
 
 def open_url(url, encoding='utf-8'):
 	try:
@@ -16,3 +18,18 @@ def open_url(url, encoding='utf-8'):
 		if encoding != 'utf-8': link = link.decode(encoding).encode('utf-8')
 		return link
 	except BaseException as e: print '##ERROR-addonsresolver:open_url: '+str(url)+' '+str(e)
+	
+def writefile(file,mode,string):
+	writes = open(file, mode)
+	writes.write(string)
+	writes.close()
+	
+def readoneline(file):
+	f = open(file,"r")
+	line = f.read()
+	f.close()
+	return line
+	
+def infoDialog(str, header=addonName):
+	try: xbmcgui.Dialog().notification(header, str, addonPath+'icon.png', 3000, sound=False)
+	except: xbmc.executebuiltin("Notification(%s,%s, 6000, %s)" % (header, str, addonPath+'icon.png'))
