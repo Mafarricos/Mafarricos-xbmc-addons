@@ -149,5 +149,10 @@ def wtsearch(name):
 	try: 
 		sitewt = re.compile('<a href="(.+?)" class="movie-name">').findall(wt)[0]
 		sitewt = links.link().wt_base % (sitewt)
-	except: sitewt = False
+	except: 
+		wt = basic.open_url(links.link().wt_search % (urllib.quote_plus(name.split(' (')[0])))
+		try: 
+			sitewt = re.compile('<a href="(.+?)" class="movie-name">').findall(wt)[0]
+			sitewt = links.link().wt_base % (sitewt)
+		except: sitewt = False
 	return sitewt
