@@ -1,10 +1,9 @@
-Version 0.0.7A
-- fix list if not source
-
 Version 0.0.7
 - sites_dos_portugas only shows when there are movies in the sources
+
 Version 0.0.6A
 - wt search fix
+
 Version 0.0.6
 - Improvements with Sites_dos_Portugas
 Version 0.0.5

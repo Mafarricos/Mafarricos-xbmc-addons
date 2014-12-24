@@ -102,12 +102,13 @@ def custom_choice(name,url,imdb_id,year):
 		else: choose1=addonchoice(language(30004),addons)
 	else: 
 		index = 0
+		choose1 = ''
 		for addon in addons:	
 			if getSetting("pref_addon").lower() in addon.lower():
 				choose1 = index
 				break
 			index += 1
-		if not choose1:
+		if choose1 == '':
 			if len(addons) == 0: 
 				basic.infoDialog(language(30003))
 				choose1 = -1			
