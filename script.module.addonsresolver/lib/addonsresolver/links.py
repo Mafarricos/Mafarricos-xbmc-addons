@@ -38,3 +38,7 @@ class link:
 		
 		self.stream_id = 'plugin.video.stream'
 		self.stream_play = base64.urlsafe_b64decode('cGx1Z2luOi8vcGx1Z2luLnZpZGVvLnN0cmVhbS9wbGF5LyVz')
+		
+		self.ice_id = 'plugin.video.icefilms'
+		self.ice_base = base64.urlsafe_b64decode('aHR0cDovL3d3dy5pY2VmaWxtcy5pbmZv')
+		self.ice_play = base64.urlsafe_b64decode('cGx1Z2luOi8vcGx1Z2luLnZpZGVvLmljZWZpbG1zLz9tb2RlPTEwMCZ1cmw9JXM=')

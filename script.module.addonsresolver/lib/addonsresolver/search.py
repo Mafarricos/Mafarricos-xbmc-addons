@@ -5,11 +5,23 @@
 
 import urllib2,xbmcaddon,xbmcgui,re,urllib,json,threading
 import links,basic
+from BeautifulSoup import BeautifulSoup
 
 addon_id 		= 'script.module.addonsresolver'
 selfAddon 		= xbmcaddon.Addon(id=addon_id)
 language		= selfAddon.getLocalizedString
 
+def icesearch(title):
+	if title.lower().startswith('the '): title2 = title.lower().replace('the ','')
+	else: title2 = title
+	if title2[0].isalpha(): url = links.link().ice_base + "/movies/a-z/" + title2[0].upper()
+	else: url = links.link().ice_base + "/movies/a-z/1"
+	html = basic.open_url(url)
+	soup = BeautifulSoup(html)
+	link = soup.find("a", href=re.compile("ip.php"), text=title)
+	if link: return links.link().ice_base+link.parent["href"]
+	else: return None
+		
 def ytssearch(imdb_id):
 	try:
 		quality = []
@@ -58,7 +70,6 @@ def sdpsearch(name,imdb):
 	for i in range(7): threads.append(threading.Thread(name=name+str(i),target=_sdpsearch,args=(search,links.link().sdp_search_add[i],result, )))
 	[i.start() for i in threads]
 	[i.join() for i in threads]
-	print result
 	if result:	
 		for res in result: 
 			if 'MATCH' in res: return res
