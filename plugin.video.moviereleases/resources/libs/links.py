@@ -48,3 +48,5 @@ class link:
 		self.trakt_user, self.trakt_password = getSetting("trakt_user"), getSetting("trakt_password")
 		self.trakt_unseen = 'http://api.trakt.tv/movie/unseen/%s' % self.trakt_key
 		self.trakt_seen = 'http://api.trakt.tv/movie/seen/%s' % self.trakt_key
+		
+		self.addon_plugin = 'plugin://plugin.video.moviereleases/'

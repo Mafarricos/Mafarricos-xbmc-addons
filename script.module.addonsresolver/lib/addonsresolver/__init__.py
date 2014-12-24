@@ -4,7 +4,7 @@
 # published by the Free Software Foundation.
 # MafaStudios@gmail.com
 import re,xbmcgui,xbmcaddon,xbmc,os,urllib,json,xbmcplugin
-import basic,links
+import basic,links,search
 
 addon_id 		= 'script.module.addonsresolver'
 selfAddon 		= xbmcaddon.Addon(id=addon_id)
@@ -64,25 +64,27 @@ def custom_choice(name,url,imdb_id,year):
 		playurl = links.link().genesis_play % (urllib.quote_plus(name),urllib.quote_plus(name),year,imdb_id.strip('tt'),url)
 		playlink.append(playurl)
 	if getSetting("rato_enabled") == 'true': 
-		url = ratosearch(imdb_id)
+		url = search.ratosearch(imdb_id)
 		if url:
 			addons.append(see % 'RatoTV')
 			playurl = links.link().rato_play % (urllib.quote_plus(url),urllib.quote_plus(name))
 			playlink.append(playurl)
 	if getSetting("wt_enabled") == 'true':
-		url = wtsearch(name)
+		url = search.wtsearch(name)
 		if url:
 			addons.append(see % 'WarezTuga')
 			playurl = links.link().wt_play % (urllib.quote_plus(url),urllib.quote_plus(name))
 			playlink.append(playurl)
 	if getSetting("sdp_enabled") == 'true':
-		addons.append(see % 'Sites_dos_Portugas')
-		if getSetting("pref_sdp_source") == 'All': automatic = ''
-		elif getSetting("pref_sdp_source") == 'Any': automatic = 'sim'
-		else: automatic = getSetting("pref_sdp_source")
-		playurl= links.link().sdp_search % (imdb_id,urllib.quote_plus(name.replace(' ('+year+')','')),automatic)
-		playlink.append(playurl)
-	if getSetting("kmediatorrent_enabled") == 'true' or getSetting("stream_enabled") == 'true': qual,magnet = ytssearch(imdb_id)
+		url = search.sdpsearch(name,imdb_id)
+		if url == 'MATCH':
+			addons.append(see % 'Sites_dos_Portugas')
+			if getSetting("pref_sdp_source") == 'All': automatic = ''
+			elif getSetting("pref_sdp_source") == 'Any': automatic = 'sim'
+			else: automatic = getSetting("pref_sdp_source")
+			playurl= links.link().sdp_search % (imdb_id,urllib.quote_plus(name.replace(' ('+year+')','')),automatic)
+			playlink.append(playurl)
+	if getSetting("kmediatorrent_enabled") == 'true' or getSetting("stream_enabled") == 'true': qual,magnet = search.ytssearch(imdb_id)
 	if getSetting("kmediatorrent_enabled") == 'true':
 		if magnet:
 			addons.append(see % 'KMediaTorrent')
@@ -122,37 +124,3 @@ def custom_choice(name,url,imdb_id,year):
 				elif 'stream' in addons[choose1].lower(): playlink[choose1] = playlink[choose1] % (urllib.quote_plus(magnet[choose2]))
 				play(playlink[choose1],fromwhere)
 		else: play(playlink[choose1],fromwhere)
-
-def ytssearch(imdb_id):
-	try:
-		quality = []
-		magnet = []
-		try:
-			yts = basic.open_url(links.link().yts_search % (imdb_id))
-			jtys = json.loads(yts)
-		except: return '',''
-		if 'No movies found' in str(jtys): return '',''
-		for j in jtys["MovieList"]:
-			quality.append(language(30006) % (j["Quality"],j["TorrentSeeds"],j["TorrentPeers"],j["Size"]))
-			magnet.append(j["TorrentMagnetUrl"])
-		return quality,magnet
-	except BaseException as e: print '##ERROR-addonsresolver:ytssearch: '+str(imdb_id)+' '+str(e)
-	
-def ratosearch(imdb_id):
-	ratos = basic.open_url(links.link().rato_search % (imdb_id))
-	try: siterato = re.compile('<span class="more-btn"><a href="(.+?)" >Ver Agora</a>').findall(ratos)[0]
-	except: siterato = False
-	return siterato
-
-def wtsearch(name):
-	wt = basic.open_url(links.link().wt_search % (urllib.quote_plus(name)))
-	try: 
-		sitewt = re.compile('<a href="(.+?)" class="movie-name">').findall(wt)[0]
-		sitewt = links.link().wt_base % (sitewt)
-	except: 
-		wt = basic.open_url(links.link().wt_search % (urllib.quote_plus(name.split(' (')[0])))
-		try: 
-			sitewt = re.compile('<a href="(.+?)" class="movie-name">').findall(wt)[0]
-			sitewt = links.link().wt_base % (sitewt)
-		except: sitewt = False
-	return sitewt

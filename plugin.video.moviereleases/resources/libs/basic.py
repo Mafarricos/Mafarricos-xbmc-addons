@@ -3,13 +3,16 @@
 # email: MafaStudios@gmail.com
 # This program is free software: GNU General Public License
 
-import os,json,urllib2,xbmcaddon,xbmc,xbmcgui
-__name__	= xbmcaddon.Addon().getAddonInfo("id")
-addonName	= xbmcaddon.Addon().getAddonInfo("name")
-debug 		= xbmcaddon.Addon().getSetting('debug_mode')
-addonPath   = xbmcaddon.Addon().getAddonInfo("path")
-language	= xbmcaddon.Addon().getLocalizedString
-getSetting	= xbmcaddon.Addon().getSetting
+import os,json,urllib,urllib2,xbmcaddon,xbmc,xbmcgui
+import links
+
+__name__		= xbmcaddon.Addon().getAddonInfo("id")
+addonName		= xbmcaddon.Addon().getAddonInfo("name")
+debug 			= xbmcaddon.Addon().getSetting('debug_mode')
+addonPath   	= xbmcaddon.Addon().getAddonInfo("path")
+language		= xbmcaddon.Addon().getLocalizedString
+getSetting		= xbmcaddon.Addon().getSetting
+movieLibrary	= os.path.join(xbmc.translatePath(getSetting("movie_library")),'')
 
 def getKey(item):
 	return item[0]
@@ -29,7 +32,7 @@ def open_url(url,post=None):
 		link=response.read()
 		response.close()
 		return link		
-	except BaseException as e: log(u"open_url ERROR: %s - %s" % (str(url),str(e).decode('ascii','ignore')))		
+	except BaseException as e: log(u"open_url ERROR: %s - %s" % (str(url),str(e).decode('ascii','ignore')))
 	except urllib2.HTTPError, e: log(u"open_url HTTPERROR: %s - %s" % (str(url),str(e.code)))
 	except urllib2.URLError, e: log(u"open_url URLERROR: %s - %s" % (str(url),str(e.reason)))
 	except httplib.HTTPException, e: log(u"open_url HTTPException: %s" % (str(url)))
@@ -68,42 +71,31 @@ def writefile(file,mode,string):
 	writes.close()
 
 def library_movie_add(originalname, url, imdb_id, year):
-	return ''
-#        try:
-#            if getSetting("check_library") == 'true': filter = xbmc.executeJSONRPC('{"jsonrpc": "2.0", "method": "VideoLibrary.GetMovies", "params": {"filter":{"or": [{"field": "year", "operator": "is", "value": "%s"}, {"field": "year", "operator": "is", "value": "%s"}, {"field": "year", "operator": "is", "value": "%s"}]}, "properties" : ["imdbnumber"]}, "id": 1}' % (year, str(int(year)+1), str(int(year)-1)))
-#            filter = unicode(filter, 'utf-8', errors='ignore')
-#            filter = json.loads(filter)['result']['movies']
-#            filter = [i for i in filter if imdb in i['imdbnumber']][0]
-#        except:
-#            filter = []
-#
-#        try:
-#            if not filter == []: return
-#            if not xbmcvfs.exists(movieLibrary): xbmcvfs.mkdir(movieLibrary)
-#
-#            sysname, systitle, sysyear, sysimdb, sysurl = urllib.quote_plus(name), urllib.quote_plus(title), urllib.quote_plus(year), urllib.quote_plus(imdb), urllib.quote_plus(url)
-#            content = '%s?mode=2&originalname=%s&year=%s&imdb_id=%s&url=%s' % (sys.argv[0], originalname, year, imdb_id, url)
-#
-#            enc_name = name.translate(None, '\/:*?"<>|').strip('.')
-#            folder = os.path.join(movieLibrary, enc_name)
-#            if not xbmcvfs.exists(folder): xbmcvfs.mkdir(folder)
-
-#            stream = os.path.join(folder, enc_name + '.strm')
-#            file = xbmcvfs.File(stream, 'w')
-#            file.write(str(content))
-#            file.close()
-#        except:
-#            return
-
-
-#	index().infoDialog(language(30309).encode("utf-8"), name)
-#	if getSetting("update_library") == 'true' and not xbmc.getCondVisibility('Library.IsScanningVideo'):
-#		xbmc.executebuiltin('UpdateLibrary(video)')
+	try:
+		if getSetting("check_library") == 'true': filter = xbmc.executeJSONRPC('{"jsonrpc": "2.0", "method": "VideoLibrary.GetMovies", "params": {"filter":{"or": [{"field": "year", "operator": "is", "value": "%s"}, {"field": "year", "operator": "is", "value": "%s"}, {"field": "year", "operator": "is", "value": "%s"}]}, "properties" : ["imdbnumber"]}, "id": 1}' % (year, str(int(year)+1), str(int(year)-1)))
+		filter = unicode(filter, 'utf-8', errors='ignore')
+		filter = json.loads(filter)['result']['movies']
+		filter = [i for i in filter if imdb_id in i['imdbnumber']][0]
+	except: filter = []
+	try:
+		if not filter == []: return
+		if not os.path.exists(movieLibrary): os.makedirs(movieLibrary)
+		sysname, sysyear, sysimdb, sysurl = urllib.quote_plus(originalname), urllib.quote_plus(year), urllib.quote_plus(imdb_id), 'external'
+		content = '%s?mode=2&originalname=%s&year=%s&imdb_id=%s&url=%s' % (links.link().addon_plugin, sysname, sysyear, sysimdb, sysurl)
+		enc_name = originalname.translate(None, '\/:*?"<>|').strip('.')+' (%s)' % sysyear
+		folder = os.path.join(movieLibrary,enc_name)
+		if not os.path.exists(folder): os.makedirs(folder)
+		stream = os.path.join(folder, enc_name + '.strm')
+		writefile(stream,'w',content)
+		infoDialog(language(30309).encode("utf-8"))
+		if getSetting("update_library") == 'true' and not xbmc.getCondVisibility('Library.IsScanningVideo'): xbmc.executebuiltin('UpdateLibrary(video)')		
+	except BaseException as e: 
+		log(u"basic.library_movie_add ERROR: %s - %s" % (str(originalname),str(e).decode('ascii','ignore')))
+		return
 		
 def progressbar(progress,f,totalpass,message,message2=None,message3=None,normal=False):
 	if normal: percent = int( ( f / float(totalpass) ) * 100)
 	else: percent = int( ( int(totalpass)-f / float(totalpass) ) * 100)
-	print '##eei',f,totalpass
 	progress.update( percent, message, message2, message3 )
 	if progress.iscanceled():
 		progress.close()

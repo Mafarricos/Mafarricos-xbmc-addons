@@ -111,7 +111,7 @@ def latestreleases(index):
 	results = []
 	f = 1
 	paging = 1	
-	for i in range(1, 15):
+	for i in range(1, 16):
 		siteon = getSetting("site"+str(i)+"on")	
 		site = getSetting("site"+str(i))
 		pageind = getSetting("site"+str(i)+"pag").replace('/','')
@@ -122,7 +122,7 @@ def latestreleases(index):
 				seclist = sections.split('|')
 				for section in seclist: sites.append(site+section+'/'+pageind+'/')
 			else: sites.append(site+pageind+'/')		
-	for i in range(1, 5):
+	for i in range(1, 6):
 		siteon = getSetting("custsite"+str(i)+"on")	
 		site = getSetting("custsite"+str(i))
 		pageind = getSetting("custsite"+str(i)+"pag").replace('/','')
@@ -160,8 +160,8 @@ def populateDir(results,ranging,cache=False):
 	results = sorted(results, key=basic.getKey)
 	for order,link in results:
 		if link not in str(unique_stuff): unique_stuff.append([order, link])
-	chunks=[unique_stuff[x:x+10] for x in xrange(0, len(unique_stuff), 10)]
-	for i in range(0,len(chunks)): threads2.append(threading.Thread(name='listmovies'+str(i),target=tmdb.searchmovielist,args=(chunks[i],result,cachePath, )))
+	chunks=[unique_stuff[x:x+10] for x in xrange(0, len(unique_stuff)+1, 10)]
+	for i in range(len(chunks)): threads2.append(threading.Thread(name='listmovies'+str(i),target=tmdb.searchmovielist,args=(chunks[i],result,cachePath, )))
 	[i.start() for i in threads2]
 	[i.join() for i in threads2]
 	result = sorted(result, key=basic.getKey)
@@ -198,6 +198,10 @@ def addDir(name,url,mode,poster,pasta,total,info,index,imdb_id,year,originalname
 		context.append((language(30020), 'Action(Info)'))
 	if playcount == 7: context.append((language(30064), 'RunPlugin(%s?mode=13&url=%s&originalname=%s&year=%s&imdb_id=%s)' % (sys.argv[0],url,originalname,year,imdb_id)))
 	else: context.append((language(30063), 'RunPlugin(%s?mode=12&url=%s&originalname=%s&year=%s&imdb_id=%s)' % (sys.argv[0],url,originalname,year,imdb_id)))
+	try: title = originalname.split(' (')[0]
+	except: title = originalname
+	context.append((language(30310), 'RunPlugin(%s?mode=14&url=%s&originalname=%s&year=%s&imdb_id=%s)' % (sys.argv[0],url,title,year,imdb_id)))
+	if AddonsResolver == True: context.append((language(30006), 'RunPlugin(%s?mode=10&url=%s)' % (sys.argv[0],'script.module.addonsresolver')))	
 	liz.addContextMenuItems(context, replaceItems=False)
 	ok = xbmcplugin.addDirectoryItem(handle=int(sys.argv[1]),url=u,listitem=liz,isFolder=pasta,totalItems=total)
 	return ok
@@ -223,8 +227,9 @@ def movies_view():
 	return
 
 def whattoplay(originalname,url,imdb_id,year):
-	try: url = xbmc.getInfoLabel('ListItem.Trailer').split('videoid=')[1]
-	except: url = ''
+	if url <> 'external':
+		try: url = xbmc.getInfoLabel('ListItem.Trailer').split('videoid=')[1]
+		except: url = ''
 	if AddonsResolver == False: youtube.playtrailer(url,originalname)
 	else:
 		if getSetting("playwhat") == 'Trailer': youtube.playtrailer(url,originalname)
@@ -314,4 +319,5 @@ elif mode==10: basic.settings_open(url)
 elif mode==11: IMDBlist2(index,url,originalname)
 elif mode==12: playcount_movies(originalname, year, imdb_id, 7)
 elif mode==13: playcount_movies(originalname, year, imdb_id, 6)
+elif mode==14: basic.library_movie_add(originalname, url, imdb_id, year)
 xbmcplugin.endOfDirectory(int(sys.argv[1]))

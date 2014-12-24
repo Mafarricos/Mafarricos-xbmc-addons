@@ -17,6 +17,14 @@ class link:
 		
 		self.sdp_id = 'plugin.video.Sites_dos_Portugas'
 		self.sdp_search = base64.urlsafe_b64decode('cGx1Z2luOi8vcGx1Z2luLnZpZGVvLlNpdGVzX2Rvc19Qb3J0dWdhcy8/dXJsPUlNREIlc0lNREImbW9kZT05MDAwJm5hbWU9JXMmYXV0b21hdGljbz0lcw==')
+		self.sdp_search_add = []
+		self.sdp_search_add.append(base64.urlsafe_b64decode('aHR0cDovL3d3dy50dWdhLWZpbG1lcy5pbmZvL3NlYXJjaD9xPSVz'))
+		self.sdp_search_add.append(base64.urlsafe_b64decode('aHR0cDovL3d3dy5jaW5lbWF0dWdhLmV1L3NlYXJjaD9xPSVz'))
+		self.sdp_search_add.append(base64.urlsafe_b64decode('aHR0cDovL3d3dy50dWdhLWZpbG1lcy51cy9zZWFyY2g/cT0lcw=='))
+		self.sdp_search_add.append(base64.urlsafe_b64decode('aHR0cDovL2ZvaXRhdHVnYWNpbmVtYW9ubGluZS5ibG9nc3BvdC5wdC9zZWFyY2g/cT0lcw=='))
+		self.sdp_search_add.append(base64.urlsafe_b64decode('aHR0cDovL3d3dy5tb3ZpZS10dWdhLmJsb2dzcG90LnB0L3NlYXJjaD9xPSVz'))
+		self.sdp_search_add.append(base64.urlsafe_b64decode('aHR0cDovL3d3dy5jaW5lbWFlbWNhc2EucHQvc2VhcmNoP3E9JXM='))
+		self.sdp_search_add.append(base64.urlsafe_b64decode('aHR0cDovL3RvcHB0Lm5ldC8/cz0lcw=='))
 		
 		self.wt_id = 'plugin.video.wt'
 		self.wt_base = base64.urlsafe_b64decode('aHR0cDovL3d3dy53YXJlenR1Z2EudHYvJXM=')

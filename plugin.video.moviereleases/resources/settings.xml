@@ -13,7 +13,12 @@
 		<setting id="trakt_user" type="text" label="30066" default=""/>
 		<setting id="trakt_password" type="text" option="hidden" label="30067" default=""/>
 		<setting id="trakt_sync" type="bool" label="30069" default="true"/>		
-	</category>		
+	</category>	
+	<category label="30100">
+		<setting id="movie_library" type="folder" label="30102" default="special://userdata/addon_data/plugin.video.moviereleases/Movies"/>
+		<setting id="update_library" type="bool" label="30107" default="true"/>
+		<setting id="check_library" type="bool" label="30108" default="true"/>
+	</category>
     <category label="30028">
 		<setting label="30023" type="lsep"/>	
 		<setting id="allyear" type="bool" default="true" label="30029"/>		
