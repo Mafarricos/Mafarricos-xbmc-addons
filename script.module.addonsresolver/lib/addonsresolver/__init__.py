@@ -31,8 +31,8 @@ def play(link,external):
 		playlist = xbmc.PlayList(xbmc.PLAYLIST_VIDEO)
 		playlist.clear()
 		playlist.add(dummy_file)
-		playlist.add(link)
-		xbmc.Player().play(playlist)
+		playlist.add(link)		
+		xbmc.Player().play(playlist)		
 		xbmc.executebuiltin("XBMC.ActivateWindow(12005)")
 		xbmc.executebuiltin("XBMC.PlayerControl(Play)")
 	#old
@@ -59,7 +59,6 @@ def custom_choice(name,url,imdb_id,year):
 	sitewt = ''
 	magnet = ''
 	see = language(30002)
-	print see
 	if getSetting("genesis_enabled") == 'true':
 		addons.append(see % 'Genesis')
 		playurl = links.link().genesis_play % (urllib.quote_plus(name),urllib.quote_plus(name),year,imdb_id.strip('tt'),url)
@@ -78,7 +77,10 @@ def custom_choice(name,url,imdb_id,year):
 			playlink.append(playurl)
 	if getSetting("sdp_enabled") == 'true':
 		addons.append(see % 'Sites_dos_Portugas')
-		playurl= links.link().sdp_search % (imdb_id,urllib.quote_plus(name.replace(' ('+year+')','')))
+		if getSetting("pref_sdp_source") == 'All': automatic = ''
+		elif getSetting("pref_sdp_source") == 'Any': automatic = 'sim'
+		else: automatic = getSetting("pref_sdp_source")
+		playurl= links.link().sdp_search % (imdb_id,urllib.quote_plus(name.replace(' ('+year+')','')),automatic)
 		playlink.append(playurl)
 	if getSetting("kmediatorrent_enabled") == 'true' or getSetting("stream_enabled") == 'true': qual,magnet = ytssearch(imdb_id)
 	if getSetting("kmediatorrent_enabled") == 'true':

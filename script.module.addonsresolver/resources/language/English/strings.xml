@@ -7,4 +7,5 @@
 	<string id="30004">Select addon</string>
 	<string id="30005">Select quality</string>
 	<string id="30006">%s (Seeds: %s Peers: %s Size: %s)</string>
+	<string id="30007">Predefined Source</string>
 </strings>
