@@ -42,3 +42,6 @@ class link:
 		self.ice_id = 'plugin.video.icefilms'
 		self.ice_base = base64.urlsafe_b64decode('aHR0cDovL3d3dy5pY2VmaWxtcy5pbmZv')
 		self.ice_play = base64.urlsafe_b64decode('cGx1Z2luOi8vcGx1Z2luLnZpZGVvLmljZWZpbG1zLz9tb2RlPTEwMCZ1cmw9JXM=')
+		
+		self.salts_id = 'plugin.video.salts'
+		self.salts_play = base64.urlsafe_b64decode('cGx1Z2luOi8vcGx1Z2luLnZpZGVvLnNhbHRzLz90aXRsZT0lcyZ2aWRlb190eXBlPU1vdmllJm1vZGU9Z2V0X3NvdXJjZXMmZGlhbG9nPVRydWUmeWVhcj0lcyZzbHVnPSVz')

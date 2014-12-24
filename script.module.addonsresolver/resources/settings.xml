@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8" standalone="yes"?>
 <settings>
 	<category label="General">
-		<setting id="pref_addon" type="select" label="30000" values="-|Genesis|RatoTV|Sites_Dos_Portugas|WarezTuga|KMediaTorrent|Stream||IceFilms" default="-" />
+		<setting id="pref_addon" type="select" label="30000" values="-|Genesis|RatoTV|Sites_Dos_Portugas|WarezTuga|KMediaTorrent|Stream|IceFilms|SALTS" default="-" />
 		<setting type="sep"/>
 		<setting type="lsep" label="30001"/>
 		<setting id="genesis_enabled" type="bool" label="Genesis" default="true"/>
@@ -11,6 +11,7 @@
 		<setting id="kmediatorrent_enabled" type="bool" label="KMediaTorrent" default="true"/>
 		<setting id="stream_enabled" type="bool" label="Stream" default="true"/>
 		<setting id="ice_enabled" type="bool" label="IceFilms" default="true"/>		
+		<setting id="salts_enabled" type="bool" label="SALTS" default="true"/>
 	</category>
 	<category label="Sites_dos_Portugas">
 		<setting id="pref_sdp_source" type="select" label="30007" values="All|Any|videomega|dropvideo|thevideo.me|vidto.me|vidzi.TV|cloudzilla|played.to|nowvideo|movshare|putlocker|firedrive" default="-" />
