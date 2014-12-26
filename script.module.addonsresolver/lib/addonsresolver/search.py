@@ -43,6 +43,13 @@ def ratosearch(imdb_id):
 	except: siterato = False
 	return siterato
 
+def yifysearch(name):
+	yify = basic.open_url(links.link().yify_search % (urllib.quote_plus(name.split(' (')[0])))	
+	searchresponse = '"title":"%s","link":"(.+?)","post_content":".+?","image":".+?","year":"%s"' % (name.split(' (')[0],name.replace(')','').split(' (')[1])
+	try: siteyify = re.compile(searchresponse).findall(yify)[0]
+	except: return False
+	return siteyify.replace('\\','')
+	
 def wtsearch(name):
 	wt = basic.open_url(links.link().wt_search % (urllib.quote_plus(name)))
 	try: 
@@ -80,7 +87,6 @@ def abelhassearch(name):
 	endlogin = links.link().abelhas_endlogin
 	abelhas = basic.open_url(endlogin,formcont,ref_data)
 	try:
-		print abelhas
-		if re.search('O ficheiro não foi encontrado',abelhas): return False
+		if re.search('O ficheiro n&#227;o foi encontrado',abelhas): return False
 		else: return True
 	except: return False
