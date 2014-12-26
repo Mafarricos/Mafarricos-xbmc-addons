@@ -49,6 +49,13 @@ def yifysearch(name):
 	try: siteyify = re.compile(searchresponse).findall(yify)[0]
 	except: return False
 	return siteyify.replace('\\','')
+
+def muchmsearch(name):
+	muchm = basic.open_url(links.link().muchm_search % name.replace('(','').replace(')','').replace(' ','-'))
+	searchresponse = '<a href="(.+?)">%s</a>' % name.replace('(','\(').replace(')','\)')
+	try: sitemuchm = links.link().muchm_base % re.compile(searchresponse).findall(muchm)[0]
+	except: return False
+	return sitemuchm
 	
 def wtsearch(name):
 	wt = basic.open_url(links.link().wt_search % (urllib.quote_plus(name)))

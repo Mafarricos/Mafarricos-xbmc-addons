@@ -26,6 +26,7 @@ def initsettings():
 	if not os.path.exists(os.path.join(installfolder,links.link().salts_id)) and getSetting("salts_enabled") == 'true': setSetting("salts_enabled",'false')
 	if not os.path.exists(os.path.join(installfolder,links.link().abelhas_id)) and getSetting("abelhas_enabled") == 'true': setSetting("abelhas_enabled",'false')
 	if not os.path.exists(os.path.join(installfolder,links.link().yify_id)) and getSetting("yify_enabled") == 'true': setSetting("yify_enabled",'false')
+	if not os.path.exists(os.path.join(installfolder,links.link().muchm_id)) and getSetting("muchm_enabled") == 'true': setSetting("muchm_enabled",'false')
 	
 def play(link,external):
 	if 'icefilms' in link or 'abelhas' in link:
@@ -122,7 +123,13 @@ def custom_choice(name,url,imdb_id,year):
 		if url:
 			addons.append(see % 'yifymovies.hd')
 			playurl = links.link().yify_play % (urllib.quote_plus(name),urllib.quote_plus(url))
-			playlink.append(playurl)		
+			playlink.append(playurl)
+	if getSetting("muchm_enabled") == 'true': 
+		url = search.muchmsearch(name)
+		if url:
+			addons.append(see % 'muchmovies.hd')
+			playurl = links.link().muchm_play % (urllib.quote_plus(name),urllib.quote_plus(url))
+			playlink.append(playurl)
 	if getSetting("pref_addon") == '-':
 		if len(addons) == 0: 
 			basic.infoDialog(language(30003))

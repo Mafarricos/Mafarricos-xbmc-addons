@@ -37,13 +37,16 @@ class link:
 		self.ice_play = base64.urlsafe_b64decode('cGx1Z2luOi8vcGx1Z2luLnZpZGVvLmljZWZpbG1zLz9tb2RlPTEwMCZ1cmw9JXM=')
 		self.salts_id = 'plugin.video.salts'
 		self.salts_play = base64.urlsafe_b64decode('cGx1Z2luOi8vcGx1Z2luLnZpZGVvLnNhbHRzLz90aXRsZT0lcyZ2aWRlb190eXBlPU1vdmllJm1vZGU9Z2V0X3NvdXJjZXMmZGlhbG9nPVRydWUmeWVhcj0lcyZzbHVnPSVz')
-		
 		self.abelhas_id = 'plugin.video.abelhas'
 		self.abelhas_search = base64.urlsafe_b64decode('cGx1Z2luOi8vcGx1Z2luLnZpZGVvLmFiZWxoYXMvP21vZGU9MjMmdXJsPWh0dHA6Ly9hYmVsaGFzLnB0L2FjdGlvbi9TZWFyY2hGaWxlcyZuYW1lPSVz')
 		self.abelhas_ref_data = base64.urlsafe_b64decode('eydIb3N0JzogJ2FiZWxoYXMucHQnLCAnQ29ubmVjdGlvbic6ICdrZWVwLWFsaXZlJywgJ1JlZmVyZXInOiAnaHR0cDovL2FiZWxoYXMucHQvJywnQWNjZXB0JzogJ3RleHQvaHRtbCxhcHBsaWNhdGlvbi94aHRtbCt4bWwsYXBwbGljYXRpb24veG1sO3E9MC45LGltYWdlL3dlYnAsKi8qO3E9MC44JywnVXNlci1BZ2VudCc6J01vemlsbGEvNS4wIChXaW5kb3dzIE5UIDYuMSkgQXBwbGVXZWJLaXQvNTM3LjM2IChLSFRNTCwgbGlrZSBHZWNrbykgQ2hyb21lLzI4LjAuMTQ2OC4wIFNhZmFyaS81MzcuMzYnLCdSZWZlcmVyJzogJ2h0dHA6Ly9hYmVsaGFzLnB0Lyd9')
 		self.abelhas_endlogin = base64.urlsafe_b64decode('aHR0cDovL2FiZWxoYXMucHQvYWN0aW9uL1NlYXJjaEZpbGVz')
 		self.abelhas_formcont = base64.urlsafe_b64decode('eydzdWJtaXRTZWFyY2hGaWxlcyc6ICdQcm9jdXJhcicsICdGaWxlVHlwZSc6ICd2aWRlbycsICdJc0dhbGxlcnknOiAnRmFsc2UnLCAnRmlsZU5hbWUnOiAlc30=')
-		
 		self.yify_id = 'plugin.video.yifymovies.hd'
 		self.yify_play = base64.urlsafe_b64decode('cGx1Z2luOi8vcGx1Z2luLnZpZGVvLnlpZnltb3ZpZXMuaGQvP2FjdGlvbj1wbGF5Jm5hbWU9JXMmdXJsPSVz')
 		self.yify_search = base64.urlsafe_b64decode('aHR0cDovL3lpZnkudHYvP3M9JXM=')
+		
+		self.muchm_id = 'plugin.video.muchmovies.hd'
+		self.muchm_play = base64.urlsafe_b64decode('cGx1Z2luOi8vcGx1Z2luLnZpZGVvLm11Y2htb3ZpZXMuaGQvP2FjdGlvbj1wbGF5Jm5hbWU9JXMmdXJsPSVz')
+		self.muchm_base = base64.urlsafe_b64decode('aHR0cDovL3Vtb3ZpZXMubWUlcw==')
+		self.muchm_search = self.muchm_base % base64.urlsafe_b64decode('L3NlYXJjaC8lcw==')
