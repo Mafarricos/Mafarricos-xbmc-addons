@@ -1,3 +1,6 @@
+Version 0.0.10A
+- Abelhas no previous search
+
 Version 0.0.10
 - Abelhas added
 

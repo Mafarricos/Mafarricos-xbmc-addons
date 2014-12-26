@@ -112,10 +112,10 @@ def custom_choice(name,url,imdb_id,year):
 		playurl = links.link().salts_play % (urllib.quote_plus(name.split(' (')[0]),year,urllib.quote_plus(name.split(' (')[0]).replace('+','-')+'-'+year)
 		playlink.append(playurl)
 	if getSetting("abelhas_enabled") == 'true':
-		if search.abelhassearch(name):
-			addons.append(see % 'Abelhas')
-			playurl = links.link().abelhas_search % (urllib.quote_plus(name))
-			playlink.append(playurl)
+		#if search.abelhassearch(name):
+		addons.append(see % 'Abelhas')
+		playurl = links.link().abelhas_search % (urllib.quote_plus(name))
+		playlink.append(playurl)
 	if getSetting("pref_addon") == '-':
 		if len(addons) == 0: 
 			basic.infoDialog(language(30003))

@@ -80,6 +80,7 @@ def abelhassearch(name):
 	endlogin = links.link().abelhas_endlogin
 	abelhas = basic.open_url(endlogin,formcont,ref_data)
 	try:
-		if re.search('O ficheiro n&#227;o foi encontrado',abelhas): return False
+		print abelhas
+		if re.search('O ficheiro não foi encontrado',abelhas): return False
 		else: return True
 	except: return False
