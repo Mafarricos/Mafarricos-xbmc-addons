@@ -53,12 +53,12 @@
 		<setting label="30053" type="lsep"/>
 		<setting id="site6on" type="bool" default="true" label="30034"/>
 		<setting id="site6" type="text" default="http://www.rlsbb.com/category/movies/" label="30033" visible="eq(-1,true)"/>
-		<setting id="site6sec" type="text" default="1080p-movie|720p-movie|bdrip-movies|dvd-r|dvdrip-movies|dvdscr" label="30036" visible="eq(-2,true)"/>
+		<setting id="site6sec" type="text" default="" label="30036" visible="eq(-2,true)"/>
 		<setting id="site6pag" type="text" default="page" label="30035" visible="eq(-3,true)"/>
 		<setting label="30054" type="lsep"/>
 		<setting id="site7on" type="bool" default="true" label="30034"/>
 		<setting id="site7" type="text" default="http://www.ddlvalley.rocks/category/movies/" label="30033" visible="eq(-1,true)"/>
-		<setting id="site7sec" type="text" default="bluray-1080p|bluray-720p|dvdrip-movies|dvdscr" label="30036" visible="eq(-2,true)"/>
+		<setting id="site7sec" type="text" default="bluray-1080p|bluray-720p" label="30036" visible="eq(-2,true)"/>
 		<setting id="site7pag" type="text" default="page" label="30035" visible="eq(-3,true)"/>
 		<setting label="30055" type="lsep"/>
 		<setting id="site8on" type="bool" default="true" label="30034"/>

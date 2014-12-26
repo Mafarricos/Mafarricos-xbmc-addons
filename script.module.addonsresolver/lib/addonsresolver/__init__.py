@@ -24,13 +24,14 @@ def initsettings():
 	if not os.path.exists(os.path.join(installfolder,links.link().stream_id)) and getSetting("stream_enabled") == 'true': setSetting("stream_enabled",'false')
 	if not os.path.exists(os.path.join(installfolder,links.link().ice_id)) and getSetting("ice_enabled") == 'true': setSetting("ice_enabled",'false')
 	if not os.path.exists(os.path.join(installfolder,links.link().salts_id)) and getSetting("salts_enabled") == 'true': setSetting("salts_enabled",'false')
+	if not os.path.exists(os.path.join(installfolder,links.link().abelhas_id)) and getSetting("abelhas_enabled") == 'true': setSetting("abelhas_enabled",'false')	
 	
 def play(link,external):
-	if 'icefilms' in link:
+	if 'icefilms' in link or 'abelhas' in link:
 		xbmc.executebuiltin('activatewindow(video,'+link+')')
 	else:
-		basic.writefile(dataPath,'w',link)
-		link = basic.readoneline(dataPath)
+		#basic.writefile(dataPath,'w',link)
+		#link = basic.readoneline(dataPath)
 		if external <> 'external': xbmc.Player().play(link)
 		else:
 			playlist = xbmc.PlayList(xbmc.PLAYLIST_VIDEO)
@@ -110,6 +111,11 @@ def custom_choice(name,url,imdb_id,year):
 		addons.append(see % 'SALTS')
 		playurl = links.link().salts_play % (urllib.quote_plus(name.split(' (')[0]),year,urllib.quote_plus(name.split(' (')[0]).replace('+','-')+'-'+year)
 		playlink.append(playurl)
+	if getSetting("abelhas_enabled") == 'true':
+		if search.abelhassearch(name):
+			addons.append(see % 'Abelhas')
+			playurl = links.link().abelhas_search % (urllib.quote_plus(name))
+			playlink.append(playurl)
 	if getSetting("pref_addon") == '-':
 		if len(addons) == 0: 
 			basic.infoDialog(language(30003))

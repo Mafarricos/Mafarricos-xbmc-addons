@@ -1,13 +1,14 @@
 <?xml version="1.0" encoding="utf-8" standalone="yes"?>
 <settings>
 	<category label="General">
-		<setting id="pref_addon" type="select" label="30000" values="-|Genesis|RatoTV|Sites_Dos_Portugas|WarezTuga|KMediaTorrent|Stream|IceFilms|SALTS" default="-" />
+		<setting id="pref_addon" type="select" label="30000" values="-|Genesis|RatoTV|Sites_Dos_Portugas|WarezTuga|KMediaTorrent|Stream|IceFilms|SALTS|Abelhas" default="-" />
 		<setting type="sep"/>
 		<setting type="lsep" label="30001"/>
 		<setting id="genesis_enabled" type="bool" label="Genesis" default="true"/>
 		<setting id="rato_enabled" type="bool" label="RatoTV" default="true"/>
 		<setting id="wt_enabled" type="bool" label="WarezTuga" default="true"/>
-		<setting id="sdp_enabled" type="bool" label="Sites_dos_Portugas" default="true"/>	
+		<setting id="sdp_enabled" type="bool" label="Sites_dos_Portugas" default="true"/>
+		<setting id="abelhas_enabled" type="bool" label="Abelhas" default="true"/>
 		<setting id="kmediatorrent_enabled" type="bool" label="KMediaTorrent" default="true"/>
 		<setting id="stream_enabled" type="bool" label="Stream" default="true"/>
 		<setting id="ice_enabled" type="bool" label="IceFilms" default="true"/>		
