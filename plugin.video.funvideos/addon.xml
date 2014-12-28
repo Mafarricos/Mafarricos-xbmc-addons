@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<addon id="plugin.video.funvideos" name="Fun Videos" version="0.2.8" provider-name="Mafarricos">
+<addon id="plugin.video.funvideos" name="Fun Videos" version="0.2.9" provider-name="Mafarricos">
   <requires>
-    <import addon="xbmc.python" version="2.1.0"/>
+    <import addon="xbmc.python" version="2.19.0"/>
 	<import addon="script.module.requests" version="2.4.3"/>
   </requires>
   <extension point="xbmc.python.pluginsource" library="main.py">
