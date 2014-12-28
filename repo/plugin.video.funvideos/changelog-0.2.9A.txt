@@ -1,6 +1,8 @@
+Version 0.2.9A
+- downgrade gotham
+
 Version 0.2.9
 - kodi fix
-
 Version 0.2.8
 - small fix no page error
 Version 0.2.7
