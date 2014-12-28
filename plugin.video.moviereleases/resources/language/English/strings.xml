@@ -73,10 +73,5 @@
 	<string id="30071">Site: %s - Page: %s</string>
 	<string id="30072">Total: (%s/%s)</string>
 	<string id="30073">Latest Releases (Customs Indexers)</string>
-	<string id="30100">Library</string>
-	<string id="30102">Movies</string>
-	<string id="30107">Update Kodi library after adding content</string>
-	<string id="30108">Avoid creating duplicate content</string>
-	<string id="30309">Added to Movie folder of Movie Releases</string>
 	<string id="30310">Add to Library</string>
 </strings>

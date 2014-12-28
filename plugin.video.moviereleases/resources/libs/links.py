@@ -49,4 +49,4 @@ class link:
 		self.trakt_unseen = 'http://api.trakt.tv/movie/unseen/%s' % self.trakt_key
 		self.trakt_seen = 'http://api.trakt.tv/movie/seen/%s' % self.trakt_key
 		
-		self.addon_plugin = 'plugin://plugin.video.moviereleases/'
+		self.addon_plugin 	= 'plugin://script.module.addonsresolver/'

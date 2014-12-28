@@ -1,6 +1,8 @@
+Version 0.2.0
+- Library integration on Kodi if AddonsResolver installed
+
 Version 0.1.5A
 - Minor Fixes (smaller list on section of Latest Movies)
-
 Version 0.1.5
 - Minor Fixes
 - Library Integration (Still with bugs in Helix)

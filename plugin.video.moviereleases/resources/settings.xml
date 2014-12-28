@@ -5,8 +5,8 @@
 		<setting id="cachesites" type="bool" label="30025" default="true" />
 		<setting id="pref_language" type="select" label="30026" values="system|aa|ab|af|am|ar|as|ay|az|ba|be|bg|bh|bi|bn|bo|br|ca|co|cs|cy|da|de|dz|el|en|eo|es|et|eu|fa|fi|fj|fo|fr|fy|ga|gd|gl|gn|gu|ha|hi|hr|hu|hy|ia|ie|ik|in|is|it|iw|ja|ji|jw|ka|kk|kl|km|kn|ko|ks|ku|ky|la|ln|lo|lt|lv|mg|mi|mk|ml|mn|mo|mr|ms|mt|my|na|ne|nl|no|oc|om|or|pa|pl|ps|pt|qu|rm|rn|ro|ru|rw|sa|sd|sg|sh|si|sk|sl|sm|sn|so|sq|sr|ss|st|su|sv|sw|ta|te|tg|th|ti|tk|tl|tn|to|tr|ts|tt|tw|uk|ur|uz|vi|vo|wo|xh|yo|zh|zu" default="system" />
 		<setting id="debug_mode" type="bool" label="30027" default="false"/>
-		<setting id="menu-view" type="enum" label="30046" lvalues="30038|30039" default="0"/>		
-		<setting id="movies-view" type="enum" label="30037" lvalues="30038|30039|30040|30041|30042|30043|30044|30045" default="6"/>		
+		<setting id="menu-view" type="select" label="30046" lvalues="30038|30039" default="0"/>		
+		<setting id="movies-view" type="select" label="30037" lvalues="30038|30039|30040|30041|30042|30043|30044|30045" default="6"/>		
     </category>
 	<category label="30065">
 		<setting type="lsep" label="Trakt"/>
@@ -14,11 +14,6 @@
 		<setting id="trakt_password" type="text" option="hidden" label="30067" default=""/>
 		<setting id="trakt_sync" type="bool" label="30069" default="true"/>		
 	</category>	
-	<category label="30100">
-		<setting id="movie_library" type="folder" label="30102" default="special://userdata/addon_data/plugin.video.moviereleases/Movies"/>
-		<setting id="update_library" type="bool" label="30107" default="true"/>
-		<setting id="check_library" type="bool" label="30108" default="true"/>
-	</category>
     <category label="30028">
 		<setting label="30023" type="lsep"/>	
 		<setting id="allyear" type="bool" default="true" label="30029"/>		
