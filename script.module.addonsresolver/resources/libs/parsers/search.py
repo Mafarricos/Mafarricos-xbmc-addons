@@ -8,10 +8,6 @@ from resources.libs import basic
 import links
 from BeautifulSoup import BeautifulSoup
 
-addonId 		= 'plugin.video.addonsresolver'
-selfAddon 		= xbmcaddon.Addon(id=addonId)
-language		= selfAddon.getLocalizedString
-
 def basic_search(searchurl,name,imdb,year,expression,type):
 	if type == 'IMDB': searchresult = basic.open_url(searchurl % (imdb))
 	elif type == 'NameYear': searchresult = basic.open_url(searchurl % (name+' ('+year+')'))

@@ -29,10 +29,15 @@ cachePath			= os.path.join(dataPath,'cache')
 sitesfile 			= os.path.join(os.path.join(addonPath, 'resources'),'sites.txt')
 sitecachefile 		= os.path.join(cachePath,'_cache.txt')
 getSetting          = xbmcaddon.Addon().getSetting
+setSetting          = xbmcaddon.Addon().setSetting
 language            = xbmcaddon.Addon().getLocalizedString
 
 if not os.path.exists(dataPath): os.makedirs(dataPath)
 if not os.path.exists(cachePath): os.makedirs(cachePath)
+
+if getSetting("settings_version") <> '0.2.0':
+	if os.path.exists(os.path.join(dataPath,'settings.xml')): os.remove(os.path.join(dataPath,'settings.xml'))
+	setSetting('settings_version', '0.2.0')
 
 def MAIN():
 	addDir(language(30000),'LatestReleases',3,'',True,4,'',0,'','','')

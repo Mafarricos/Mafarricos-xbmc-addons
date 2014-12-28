@@ -6,11 +6,16 @@
 # MafaStudios@gmail.com
 import re,xbmcgui,xbmcaddon,xbmc,os,urllib,json,xbmcplugin
 from resources.libs import play,basic
+from resources.libs.parsers import links
 
 addonId			= xbmcaddon.Addon().getAddonInfo("id")
 selfAddon 		= xbmcaddon.Addon(id=addonId)
 language		= selfAddon.getLocalizedString
 
+if links.link().getSetting("settings_version") <> '0.1.0':
+	if os.path.exists(os.path.join(links.link().dataPath,'settings.xml')): os.remove(os.path.join(links.link().dataPath,'settings.xml'))
+	links.link().setSetting('settings_version', '0.1.0')
+	
 def MAIN():
 	addDir('Settings','settings')
 	xbmc.executebuiltin('Addon.OpenSettings(%s)' % addonId)
@@ -65,7 +70,5 @@ print "year: "+str(year)
 if action==None: MAIN()
 elif action == 'play': play.play().play_stream(name, url, imdbid, year)
 elif action == 'library': basic.library_movie_add(name, url, imdbid, year)
-elif action == 'settings':
-	play.initsettings()
-	xbmc.executebuiltin('Addon.OpenSettings(%s)' % addonId)
+elif action == 'settings': xbmc.executebuiltin('Addon.OpenSettings(%s)' % addonId)
 xbmcplugin.endOfDirectory(int(sys.argv[1]))
