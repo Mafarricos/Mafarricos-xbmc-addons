@@ -5,7 +5,7 @@
 	<import addon="script.module.beautifulsoup" version="3.2.1"/>
 	<import addon="script.module.metahandler" version="2.7.0"/>
 	<import addon="plugin.video.youtube" version="1.0.0"/>	
-	<import addon="script.module.addonsresolver" version="0.0.1"/>
+	<import addon="script.module.addonsresolver" optional="true"/>
   </requires>
   <extension point="xbmc.python.pluginsource" library="main.py">
     <provides>video</provides>
