@@ -1,7 +1,9 @@
+Version 0.1.2
+- android fix;
+
 Version 0.1.1
 - minor fixes;
 - cleanup settings for older versions.
-
 Version 0.1.0
 - Changed from module addon to program addon;
 - code redone.

@@ -74,10 +74,7 @@ class play:
 			if not paths:  basic.infoDialog(language(30003))
 		if paths:
 			for path in paths:
-				addonstring = filter(lambda c: not c.isdigit(),path).replace('.strm','').replace(os.path.join(strmPath,'.plugin.video.'),'').upper()
-				if '3d' in path.lower(): addonstring = addonstring.replace('.D','-3D')
-				elif '720p' in path.lower(): addonstring = addonstring.replace('.P','-720P')
-				elif '1080p' in path.lower(): addonstring = addonstring.replace('.P','-1080P')			
+				addonstring = path.split('plugin.video.')[1].replace('.strm','').upper()
 				addons.append(addonstring)
 			if len(addons) == 1: choose1 = 0
 			else: choose1=addonchoice(language(30004),addons)
