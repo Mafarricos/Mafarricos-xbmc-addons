@@ -1,6 +1,9 @@
+Version 0.1.0
+- Changed from module addon to program addon;
+- code redone.
+
 Version 0.0.11
 - added muchmovies.HD and yifymovies.HD
-
 Version 0.0.10A
 - Abelhas no previous search
 Version 0.0.10

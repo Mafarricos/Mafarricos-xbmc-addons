@@ -8,4 +8,10 @@
 	<string id="30005">Seleccione a qualidade</string>
 	<string id="30006">%s (Seeds: %s Peers: %s Tamanho: %s)</string>
 	<string id="30007">Fonte Preferencial</string>
+	<string id="30008">Ordenação</string>
+	<string id="30100">Biblioteca</string>
+	<string id="30102">Filmes</string>
+	<string id="30107">Actualizar biblioteca Kodi depois de adicionar conteúdo</string>
+	<string id="30108">Evitar criar conteúdo duplicado</string>
+	<string id="30309">Adicionado à pasta de Filmes de Addons Resolver</string>	
 </strings>
