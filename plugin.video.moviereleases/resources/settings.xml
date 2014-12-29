@@ -22,43 +22,43 @@
 		<setting id="pages-num" type="slider" default="2" label="30032" range="1,1,10" option="int"/>
 		<setting label="30048" type="lsep"/>
 		<setting id="site1on" type="bool" default="true" label="30034"/>
-		<setting id="site1" type="text" default="http://rapidmoviez.com/l/" label="30033" visible="eq(-1,true)"/>
+		<setting id="site1" type="text" default="http://www.rlslog.net/category/movies/" label="30033" visible="eq(-1,true)"/>
 		<setting id="site1sec" type="text" default="" label="30036" visible="eq(-2,true)"/>
-		<setting id="site1pag" type="text" default="m" label="30035" visible="eq(-3,true)"/>
+		<setting id="site1pag" type="text" default="page" label="30035" visible="eq(-3,true)"/>
 		<setting label="30049" type="lsep"/>
 		<setting id="site2on" type="bool" default="true" label="30034"/>
-		<setting id="site2" type="text" default="http://oneclickwatch.ws/category/movies/" label="30033" visible="eq(-1,true)"/>
+		<setting id="site2" type="text" default="http://sceper.ws/category/movies/" label="30033" visible="eq(-1,true)"/>
 		<setting id="site2sec" type="text" default="" label="30036" visible="eq(-2,true)"/>
 		<setting id="site2pag" type="text" default="page" label="30035" visible="eq(-3,true)"/>
 		<setting label="30050" type="lsep"/>
 		<setting id="site3on" type="bool" default="true" label="30034"/>
-		<setting id="site3" type="text" default="http://sceper.ws/category/movies/" label="30033" visible="eq(-1,true)"/>
+		<setting id="site3" type="text" default="http://www.scnsrc.me/category/films/" label="30033" visible="eq(-1,true)"/>
 		<setting id="site3sec" type="text" default="" label="30036" visible="eq(-2,true)"/>
 		<setting id="site3pag" type="text" default="page" label="30035" visible="eq(-3,true)"/>
 		<setting label="30051" type="lsep"/>
 		<setting id="site4on" type="bool" default="true" label="30034"/>
-		<setting id="site4" type="text" default="http://www.scnsrc.me/category/films/" label="30033" visible="eq(-1,true)"/>
-		<setting id="site4sec" type="text" default="bdrip|bluray" label="30036" visible="eq(-2,true)"/>
-		<setting id="site4pag" type="text" default="page" label="30035" visible="eq(-3,true)"/>
+		<setting id="site4" type="text" default="http://www.vcdq.com/browse/1/0/3_2/10_9_21_22_23_24_6_28_32_19_11_3_2/0/2011_2012_2013_2014/0/0/0/" label="30033" visible="eq(-1,true)"/>
+		<setting id="site4sec" type="text" default="" label="30036" visible="eq(-2,true)"/>
+		<setting id="site4pag" type="text" default="0" label="30035" visible="eq(-3,true)"/>
 		<setting label="30052" type="lsep"/>
 		<setting id="site5on" type="bool" default="true" label="30034"/>
-		<setting id="site5" type="text" default="http://www.rlslog.net/category/movies/" label="30033" visible="eq(-1,true)"/>
-		<setting id="site5sec" type="text" default="bdrip|dvdrip" label="30036" visible="eq(-2,true)"/>
+		<setting id="site5" type="text" default="http://oneclickwatch.ws/category/movies/" label="30033" visible="eq(-1,true)"/>
+		<setting id="site5sec" type="text" default="" label="30036" visible="eq(-2,true)"/>
 		<setting id="site5pag" type="text" default="page" label="30035" visible="eq(-3,true)"/>
 		<setting label="30053" type="lsep"/>
 		<setting id="site6on" type="bool" default="true" label="30034"/>
-		<setting id="site6" type="text" default="http://www.rlsbb.com/category/movies/" label="30033" visible="eq(-1,true)"/>
+		<setting id="site6" type="text" default="http://www.ddlvalley.rocks/category/movies/" label="30033" visible="eq(-1,true)"/>
 		<setting id="site6sec" type="text" default="" label="30036" visible="eq(-2,true)"/>
 		<setting id="site6pag" type="text" default="page" label="30035" visible="eq(-3,true)"/>
 		<setting label="30054" type="lsep"/>
 		<setting id="site7on" type="bool" default="true" label="30034"/>
-		<setting id="site7" type="text" default="http://www.ddlvalley.rocks/category/movies/" label="30033" visible="eq(-1,true)"/>
-		<setting id="site7sec" type="text" default="bluray-1080p|bluray-720p" label="30036" visible="eq(-2,true)"/>
-		<setting id="site7pag" type="text" default="page" label="30035" visible="eq(-3,true)"/>
+		<setting id="site7" type="text" default="http://rapidmoviez.com/l/" label="30033" visible="eq(-1,true)"/>
+		<setting id="site7sec" type="text" default="" label="30036" visible="eq(-2,true)"/>
+		<setting id="site7pag" type="text" default="m" label="30035" visible="eq(-3,true)"/>
 		<setting label="30055" type="lsep"/>
 		<setting id="site8on" type="bool" default="true" label="30034"/>
-		<setting id="site8" type="text" default="http://rls1click.com/category/movies/" label="30033" visible="eq(-1,true)"/>
-		<setting id="site8sec" type="text" default="1080p|720p|bdrip|brrip" label="30036" visible="eq(-2,true)"/>
+		<setting id="site8" type="text" default="http://www.rlsbb.com/category/movies/" label="30033" visible="eq(-1,true)"/>
+		<setting id="site8sec" type="text" default="" label="30036" visible="eq(-2,true)"/>
 		<setting id="site8pag" type="text" default="page" label="30035" visible="eq(-3,true)"/>
 		<setting label="30056" type="lsep"/>
 		<setting id="site9on" type="bool" default="false" label="30034"/>
@@ -87,14 +87,14 @@
 		<setting id="site13pag" type="text" default="" label="30035" visible="eq(-3,true)"/>
 		<setting label="30061" type="lsep"/>
 		<setting id="site14on" type="bool" default="false" label="30034"/>
-		<setting id="site14" type="text" default="" label="30033" visible="eq(-1,true)"/>
+		<setting id="site14" type="text" default="http://rls1click.com/category/movies/" label="30033" visible="eq(-1,true)"/>
 		<setting id="site14sec" type="text" default="" label="30036" visible="eq(-2,true)"/>
-		<setting id="site14pag" type="text" default="" label="30035" visible="eq(-3,true)"/>
+		<setting id="site14pag" type="text" default="page" label="30035" visible="eq(-3,true)"/>
 		<setting label="30062" type="lsep"/>
 		<setting id="site15on" type="bool" default="false" label="30034"/>
-		<setting id="site15" type="text" default="http://irfree.com/movies/page/" label="30033" visible="eq(-1,true)"/>
+		<setting id="site15" type="text" default="http://irfree.com/movies/" label="30033" visible="eq(-1,true)"/>
 		<setting id="site15sec" type="text" default="" label="30036" visible="eq(-2,true)"/>
-		<setting id="site15pag" type="text" default="" label="30035" visible="eq(-3,true)"/>
+		<setting id="site15pag" type="text" default="page" label="30035" visible="eq(-3,true)"/>
     </category>
     <category label="30073">
 		<setting label="30048" type="lsep"/>

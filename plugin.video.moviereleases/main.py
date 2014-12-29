@@ -35,9 +35,9 @@ language            = xbmcaddon.Addon().getLocalizedString
 if not os.path.exists(dataPath): os.makedirs(dataPath)
 if not os.path.exists(cachePath): os.makedirs(cachePath)
 
-if getSetting("settings_version") <> '0.2.0':
+if getSetting("settings_version") <> '0.2.2':
 	if os.path.exists(os.path.join(dataPath,'settings.xml')): os.remove(os.path.join(dataPath,'settings.xml'))
-	setSetting('settings_version', '0.2.0')
+	setSetting('settings_version', '0.2.2')
 
 def MAIN():
 	addDir(language(30000),'LatestReleases',3,'',True,4,'',0,'','','')
@@ -141,7 +141,9 @@ def latestreleases(index):
 			if sections <> '':
 				seclist = sections.split('|')
 				for section in seclist: sites.append(site+section+'/'+pageind+'/')
-			else: sites.append(site+pageind+'/')
+			else: 
+				if 'vcdq' in site: sites.append(site+pageind+'/1/')
+				else: sites.append(site+pageind+'/')
 	try: ranging = int(index)+1
 	except: ranging = 1
 	if ranging ==1: open(sitecachefile, 'w').close()
@@ -150,7 +152,8 @@ def latestreleases(index):
 	a = time.time()
 	for i in range(ranging, ranging+int(getSetting('pages-num'))):
 		for site in sites:
-			threads.append(threading.Thread(name=site+str(i),target=imdb.getlinks,args=(site+str(i)+'/',results,f*100, )))
+			if 'vcdq' in site: threads.append(threading.Thread(name=site+str(i-1),target=imdb.getlinks,args=(site+str(i)+'/',results,f*100, )))
+			else: threads.append(threading.Thread(name=site+str(i),target=imdb.getlinks,args=(site+str(i)+'/',results,f*100, )))
 			f += 1
 	ranging = i
 	[i.start() for i in threads]
