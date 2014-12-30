@@ -43,10 +43,10 @@
 	<string id="30040">Miniaturas</string>
 	<string id="30041">Posters</string>
 	<string id="30042">Fanart</string>
-	<string id="30043">Media Info 1</string>
-	<string id="30044">Media Info 2</string>
-	<string id="30045">Media Info 3</string>
-	<string id="30046">View - Menus</string>	
+	<string id="30043">Média Info 1</string>
+	<string id="30044">Média Info 2</string>
+	<string id="30045">Média Info 3</string>
+	<string id="30046">Vista - Menus</string>	
 	<string id="30048">Site 1</string>
 	<string id="30049">Site 2</string>
 	<string id="30050">Site 3</string>
@@ -66,7 +66,7 @@
 	<string id="30064">Marcar como Não Visto</string>
 	<string id="30065">Contas</string>
 	<string id="30066">Utilizador</string>
-	<string id="30067">Password</string>
+	<string id="30067">Palavra-passe</string>
 	<string id="30068">Definições do MetaHandler</string>
 	<string id="30069">Sincronizar Vistos com Trakt</string>
 	<string id="30070">A Obter dados...</string>
