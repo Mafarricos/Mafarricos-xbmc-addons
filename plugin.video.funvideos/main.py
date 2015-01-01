@@ -21,10 +21,14 @@ sitecachefile 		= os.path.join(cachePath,'_cache.txt')
 if not os.path.exists(dataPath): os.makedirs(dataPath)
 if not os.path.exists(cachePath): os.makedirs(cachePath)
 
-def MAIN(index=None):
+def MAIN():
+	addDir('[COLOR yellow]Listar Videos[/COLOR]','videos',6,'',True,2,'','','')
+	addDir('[COLOR grey]Gerir Sites[/COLOR]','next',3,'',True,2,'','',index)
+
+def videosmenu(index=None):
 	parser = HTMLParser()
 	linecache = ''
-	if not index:
+	if index == None:
 		index = 0		
 		open(site9gagfile, 'w').close()
 		open(sitecachefile, 'w').close()
@@ -40,8 +44,8 @@ def MAIN(index=None):
 		elif '::pageindex::'+str(index)+'::'+link['url'] in str(linecache):
 			informacao = { "Title": parser.unescape(link['title'])}			
 			addDir(parser.unescape(link['title'])+' [COLOR yellow]['+link['prettyname']+'][/COLOR]',link['url'],1,link['thumbnail'],False,total,link['duration'],informacao,index)		
-	addDir('Seguinte >>','next',2,'',True,1,'','',index)
-	if index == 0: addDir('[COLOR grey]Gerir Sites[/COLOR]','next',3,'',True,1,'','',index)
+	addDir('Seguinte >>','next',6,'',True,1,'','',index)
+
 	
 def listingsites():
 	list = basic.listsites(sitesfile)
@@ -125,8 +129,9 @@ print "Index: "+str(index)
 
 if mode==None or url==None or len(url)<1: MAIN()
 elif mode==1: play(url)
-elif mode==2: MAIN(index)
+elif mode==2: MAIN()
 elif mode==3: listingsites()
 elif mode==4: changestatus(url)
 elif mode==5: xbmcgui.Dialog().ok('Cache',basic.removecache(cachePath))
+elif mode==6: videosmenu(index)
 xbmcplugin.endOfDirectory(int(sys.argv[1]))

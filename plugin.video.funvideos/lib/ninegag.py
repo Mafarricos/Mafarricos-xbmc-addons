@@ -13,8 +13,8 @@ def grab(url,prettyname,id,cachePath,site9gagfile,cacheE):
 	idpage = re.findall('::'+id+'::::(.+?)::', line, re.DOTALL)
 	if not idpage: page = basic.open_url('http://9gag.tv')
 	else: page = basic.open_url(url+idpage[0],'9gag')
-	jsondata = re.findall('   postGridPrefetchPosts = (.+?);', page, re.DOTALL)
-	j = json.loads(jsondata[0])
+	jsondata = re.findall('   postGridPrefetchPosts = (.+?)];', page, re.DOTALL)
+	j = json.loads(jsondata[0]+']')
 	size = len(j)
 	e=0
 	for data in j:
