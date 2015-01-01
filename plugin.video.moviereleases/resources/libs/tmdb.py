@@ -19,7 +19,7 @@ def listmovies(url,cachePath):
 	for list in j['results']: 
 		order += 1
 		sendlist.append([order,list['id']])
-	chunks=[sendlist[x:x+5] for x in xrange(0, len(sendlist)+1, 5)]
+	chunks=[sendlist[x:x+5] for x in xrange(0, len(sendlist), 5)]
 	for i in range(len(chunks)): threads.append(threading.Thread(name='listmovies'+str(i),target=searchmovielist,args=(chunks[i],result,cachePath, )))
 	[i.start() for i in threads]
 	[i.join() for i in threads]

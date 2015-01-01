@@ -1,8 +1,14 @@
+Version 0.2.3
+- Initial Support to new trakt API;
+- New Rotten Tomatoes Section;
+- migrated strings.xml to strings.po;
+- minor fixes;
+- Portuguese translations fixed (ty Leinad4Mind).
+
 Version 0.2.2
 - New indexers;
 - Indexers without sections by default;
 - cleanup settings for older versions.
-
 Version 0.2.1
 - minor fixes;
 - cleanup settings for older versions.

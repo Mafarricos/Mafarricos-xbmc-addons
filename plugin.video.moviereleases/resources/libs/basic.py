@@ -34,7 +34,17 @@ def open_url(url,post=None):
 	except urllib2.HTTPError, e: log(u"open_url HTTPERROR: %s - %s" % (str(url),str(e.code)))
 	except urllib2.URLError, e: log(u"open_url URLERROR: %s - %s" % (str(url),str(e.reason)))
 	except httplib.HTTPException, e: log(u"open_url HTTPException: %s" % (str(url)))
-		
+
+def open_url_headers(url,headers):
+	request = urllib2.Request(url, headers=headers)
+	try: 
+		response_body = urllib2.urlopen(request).read()	
+		return response_body
+	except BaseException as e: log(u"open_url_headers ERROR: %s - %s" % (str(url),str(e).decode('ascii','ignore')))
+	except urllib2.HTTPError, e: log(u"open_url_headers HTTPERROR: %s - %s" % (str(url),str(e.code)))
+	except urllib2.URLError, e: log(u"open_url_headers URLERROR: %s - %s" % (str(url),str(e.reason)))
+	except httplib.HTTPException, e: log(u"open_url_headers HTTPException: %s" % (str(url)))
+	
 def listsites(sitesfile):
 	list = []
 	ins = open(sitesfile, "r" )	

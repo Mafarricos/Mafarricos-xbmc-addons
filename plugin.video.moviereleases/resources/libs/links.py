@@ -31,7 +31,7 @@ class link:
 		self.imdb_top250 = 'http://akas.imdb.com/chart/top'
 		self.imdb_bot100 = 'http://akas.imdb.com/chart/bottom'
 		self.imdb_theaters = 'http://www.imdb.com/movies-in-theaters/'
-		self.imdb_comming_soon = 'http://www.imdb.com/movies-coming-soon/'	
+		self.imdb_coming_soon = 'http://www.imdb.com/movies-coming-soon/'	
 		self.imdb_popular = 'http://akas.imdb.com/search/title?sort=moviemeter,asc&title_type=feature,tv_movie&count=30&start=%s'
 		self.imdb_popularbygenre = 'http://akas.imdb.com/search/title?sort=moviemeter,asc&title_type=feature,tv_movie&count=30&start=%s&genres=%s'
 		self.imdb_boxoffice = 'http://akas.imdb.com/search/title?sort=boxoffice_gross_us&title_type=feature,tv_movie&count=30&start=%s'
@@ -49,4 +49,22 @@ class link:
 		self.trakt_unseen = 'http://api.trakt.tv/movie/unseen/%s' % self.trakt_key
 		self.trakt_seen = 'http://api.trakt.tv/movie/seen/%s' % self.trakt_key
 		
+		self.trakt_base_s = 'https://api.trakt.tv/%s'
+		if getSetting("trakt_api") <> '': self.trakt_apikey = getSetting("trakt_api")
+		#else: self.trakt_apikey = base64.urlsafe_b64decode('M2Q4OTdlNWFiNDkxMWIwMzYwZGQ4NGNmYmQzZTA3NzljZTg2OTM2ZmNjYmYwMDBjYTdlMjFkNWY4ZjBiNDk2ZA==')
+		self.trakt_popular = self.trakt_base_s % 'movies/popular'
+		self.trakt_trending = self.trakt_base_s % 'movies/trending'
+		
 		self.addon_plugin 	= 'plugin://script.module.addonsresolver/'
+		
+		if getSetting("rotten_api") <> '': self.rotten_key = getSetting("rotten_api")
+		else: self.rotten_key = base64.urlsafe_b64decode('eWFqZTl6czVheWJzcHY4a2NwMjZuNHV2')
+		self.rotten_base = 'http://api.rottentomatoes.com/api/public/v1.0/lists/%s'
+		self.rotten_boxoffice = self.rotten_base % 'movies/box_office.json?apikey=%s&page_limit=30&page=%s'
+		self.rotten_theaters = self.rotten_base % 'movies/in_theaters.json?apikey=%s&page_limit=30&page=%s'
+		self.rotten_opening = self.rotten_base % 'movies/opening.json?apikey=%s&page_limit=30&page=%s'
+		self.rotten_upcoming = self.rotten_base % 'movies/upcoming.json?apikey=%s&page_limit=30&page=%s'
+		self.rotten_dvdtop_rentals = self.rotten_base % 'dvds/top_rentals.json?apikey=%s&page_limit=30&page=%s'
+		self.rotten_dvdcurrent_releases = self.rotten_base % 'dvds/current_releases.json?apikey=%s&page_limit=30&page=%s'
+		self.rotten_dvdnew_releases = self.rotten_base % 'dvds/new_releases.json?apikey=%s&page_limit=30&page=%s'
+		self.rotten_dvdupcoming = self.rotten_base % 'dvds/upcoming.json?apikey=%s&page_limit=30&page=%s'

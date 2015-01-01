@@ -12,7 +12,10 @@
 		<setting type="lsep" label="Trakt"/>
 		<setting id="trakt_user" type="text" label="30066" default=""/>
 		<setting id="trakt_password" type="text" option="hidden" label="30067" default=""/>
-		<setting id="trakt_sync" type="bool" label="30069" default="true"/>		
+		<setting id="trakt_sync" type="bool" label="30069" default="true"/>
+		<setting id="trakt_api" type="text" label="API Key" default=""/>		
+		<setting type="lsep" label="Rotten Tomatoes"/>
+		<setting id="rotten_api" type="text" label="API Key" default=""/>		
 	</category>	
     <category label="30028">
 		<setting label="30023" type="lsep"/>	

@@ -5,7 +5,7 @@
 
 import xbmcplugin,xbmcgui,xbmc,xbmcaddon,os,threading,re,urllib,json,time
 from BeautifulSoup import BeautifulSoup
-from resources.libs import links,tmdb,imdb,youtube,basic
+from resources.libs import links,tmdb,imdb,trakt,rottentomatoes,youtube,basic
 AddonsResolver = True
 try:
 	addon_resolver = xbmc.translatePath('special://home/addons/script.module.addonsresolver/resources/libs')
@@ -40,38 +40,83 @@ if getSetting("settings_version") <> '0.2.2':
 	setSetting('settings_version', '0.2.2')
 
 def MAIN():
-	addDir(language(30000),'LatestReleases',3,'',True,4,'',0,'','','')
-	addDir(language(30001),'TMDB',6,'',True,4,'',0,'','','')	
-	addDir(language(30002),'IMDB',4,'',True,4,'',0,'','','')
-	addDir(language(30003),'search',7,'',True,4,'',0,'','','')	
-	addDir(language(30004),'Tools',9,'',True,4,'',0,'','','')
+	addDir(language(30000),'LatestReleases',3,'',True,7,'',0,'','','')
+	addDir(language(30001),'TMDB',6,'',True,7,'',0,'','','')
+	addDir(language(30002),'IMDB',4,'',True,7,'',0,'','','')
+	if links.link().trakt_apikey <> '': addDir(language(30047),'trakt',14,'',True,7,'',0,'','','')
+	if links.link().rotten_key <> '': addDir(language(30074),'rotten',16,'',True,7,'',0,'','','')
+	addDir(language(30003),'search',7,'',True,7,'',0,'','','')	
+	addDir(language(30004),'Tools',9,'',True,7,'',0,'','','')
 	menus_view()
 	
 def ToolsMenu():
-	addDir(language(30005),'CleanCache',8,'',False,2,'',0,'','','')
-	if AddonsResolver: addDir(language(30006),'script.module.addonsresolver',10,'',False,2,'',0,'','','')
-	addDir(language(30068),'script.module.metahandler',10,'',False,2,'',0,'','','')
+	addDir(language(30005),'CleanCache',8,'',False,3,'',0,'','','')
+	if AddonsResolver: addDir(language(30006),'script.module.addonsresolver',10,'',False,3,'',0,'','','')
+	addDir(language(30068),'script.module.metahandler',10,'',False,3,'',0,'','','')
 	menus_view()
 	
 def IMDBmenu():
-	addDir(language(30007),'top250',11,'',True,8,'','','','','')
-	addDir(language(30008),'bot100',11,'',True,8,'','','','','')	
-	addDir(language(30009),'theaters',11,'',True,8,'','','','','')
-	addDir(language(30010),'comming_soon',11,'',True,8,'','','','','')
-	addDir(language(30011),'boxoffice',11,'',True,8,'',1,'','','')
-	addDir(language(30012),'most_voted',11,'',True,8,'',1,'','','')
-	addDir(language(30013),'oscars',11,'',True,8,'',1,'','','')
-	addDir(language(30014),'popular',11,'',True,8,'',1,'','','')
-	addDir(language(30015),'popularbygenre',11,'',True,8,'',1,'','','')	
+	addDir('[COLOR yellow]%s[/COLOR]' % language(30002),'IMDB',11,'',False,10,'',0,'','','')
+	addDir(language(30007),'top250',11,'',True,10,'','','','','')
+	addDir(language(30008),'bot100',11,'',True,10,'','','','','')	
+	addDir(language(30009),'theaters',11,'',True,10,'','','','','')
+	addDir(language(30010),'coming_soon',11,'',True,10,'','','','','')
+	addDir(language(30011),'boxoffice',11,'',True,10,'',1,'','','')
+	addDir(language(30012),'most_voted',11,'',True,10,'',1,'','','')
+	addDir(language(30013),'oscars',11,'',True,10,'',1,'','','')
+	addDir(language(30014),'popular',11,'',True,10,'',1,'','','')
+	addDir(language(30015),'popularbygenre',11,'',True,10,'',1,'','','')	
 	menus_view()
 	
 def TMDBmenu():
-	addDir(language(30009),'Theaters',7,'',True,5,'',1,'','','')
-	addDir(language(30010),'Upcoming',7,'',True,5,'',1,'','','')
-	addDir(language(30014),'Popular',7,'',True,5,'',1,'','','')
-	addDir(language(30012),'TopRated',7,'',True,5,'',1,'','','')
-	addDir(language(30016),'discoverpop',7,'',True,5,'',1,'','','')	
+	addDir('[COLOR yellow]%s[/COLOR]' % language(30001),'TMDB',7,'',False,6,'',0,'','','')
+	addDir(language(30009),'Theaters',7,'',True,6,'',1,'','','')
+	addDir(language(30010),'Upcoming',7,'',True,6,'',1,'','','')
+	addDir(language(30014),'Popular',7,'',True,6,'',1,'','','')
+	addDir(language(30012),'TopRated',7,'',True,6,'',1,'','','')
+	addDir(language(30016),'discoverpop',7,'',True,6,'',1,'','','')	
 	menus_view()
+
+def traktmenu():
+	addDir('[COLOR yellow]%s[/COLOR]' % language(30047),'trakt',15,'',False,3,'',0,'','','')
+	addDir(language(30014),'Popular',15,'',True,3,'',1,'','','')
+	addDir(language(30080),'Trending',15,'',True,3,'',1,'','','')	
+	menus_view()
+
+def traktlist(index,url):
+	listdirs = []
+	if url == 'Popular': listdirs = trakt.listmovies(links.link().trakt_popular,index,cachePath)
+	elif url == 'Trending': listdirs = trakt.listmovies(links.link().trakt_trending,index,cachePath)	
+	for j in listdirs: addDir(j['label'],j['imdbid'],2,j['poster'],False,len(listdirs)+1,j['info'],'',j['imdbid'],j['year'],j['originallabel'],j['fanart_image'])
+	#addDir(language(30018)+'>>',url,15,'',True,len(listdirs)+1,'',int(index)+1,'','','')
+	movies_view()
+	
+def rottenmenu():
+	addDir('[COLOR yellow]%s[/COLOR]' % language(30074),'rotten',17,'',False,9,'',0,'','','')
+	addDir(language(30011),'boxoffice',17,'',True,9,'',1,'','','')
+	addDir(language(30009),'theaters',17,'',True,9,'',1,'','','')
+	addDir(language(30075),'opening',17,'',True,9,'',1,'','','')
+	addDir(language(30010),'upcoming',17,'',True,9,'',1,'','','')
+	addDir('[COLOR green]%s[/COLOR]' % language(30076),'dvds',17,'',False,9,'',1,'','','')	
+	addDir(language(30077),'dvdtop_rentals',17,'',True,9,'',1,'','','')
+	addDir(language(30078),'dvdcurrent_releases',17,'',True,9,'',1,'','','')
+	addDir(language(30079),'dvdnew_releases',17,'',True,9,'',1,'','','')
+	#addDir('dvdupcoming','dvdupcoming',17,'',True,1,'',1,'','','')
+	menus_view()
+
+def rottenlist(index,url):
+	listdirs = []
+	if url == 'boxoffice': listdirs = rottentomatoes.listmovies(links.link().rotten_boxoffice % (links.link().rotten_key,index),cachePath)
+	elif url == 'theaters': listdirs = rottentomatoes.listmovies(links.link().rotten_theaters % (links.link().rotten_key,index),cachePath)
+	elif url == 'opening': listdirs = rottentomatoes.listmovies(links.link().rotten_opening % (links.link().rotten_key,index),cachePath)
+	elif url == 'upcoming': listdirs = rottentomatoes.listmovies(links.link().rotten_upcoming % (links.link().rotten_key,index),cachePath)
+	elif url == 'dvdtop_rentals': listdirs = rottentomatoes.listmovies(links.link().rotten_dvdtop_rentals % (links.link().rotten_key,index),cachePath)
+	elif url == 'dvdcurrent_releases': listdirs = rottentomatoes.listmovies(links.link().rotten_dvdcurrent_releases % (links.link().rotten_key,index),cachePath)
+	elif url == 'dvdnew_releases': listdirs = rottentomatoes.listmovies(links.link().rotten_dvdnew_releases % (links.link().rotten_key,index),cachePath)
+	#elif url == 'dvdupcoming': listdirs = rottentomatoes.listmovies(links.link().rotten_dvdupcoming % (links.link().rotten_key,index),cachePath)	
+	for j in listdirs: addDir(j['label'],j['imdbid'],2,j['poster'],False,len(listdirs)+1,j['info'],'',j['imdbid'],j['year'],j['originallabel'],j['fanart_image'])
+	if url == 'theaters' or ('dvd' in url and url <> 'dvdtop_rentals'): addDir(language(30018)+'>>',url,17,'',True,len(listdirs)+1,'',int(index)+1,'','','')
+	movies_view()
 	
 def TMDBlist(index,url):
 	listdirs = []
@@ -100,12 +145,12 @@ def IMDBlist2(index,url,originalname):
 	elif url == 'oscars': listdirs = imdb.listmovies(links.link().imdb_oscars % (index),cachePath)
 	elif url == 'popular': listdirs = imdb.listmovies(links.link().imdb_popular % (index),cachePath)
 	elif url == 'theaters': listdirs = imdb.listmovies(links.link().imdb_theaters,cachePath)
-	elif url == 'comming_soon': listdirs = imdb.listmovies(links.link().imdb_comming_soon,cachePath)	
+	elif url == 'coming_soon': listdirs = imdb.listmovies(links.link().imdb_coming_soon,cachePath)	
 	elif url == 'popularbygenre': 
 		if index == '1': originalname = imdb.getgenre(links.link().imdb_genre)
 		listdirs = imdb.listmovies(links.link().imdb_popularbygenre % (index,originalname),cachePath)	
 	for j in listdirs: addDir(j['label'],j['imdbid'],2,j['poster'],False,len(listdirs)+1,j['info'],'',j['imdbid'],j['year'],j['originallabel'],j['fanart_image'])
-	if url <> 'top250' and url <> 'bot100' and url <> 'theaters' and url <> 'comming_soon': 
+	if url <> 'top250' and url <> 'bot100' and url <> 'theaters' and url <> 'coming_soon': 
 		if url == 'popularbygenre': addDir(language(30018)+'>>',url,11,'',True,len(listdirs)+1,'',int(index)+30,'','',originalname,'')
 		else: addDir(language(30018)+'>>',url,11,'',True,len(listdirs)+1,'',int(index)+30,'','','','')
 	movies_view()
@@ -172,7 +217,7 @@ def populateDir(results,ranging,cache=False):
 	results = sorted(results, key=basic.getKey)
 	for order,link in results:
 		if link not in str(unique_stuff): unique_stuff.append([order, link])
-	chunks=[unique_stuff[x:x+10] for x in xrange(0, len(unique_stuff)+1, 10)]
+	chunks=[unique_stuff[x:x+10] for x in xrange(0, len(unique_stuff), 10)]
 	for i in range(len(chunks)): threads2.append(threading.Thread(name='listmovies'+str(i),target=tmdb.searchmovielist,args=(chunks[i],result,cachePath, )))
 	[i.start() for i in threads2]
 	[i.join() for i in threads2]
@@ -183,11 +228,17 @@ def populateDir(results,ranging,cache=False):
 		if cache:
 			if lists['label'].encode('utf-8') not in str(linecache):
 				basic.writefile(sitecachefile,"a",'::pageindex::'+str(ranging)+'::'+lists['label'].encode('utf-8')+'::\n')
-				if (getSetting('allyear') == 'true') or ((getSetting('allyear') == 'false') and (int(lists['info']['year']) >= int(getSetting('minyear')) and int(lists['info']['year']) <= int(getSetting('maxyear')))): addDir(lists['label'],lists['imdbid'],2,lists['poster'],False,len(result)+1,lists['info'],ranging,lists['imdbid'],lists['year'],lists['originallabel'],lists['fanart_image'])
+				try: 
+					if (getSetting('allyear') == 'true') or ((getSetting('allyear') == 'false') and (int(lists['info']['year']) >= int(getSetting('minyear')) and int(lists['info']['year']) <= int(getSetting('maxyear')))): addDir(lists['label'],lists['imdbid'],2,lists['poster'],False,len(result)+1,lists['info'],ranging,lists['imdbid'],lists['year'],lists['originallabel'],lists['fanart_image'])
+				except: addDir(lists['label'],lists['imdbid'],2,lists['poster'],False,len(result)+1,lists['info'],ranging,lists['imdbid'],lists['year'],lists['originallabel'],lists['fanart_image'])
 			elif '::pageindex::'+str(ranging)+'::'+lists['label'].encode('utf-8') in str(linecache): 
-				if (getSetting('allyear') == 'true') or ((getSetting('allyear') == 'false') and (int(lists['info']['year']) >= int(getSetting('minyear')) and int(lists['info']['year']) <= int(getSetting('maxyear')))): addDir(lists['label'],lists['imdbid'],2,lists['poster'],False,len(result)+1,lists['info'],ranging,lists['imdbid'],lists['year'],lists['originallabel'],lists['fanart_image'])
+				try: 
+					if (getSetting('allyear') == 'true') or ((getSetting('allyear') == 'false') and (int(lists['info']['year']) >= int(getSetting('minyear')) and int(lists['info']['year']) <= int(getSetting('maxyear')))): addDir(lists['label'],lists['imdbid'],2,lists['poster'],False,len(result)+1,lists['info'],ranging,lists['imdbid'],lists['year'],lists['originallabel'],lists['fanart_image'])
+				except: addDir(lists['label'],lists['imdbid'],2,lists['poster'],False,len(result)+1,lists['info'],ranging,lists['imdbid'],lists['year'],lists['originallabel'],lists['fanart_image'])
 		else:
-			if (getSetting('allyear') == 'true') or ((getSetting('allyear') == 'false') and (int(lists['info']['year']) >= int(getSetting('minyear')) and int(lists['info']['year']) <= int(getSetting('maxyear')))): addDir(lists['label'],lists['imdbid'],2,lists['poster'],False,len(result)+1,lists['info'],ranging,lists['imdbid'],lists['year'],lists['originallabel'],lists['fanart_image'])
+			try: 
+				if (getSetting('allyear') == 'true') or ((getSetting('allyear') == 'false') and (int(lists['info']['year']) >= int(getSetting('minyear')) and int(lists['info']['year']) <= int(getSetting('maxyear')))): addDir(lists['label'],lists['imdbid'],2,lists['poster'],False,len(result)+1,lists['info'],ranging,lists['imdbid'],lists['year'],lists['originallabel'],lists['fanart_image'])
+			except: addDir(lists['label'],lists['imdbid'],2,lists['poster'],False,len(result)+1,lists['info'],ranging,lists['imdbid'],lists['year'],lists['originallabel'],lists['fanart_image'])
 	
 def addDir(name,url,mode,poster,pasta,total,info,index,imdb_id,year,originalname,fanart=None):
 	u=sys.argv[0]+"?url="+urllib.quote_plus(url)+"&mode="+str(mode)+"&name="+urllib.quote_plus(name.encode('ascii','xmlcharrefreplace'))+"&originalname="+urllib.quote_plus(originalname.encode('ascii','xmlcharrefreplace'))+"&index="+str(index)+"&imdb_id="+str(imdb_id)+"&year="+str(year)
@@ -332,4 +383,8 @@ elif mode==10: basic.settings_open(url)
 elif mode==11: IMDBlist2(index,url,originalname)
 elif mode==12: playcount_movies(originalname, year, imdb_id, 7)
 elif mode==13: playcount_movies(originalname, year, imdb_id, 6)
+elif mode==14: traktmenu()
+elif mode==15: traktlist(index,url)
+elif mode==16: rottenmenu()
+elif mode==17: rottenlist(index,url)
 xbmcplugin.endOfDirectory(int(sys.argv[1]))
