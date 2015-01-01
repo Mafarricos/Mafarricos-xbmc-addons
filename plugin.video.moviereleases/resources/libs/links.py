@@ -51,6 +51,7 @@ class link:
 		
 		self.trakt_base_s = 'https://api.trakt.tv/%s'
 		if getSetting("trakt_api") <> '': self.trakt_apikey = getSetting("trakt_api")
+		else: self.trakt_apikey = ''
 		#else: self.trakt_apikey = base64.urlsafe_b64decode('M2Q4OTdlNWFiNDkxMWIwMzYwZGQ4NGNmYmQzZTA3NzljZTg2OTM2ZmNjYmYwMDBjYTdlMjFkNWY4ZjBiNDk2ZA==')
 		self.trakt_popular = self.trakt_base_s % 'movies/popular'
 		self.trakt_trending = self.trakt_base_s % 'movies/trending'
