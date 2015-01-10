@@ -7,7 +7,7 @@ import os,json
 from HTMLParser import HTMLParser
 
 def cleanTitle(title):
-	title = title.replace("&lt;", "<").replace("&gt;", ">").replace("&amp;", "&").replace("&#39;", "'").replace("&quot;", "\"").replace("&ndash;", "-")
+	title = title.replace("&lt;", "<").replace("&gt;", ">").replace("&amp;", "&").replace("&#39;", "'").replace("&quot;", "\"").replace("&ndash;", "-").replace('\\','')
 	title = title.replace('"',"")
 	title = title.strip()
 	return title

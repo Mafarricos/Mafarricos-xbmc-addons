@@ -78,16 +78,18 @@ def play(url):
 	except: pass
 
 def addDir(name,url,mode,iconimage,pasta,total,duration,informacao,index):
-        u=sys.argv[0]+"?url="+urllib.quote_plus(url)+"&mode="+str(mode)+"&name="+urllib.quote_plus(name.encode('ascii', 'xmlcharrefreplace'))+"&index="+str(index)
-        ok=True
-        liz=xbmcgui.ListItem(name, iconImage="DefaultFolder.png", thumbnailImage=iconimage)
+	context = []
+	u=sys.argv[0]+"?url="+urllib.quote_plus(url)+"&mode="+str(mode)+"&name="+urllib.quote_plus(name.encode('ascii', 'xmlcharrefreplace'))+"&index="+str(index)
+	ok=True
+	liz=xbmcgui.ListItem(name, iconImage="DefaultFolder.png", thumbnailImage=iconimage)
 	liz.setProperty('fanart_image',addonPath+'/fanart.jpg')
 	if informacao <> '': liz.setInfo( type="Video", infoLabels=informacao )	
-	if duration <> '':
-		liz.addStreamInfo('Video', {"duration":duration})	
-        ok=xbmcplugin.addDirectoryItem(handle=int(sys.argv[1]),url=u,listitem=liz,isFolder=pasta,totalItems=total)
-        return ok
-		
+	if duration <> '': liz.addStreamInfo('Video', {"duration":duration})
+	context.append(('E-Mail', 'RunPlugin(%s?mode=7&url=%s&name=%s)' % (sys.argv[0],urllib.quote_plus(url),name)))
+	liz.addContextMenuItems(context, replaceItems=False)
+	ok=xbmcplugin.addDirectoryItem(handle=int(sys.argv[1]),url=u,listitem=liz,isFolder=pasta,totalItems=total)
+	return ok
+
 def get_params():
         param=[]
         paramstring=sys.argv[2]
@@ -134,4 +136,5 @@ elif mode==3: listingsites()
 elif mode==4: changestatus(url)
 elif mode==5: xbmcgui.Dialog().ok('Cache',basic.removecache(cachePath))
 elif mode==6: videosmenu(index)
+elif mode==7: util.send_email(name,url)
 xbmcplugin.endOfDirectory(int(sys.argv[1]))

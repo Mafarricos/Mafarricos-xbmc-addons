@@ -304,3 +304,33 @@ def videolog_resolver(url,prettyname,cachePath):
 	except BaseException as e:
 		print '##ERROR-funvideos:videolog_resolver: '+str(id)+' '+str(e)
 		pass
+		
+def send_email(name,url):
+	import smtplib
+	name = name.split(' [')[0]
+	if 'dailymotion' in url: url = url.replace('plugin://plugin.video.dailymotion_com/?mode=playVideo&url=','http://www.dailymotion.com/video/')
+	elif 'youtube' in url: url = url.replace('plugin://plugin.video.youtube/?action=play_video&videoid=','https://www.youtube.com/watch?v=')
+	elif 'break' in url:
+		videoid = url.split('/')[7]
+		pageid = url.split('/')[8]
+		pageid = re.compile('(.+?)-\d+_kbps.').findall(pageid)[0]
+		url = 'http://www.break.com/video/%s-%s' % (pageid,videoid)
+	mail_user = getSetting("fromemail")
+	mail_pwd = getSetting("password")
+	FROM = getSetting("fromemail")
+	try: TO = getSetting("toemail").split(',')
+	except: TO = [getSetting("toemail")]
+	SUBJECT = name
+	TEXT = url
+	# Prepare actual message
+	message = """\From: %s\nTo: %s\nSubject: %s\n\n%s """ % (FROM, ", ".join(TO), SUBJECT, TEXT)
+	try:
+		if getSetting("server") == 'Gmail': server = smtplib.SMTP("smtp.gmail.com", 587)
+		elif getSetting("server") == 'Hotmail': server = smtplib.SMTP("smtp.live.com", 587)
+		server.ehlo()
+		server.starttls()
+		server.login(mail_user, mail_pwd)
+		server.sendmail(FROM, TO, message)
+		server.close()
+		print 'successfully sent the mail'
+	except: print "failed to send mail"

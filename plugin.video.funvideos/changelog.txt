@@ -1,7 +1,9 @@
+Version 0.3.1
+- E-Mail integration via Gmail/Hotmail
+
 Version 0.3.0
 - 9gag fix
 - new section to the videos
-
 Version 0.2.9A
 - downgrade gotham
 Version 0.2.9
