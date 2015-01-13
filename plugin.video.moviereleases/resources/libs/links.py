@@ -43,18 +43,15 @@ class link:
 		self.imdb_years = 'http://akas.imdb.com/search/title?title_type=feature,tv_movie&sort=boxoffice_gross_us&count=30&start=%s&year=%s,%s'
 		self.imdb_genre = 'http://www.imdb.com/chart/'
 		
-		self.trakt_base = 'http://api.trakt.tv'
-		self.trakt_key = base64.urlsafe_b64decode('Nzc0ZmU3MTY3YjM4ODUwNzkxM2E5MzlkNmQwMzhmOTI=')
-		self.trakt_user, self.trakt_password = getSetting("trakt_user"), getSetting("trakt_password")
-		self.trakt_unseen = 'http://api.trakt.tv/movie/unseen/%s' % self.trakt_key
-		self.trakt_seen = 'http://api.trakt.tv/movie/seen/%s' % self.trakt_key
-		
+		self.trakt_user, self.trakt_password = getSetting("trakt_user"), getSetting("trakt_password")	
 		self.trakt_base_s = 'https://api.trakt.tv/%s'
 		if getSetting("trakt_api") <> '': self.trakt_apikey = getSetting("trakt_api")
-		else: self.trakt_apikey = ''
-		#else: self.trakt_apikey = base64.urlsafe_b64decode('M2Q4OTdlNWFiNDkxMWIwMzYwZGQ4NGNmYmQzZTA3NzljZTg2OTM2ZmNjYmYwMDBjYTdlMjFkNWY4ZjBiNDk2ZA==')
+		else: self.trakt_apikey = base64.urlsafe_b64decode('M2Q4OTdlNWFiNDkxMWIwMzYwZGQ4NGNmYmQzZTA3NzljZTg2OTM2ZmNjYmYwMDBjYTdlMjFkNWY4ZjBiNDk2ZA==')
 		self.trakt_popular = self.trakt_base_s % 'movies/popular'
 		self.trakt_trending = self.trakt_base_s % 'movies/trending'
+		self.trakt_history = self.trakt_base_s % 'sync/history'
+		self.trakt_history_remove = self.trakt_base_s % 'sync/history/remove'
+
 		
 		self.addon_plugin 	= 'plugin://script.module.addonsresolver/'
 		

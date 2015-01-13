@@ -2,7 +2,41 @@
 # by Mafarricos
 # email: MafaStudios@gmail.com
 # This program is free software: GNU General Public License
-import basic,links,json,tmdb,threading,xbmcaddon,os
+import basic,links,json,tmdb,threading,xbmcaddon,os,urllib2
+
+def results(url, auth=True, post=None):
+	try:
+		trakt_key = links.link().trakt_apikey
+		headers = {'Content-Type': 'application/json', 'trakt-api-key': trakt_key, 'trakt-api-version': '2'}
+		if not post == None: post = json.dumps(post)
+		if (links.link().trakt_user == '' or links.link().trakt_password == ''): pass
+		elif auth == False: pass
+		else:
+			token = auth_token(links.link().trakt_user, links.link().trakt_password)
+			headers.update({'trakt-user-login': links.link().trakt_user, 'trakt-user-token': token})
+		request = urllib2.Request(url, data=post, headers=headers)
+		response = urllib2.urlopen(request, timeout=30)
+		result = response.read()
+		response.close()
+		return result
+	except BaseException as e:
+		basic.log(u"trakt.results ##Error: %s" % str(e))
+
+def auth_token(trakt_user, trakt_password):
+	try:
+		trakt_key = links.link().trakt_apikey
+		headers = {'Content-Type': 'application/json', 'trakt-api-key': trakt_key, 'trakt-api-version': '2'}
+		post = json.dumps({'login': trakt_user, 'password': trakt_password})
+		print headers,post
+		request = urllib2.Request('https://api.trakt.tv/auth/login', data=post, headers=headers)
+		response = urllib2.urlopen(request, timeout=10)
+		result = response.read()
+		result = json.loads(result)
+		auth = result['token']
+		response.close()
+		return auth
+	except BaseException as e:
+		basic.log(u"trakt.auth ##Error: %s" % str(e))
 
 def listmovies(url,index,cachePath):
 	basic.log(u"trakt.listmovies url: %s" % url)

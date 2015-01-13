@@ -1,10 +1,14 @@
+Version 0.2.4
+- trakt API key approved;
+- trakt mark as watched and not watched in API V2;
+- trakt section activated.
+
 Version 0.2.3
 - Initial Support to new trakt API;
 - New Rotten Tomatoes Section;
 - migrated strings.xml to strings.po;
 - minor fixes;
 - Portuguese translations fixed (ty Leinad4Mind).
-
 Version 0.2.2
 - New indexers;
 - Indexers without sections by default;

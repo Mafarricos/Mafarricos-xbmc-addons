@@ -310,10 +310,9 @@ def playcount_movies(title, year, imdb, watched):
 		if getSetting("trakt_sync") == 'true':	
 			if (links.link().trakt_user == '' or links.link().trakt_password == ''): raise Exception()
 			if not imdb.startswith('tt'): imdb = 'tt' + imdb
-			if watched == 7: url = links.link().trakt_seen
-			else: url = links.link().trakt_unseen
-			post = {"movies": [{"imdb_id": imdb}], "username": links.link().trakt_user, "password": links.link().trakt_password}
-			result = basic.open_url(url, post=json.dumps(post))
+			if watched == 7: url = links.link().trakt_history
+			else: url = links.link().trakt_history_remove
+			result = trakt.results(url, post={"movies": [{"ids": {"imdb": imdb}}]})
 			basic.log(u"main.playcount_movies trakt result %s" % (result))
 	except: pass
 	xbmc.executebuiltin("Container.Refresh")
