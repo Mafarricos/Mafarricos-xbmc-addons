@@ -38,15 +38,15 @@ def auth_token(trakt_user, trakt_password):
 	except BaseException as e:
 		basic.log(u"trakt.auth ##Error: %s" % str(e))
 
-def listmovies(url,index,cachePath):
+def listmovies(url,index):
 	basic.log(u"trakt.listmovies url: %s" % url)
 	mainlist = []
 	sendlist = [] 
 	result = []
 	threads = []
 	order = 0
-	if 'popular' in url: headers = { 'Content-Type': 'application/json', 'trakt-api-version': '2', 'trakt-api-key': '', 'page': index, 'limit': '30' }
-	elif 'trending' in url: headers = { 'Content-Type': 'application/json', 'trakt-api-version': '2', 'trakt-api-key': links.link().trakt_apikey, 'page': index, 'limit': '30' }	
+	if 'popular' in url: headers = { 'Content-Type': 'application/json', 'trakt-api-version': '2', 'trakt-api-key': links.link().trakt_apikey, 'page': index, 'limit': '25' }
+	elif 'trending' in url: headers = { 'Content-Type': 'application/json', 'trakt-api-version': '2', 'trakt-api-key': links.link().trakt_apikey, 'page': index, 'limit': '25' }	
 	print headers,url
 	jsonpage = basic.open_url_headers(url,headers)
 	print 'jsonpage %s' % jsonpage
@@ -56,8 +56,7 @@ def listmovies(url,index,cachePath):
 		if 'trending' in url: sendlist.append([order,list['movie']['ids']['tmdb']])
 		elif 'popular' in url: sendlist.append([order,list['ids']['tmdb']])
 	chunks=[sendlist[x:x+5] for x in xrange(0, len(sendlist), 5)]
-	print 'chunks',chunks
-	for i in range(len(chunks)): threads.append(threading.Thread(name='listmovies'+str(i),target=tmdb.searchmovielist,args=(chunks[i],result,cachePath, )))
+	for i in range(len(chunks)): threads.append(threading.Thread(name='listmovies'+str(i),target=tmdb.searchmovielist,args=(chunks[i],result, )))
 	[i.start() for i in threads]
 	[i.join() for i in threads]
 	result = sorted(result, key=basic.getKey)

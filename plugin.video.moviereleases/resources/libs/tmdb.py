@@ -2,12 +2,12 @@
 # by Mafarricos
 # email: MafaStudios@gmail.com
 # This program is free software: GNU General Public License
-import basic,links,json,omdbapi,threading,xbmcaddon,os
+import basic,links,json,omdbapi,threading,xbmcaddon,os,localdb
 
 LANG = basic.get_api_language()
 getSetting          = xbmcaddon.Addon().getSetting
 
-def listmovies(url,cachePath):
+def listmovies(url):
 	basic.log(u"tmdb.listmovies url: %s" % url)
 	mainlist = []
 	sendlist = [] 
@@ -20,7 +20,7 @@ def listmovies(url,cachePath):
 		order += 1
 		sendlist.append([order,list['id']])
 	chunks=[sendlist[x:x+5] for x in xrange(0, len(sendlist), 5)]
-	for i in range(len(chunks)): threads.append(threading.Thread(name='listmovies'+str(i),target=searchmovielist,args=(chunks[i],result,cachePath, )))
+	for i in range(len(chunks)): threads.append(threading.Thread(name='listmovies'+str(i),target=searchmovielist,args=(chunks[i],result, )))
 	[i.start() for i in threads]
 	[i.join() for i in threads]
 	result = sorted(result, key=basic.getKey)
@@ -28,14 +28,14 @@ def listmovies(url,cachePath):
 	basic.log(u"tmdb.listmovies mainlist: %s" % mainlist)	
 	return mainlist
 
-def searchmovielist(list,result,cachePath):
+def searchmovielist(list,result):
 	basic.log(u"tmdb.searchmovielist list: %s" % list)
 	for num,id in list: 
-		moviedata = searchmovie(id,cachePath)
+		moviedata = searchmovie(id)
 		if moviedata: result.append([num,moviedata])
 	basic.log(u"tmdb.searchmovielist result: %s" % result)
 	
-def searchmovie(id,cachePath):
+def searchmovie(id):
 	basic.log(u"tmdb.searchmovie id: %s" % id)
 	listgenre = []
 	listcast = []
@@ -51,15 +51,17 @@ def searchmovie(id,cachePath):
 	fanart = ''
 	temptitle = ''
 	originaltitle = ''
-	videocache = os.path.join(cachePath,str(id))
-	if getSetting("cachesites") == 'true' and os.path.isfile(videocache): return json.loads(basic.readfiletoJSON(videocache))
+	if getSetting("cachesites") == 'true':
+		cached = localdb.get_cache(id)
+		if cached:
+			response = { "label": cached[2], "originallabel": cached[3], "poster": cached[4], "fanart_image": cached[5], "imdbid": cached[0], "year": cached[6], "info": json.loads(cached[7]) }
+			return response
 	jsonpage = basic.open_url(links.link().tmdb_info_default % (id))
-	#if not jsonpage: jsonpage = basic.open_url(links.link().tmdb_info_default_alt % (id))
 	try: jdef = json.loads(jsonpage)
 	except:
 		if 'tt' in str(id):
 			try: 
-				jdef = omdbapi.searchmovie(str(id),cachePath)
+				jdef = omdbapi.searchmovie(str(id))
 				return jdef
 			except: return False
 		else: return False
@@ -83,8 +85,10 @@ def searchmovie(id,cachePath):
 	temptitle = jdef['title'].encode('ascii','ignore').replace(' ','')
 	if temptitle <> '':
 		if not title: title = jdef['title']
-	originaltitle = jdef['original_title'].encode('ascii','ignore')
+	temporiginaltitle = jdef['original_title'].encode('ascii','ignore')
 	if temptitle == '': originaltitle = jdef['title']
+	if temporiginaltitle == '': originaltitle = jdef['title']
+	else: originaltitle = jdef['original_title']
 	if not poster: poster = jdef['poster_path']
 	if not fanart: fanart = jdef['backdrop_path']
 	if not fanart: fanart = poster
@@ -122,7 +126,7 @@ def searchmovie(id,cachePath):
 			break
 	duration = jdef['runtime']
 	if not poster or duration == 0 and jdef['imdb_id']:
-		altsearch = omdbapi.searchmovie(jdef['imdb_id'],cachePath,False)
+		altsearch = omdbapi.searchmovie(jdef['imdb_id'],False)
 		if not poster: poster = altsearch['poster']
 		if not fanart: fanart = poster
 		if not plot: plot = altsearch['info']['plot']
@@ -134,14 +138,7 @@ def searchmovie(id,cachePath):
 		if not writer: writer = altsearch['info']['writer']
 		if not director: director = altsearch['info']['director']		
 		if not genre: genre = altsearch['info']['genre']
-	response = {
-		"label": '%s (%s)' % (title,year),
-		"originallabel": '%s (%s)' % (originaltitle,year),		
-		"poster": poster,
-		"fanart_image": fanart,
-		"imdbid": jdef['imdb_id'],
-		"year": year,
-		"info":{
+	info = {
 			"genre": genre, 
 			"year": year,
 			"rating": jdef['vote_average'], 
@@ -162,15 +159,17 @@ def searchmovie(id,cachePath):
 			"votes": jdef['vote_count'],
 			"trailer": trailer
 			}
+	response = {
+		"label": '%s (%s)' % (title,year),
+		"originallabel": '%s (%s)' % (originaltitle,year),		
+		"poster": poster,
+		"fanart_image": fanart,
+		"imdbid": jdef['imdb_id'],
+		"year": year,
+		"info": info
 		}
-	#try:
-	#	from metahandler import metahandlers
-	#	metaget = metahandlers.MetaData(preparezip=False)
-	#except: pass
-	#try:
-	#	playcount = metaget._get_watched('movie', jdef['imdb_id'], '', '')
-	#	if playcount == 7: response.update({'playcount': 1, 'overlay': 7})
-	#	else: response.update({'playcount': 0, 'overlay': 6})
-	#except: pass
-	if getSetting("cachesites") == 'true' and not os.path.isfile(videocache): basic.writefile(videocache,'w',json.dumps(response))
+	if getSetting("cachesites") == 'true':
+		if not str(id).startswith('tt'): tmdbid = id
+		else: tmdbid = jdef['id']
+		localdb.save_cache(jdef['imdb_id'],tmdbid,'%s (%s)' % (title,year),'%s (%s)' % (originaltitle,year),poster,fanart,year,json.dumps(info))
 	return response

@@ -4,7 +4,7 @@
 # This program is free software: GNU General Public License
 import basic,links,json,tmdb,threading,xbmcaddon,os
 
-def listmovies(url,cachePath):
+def listmovies(url):
 	basic.log(u"rotten.listmovies url: %s" % url)
 	mainlist = []
 	sendlist = [] 
@@ -19,7 +19,7 @@ def listmovies(url,cachePath):
 		try: sendlist.append([order,'tt'+list['alternate_ids']['imdb']])
 		except: pass
 	chunks=[sendlist[x:x+5] for x in xrange(0, len(sendlist), 5)]
-	for i in range(len(chunks)): threads.append(threading.Thread(name='listmovies'+str(i),target=tmdb.searchmovielist,args=(chunks[i],result,cachePath, )))
+	for i in range(len(chunks)): threads.append(threading.Thread(name='listmovies'+str(i),target=tmdb.searchmovielist,args=(chunks[i],result, )))
 	[i.start() for i in threads]
 	[i.join() for i in threads]
 	result = sorted(result, key=basic.getKey)

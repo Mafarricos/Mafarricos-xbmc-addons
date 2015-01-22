@@ -7,7 +7,7 @@ import re,threading,xbmcgui
 import basic,tmdb
 from BeautifulSoup import BeautifulSoup
 
-def listmovies(url,cachePath):
+def listmovies(url):
 	basic.log(u"imdb.listmovies url: %s" % url)
 	mainlist = []
 	sendlist = [] 
@@ -20,7 +20,7 @@ def listmovies(url,cachePath):
 		order += 1
 		sendlist.append([order,imdb_id])
 	chunks=[sendlist[x:x+5] for x in xrange(0, len(sendlist), 5)]
-	for i in range(len(chunks)): threads.append(threading.Thread(name='listmovies'+str(i),target=tmdb.searchmovielist,args=(chunks[i],result,cachePath, )))
+	for i in range(len(chunks)): threads.append(threading.Thread(name='listmovies'+str(i),target=tmdb.searchmovielist,args=(chunks[i],result, )))
 	[i.start() for i in threads]
 	[i.join() for i in threads]
 	result = sorted(result, key=basic.getKey)

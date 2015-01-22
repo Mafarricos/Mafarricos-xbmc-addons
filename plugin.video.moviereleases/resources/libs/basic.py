@@ -94,8 +94,8 @@ def infoDialog(str, header=addonName):
 def removecache(cachePath):
 	try:
 		for root,dir,files in os.walk(cachePath):
-			for f in files:
-				if not '_cache' in f: os.unlink(os.path.join(root, f))
+			for f in files: os.unlink(os.path.join(root, f))
+		os.rmdir(cachePath)
 		return language(30022).encode('utf-8')
 	except BaseException as e: log(u"removecache ERROR: %s" % (str(e)))
 
