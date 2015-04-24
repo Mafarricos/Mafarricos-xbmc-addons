@@ -45,10 +45,11 @@ def ytssearch(imdb_id):
 			jtys = json.loads(yts)
 		except: return '',''
 		if 'No movies found' in str(jtys): return '',''
-		for j in jtys["MovieList"]:
-			#quality.append(j["Quality"]+'_'+j["Size"])
-			quality.append(j["Quality"])
-			magnet.append(j["TorrentMagnetUrl"])
+		for j in jtys["data"]["movies"]:
+			for i in j["torrents"]:
+				#quality.append(j["Quality"]+'_'+j["Size"])
+				quality.append(i["quality"])
+				magnet.append(links.link().yts_magnet % (i["hash"],j["title_long"]))
 		return quality,magnet
 	except BaseException as e: print '##ERROR-addonsresolver:ytssearch: '+str(imdb_id)+' '+str(e)
 
