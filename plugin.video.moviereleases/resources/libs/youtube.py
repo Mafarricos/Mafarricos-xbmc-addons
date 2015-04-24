@@ -7,7 +7,7 @@ import basic,links
 
 def searchtrailer(name):
 	ytpage = open_url(links.link().youtube_trailer_search % (urllib.unquote_plus(name)))
-	youtubeid = re.findall('(\d+) min', ytpage, re.DOTALL)
+	youtubeid = re.compile('"videoId": "(.+?)"').findall(ytpage)
 	return youtubeid[0]
 	
 def playtrailer(url,name):

@@ -25,7 +25,7 @@ class link:
 		self.tmdb_posterbase = self.tmdb_image % ('w500%s')
 		self.tmdb_discover = 'http://api.themoviedb.org/3/discover/movie?page=%s&sort_by=popularity.desc&api_key='+self.tmdb_key
 		self.tmdb_search ='http://api.themoviedb.org/3/search/movie?include_adult=false&query=%s&api_key='+self.tmdb_key
-		self.youtube_trailer_search = 'http://gdata.youtube.com/feeds/api/videos?q=%s-trailer&start-index=1&max-results=1&v=2&alt=json&hd'
+		self.youtube_trailer_search = 'https://www.googleapis.com/youtube/v3/search?part=id%2Csnippet&q=%s-Trailer&maxResults=1&key=AIzaSyCtxrgktLdk4Y6dTcqeYw3U9-3H_wvtP6E'
 		self.youtube_plugin = 'plugin://plugin.video.youtube/?action=play_video&videoid=%s'
 		
 		self.imdb_top250 = 'http://akas.imdb.com/chart/top'
