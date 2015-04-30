@@ -17,6 +17,14 @@ def MAIN():
 	addDir('http://tearsofsteel.org/ - '+language(30020).encode('utf-8'),'http://tearsofsteel.org/',6,wtpath + art + 'iconTOS.png' ,True,'','')
 	addDir('http://sintel.org/ - '+language(30020).encode('utf-8'),'http://sintel.org/',7,wtpath + art + 'iconST.jpg',True,'','')	
 	addDir('http://elephantsdream.org - '+language(30019).encode('utf-8'),'http://peach.blender.org/',5,wtpath + art + 'iconED.jpg' ,True,'','')
+	addDir('http://www.libde265.org - H265','http://www.libde265.org',8,'',True,'','')
+
+def h265():
+	html = open_url('http://www.libde265.org/downloads-videos/')
+	data = re.findall('<a title="(.+?)" href="/hevc-bitstreams/(.+?)" target=".+?">(.+?)</a>', html, re.DOTALL)	
+	for title,url,title2 in data:
+		information2 = ''
+		addDir(title+' '+title2,'http://www.libde265.org/hevc-bitstreams/'+url,1,'',False,title,information2)	
 	
 def sintel():
 	filetypes = ['mkv','ogv','mp4','divx','mov']
@@ -201,4 +209,5 @@ elif mode==4: bbb()
 elif mode==5: ed()
 elif mode==6: tearsofsteel()
 elif mode==7: sintel()
+elif mode==8: h265()
 xbmcplugin.endOfDirectory(int(sys.argv[1]))

@@ -1,5 +1,0 @@
-Version 0.0.2
-* Site inactivo
-
-Version 0.0.1
-* First addon release

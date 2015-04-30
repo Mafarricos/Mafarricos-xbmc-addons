@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<addon id="plugin.video.tester" name="Video Test Files" version="0.1.0" provider-name="Mafarricos">
+<addon id="plugin.video.tester" name="Video Test Files" version="0.1.1" provider-name="Mafarricos">
   <requires>
     <import addon="xbmc.python" version="2.14.0"/>
   </requires>
@@ -10,13 +10,14 @@
     <language>en</language>
     <platform>all</platform>
     <summary lang="en">Video Test Files</summary>
-    <description lang="en">A number of H.264 encoded .mkv video clips that can be used for testing the network streaming and playback performance of media streamers and HTPCs.
+    <description lang="en">A number of H.264/H.265 encoded .mkv video clips that can be used for testing the network streaming and playback performance of media streamers and HTPCs.
 	All Original content on: 
 	http://jell.yfish.us
 	http://bigbuckbunny.org
 	http://tearsofsteel.org
 	http://sintel.org
-	http://elephantsdream.org 
+	http://elephantsdream.org
+	http://www.libde265.org	
 	</description>
     <platform>all</platform>
   </extension>
