@@ -192,19 +192,20 @@ def youtube_resolver(url,prettyname,cachePath):
 			return jsonline,jsonloaded
 		else:
 			try:
-				data=basic.open_url('https://gdata.youtube.com/feeds/api/videos/' + str(match[0]) +'?v2&alt=json')
-				parameters = json.loads(data)
+				data=basic.open_url('https://www.googleapis.com/youtube/v3/videos?id=' + str(match[0]) +'&key=AIzaSyCeh7CwOCb-wJQoPDgDX1faEiXntqYfIIA&part=snippet,contentDetails')
 				title = ''
 				duration = ''
 				thumbnail = ''
-				title = basic.cleanTitle(parameters['entry']['title']['$t'])
+				title = re.compile('"title": "(.+?)"').findall(data)
+				title = title[0]
 				title2 = ''	
 				try: title2 = title.decode('utf8').encode('ascii','xmlcharrefreplace')
 				except: title2 = title.encode('ascii','xmlcharrefreplace')
 				if title2 <> '': title = title2
-				print title
-				duration = parameters['entry']['media$group']['yt$duration']['seconds']
-				thumbnail = parameters['entry']['media$group']['media$thumbnail'][0]['url']
+				dur = re.compile('"duration": "PT(\d+)M(\d+)S"').findall(data)
+				duration = dur[0]*60+dur[1]
+				thumbnail = re.compile('"high": {\s+"url": "(.+?)",').findall(data)
+				thumbnail = thumbnail[0]
 				jsontext= '{"prettyname":"'+prettyname+'","url":"plugin://plugin.video.youtube/?action=play_video&videoid=' + str(match[0])+'","title":"'+title+'","duration":"'+str(duration)+'","thumbnail":"'+thumbnail+'"}'
 				jsonloaded = json.loads('{"prettyname":"'+prettyname+'","url":"plugin://plugin.video.youtube/?action=play_video&videoid=' + str(match[0])+'","title":"'+title+'","duration":"'+str(duration)+'","thumbnail":"'+thumbnail+'"}', encoding="latin-1")
 				if getSetting("cachesites") == 'true': basic.writefile(videocache,'w',jsontext)
