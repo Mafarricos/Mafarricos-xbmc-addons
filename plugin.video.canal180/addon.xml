@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<addon id="plugin.video.canal180" name="Canal 180" version="0.0.1" provider-name="Mafarricos">
+  <requires>
+	<import addon="xbmc.python" version="2.1.0"/>
+	<import addon="plugin.video.vimeo" version="4.1.1"/>
+  </requires>
+  <extension point="xbmc.python.pluginsource" library="main.py">
+    <provides>video</provides>
+  </extension>
+  <extension point="xbmc.addon.metadata">
+    <language>en</language>
+    <platform>all</platform>
+    <summary lang="en">Videos do Canal 180</summary>
+    <description lang="en">Todo o conteudo é do site http://canal180.pt/</description>
+    <platform>all</platform>
+  </extension>
+</addon>
