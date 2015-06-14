@@ -34,7 +34,7 @@ class play:
 		[i.join() for i in threads]	
 		
 	def _play(self,link,external):
-		if 'icefilms' in link or 'abelhas' in link:
+		if 'icefilms' in link:
 			link = basic.readoneline(link)
 			xbmc.executebuiltin('activatewindow(video,'+link+')')
 		else:
