@@ -1,6 +1,33 @@
+Version 0.2.7
+- faster latest releases and no false good releases
+
+Version 0.2.6
+- Update on Youtube API
+Version 0.2.5a
+- fix clean old cache
+Version 0.2.5
+- Cache done by db.
+Version 0.2.4
+- trakt API key approved;
+- trakt mark as watched and not watched in API V2;
+- trakt section activated.
+Version 0.2.3
+- Initial Support to new trakt API;
+- New Rotten Tomatoes Section;
+- migrated strings.xml to strings.po;
+- minor fixes;
+- Portuguese translations fixed (ty Leinad4Mind).
+Version 0.2.2
+- New indexers;
+- Indexers without sections by default;
+- cleanup settings for older versions.
+Version 0.2.1
+- minor fixes;
+- cleanup settings for older versions.
+Version 0.2.0
+- Library integration on Kodi if AddonsResolver installed
 Version 0.1.5A
 - Minor Fixes (smaller list on section of Latest Movies)
-
 Version 0.1.5
 - Minor Fixes
 - Library Integration (Still with bugs in Helix)

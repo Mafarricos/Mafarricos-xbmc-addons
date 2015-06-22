@@ -1,6 +1,8 @@
+Version 0.2.7
+- faster latest releases and no false good releases
+
 Version 0.2.6
 - Update on Youtube API
-
 Version 0.2.5a
 - fix clean old cache
 Version 0.2.5

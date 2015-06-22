@@ -33,9 +33,9 @@ language            = xbmcaddon.Addon().getLocalizedString
 if not os.path.exists(dataPath): os.makedirs(dataPath)
 if getSetting("cachesites") == 'true': localdb.create_tables()
 
-if getSetting("settings_version") <> '0.2.6':
+if getSetting("settings_version") <> '0.2.7':
 	if os.path.exists(os.path.join(dataPath,'settings.xml')): os.remove(os.path.join(dataPath,'settings.xml'))
-	setSetting('settings_version', '0.2.6')
+	setSetting('settings_version', '0.2.7')
 
 def MAIN():
 	addDir(language(30000),'LatestReleases',3,'',True,7,'',0,'','','')
