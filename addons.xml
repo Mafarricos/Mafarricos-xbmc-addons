@@ -260,7 +260,7 @@
   </extension>
 </addon>
 
-<addon id="script.maintenance.management" name="Manutenção do XBMC" version="0.0.7" provider-name="Mafarricos">
+<addon id="script.maintenance.management" name="Manutenção do KODI" version="0.0.8" provider-name="Mafarricos">
   <requires>
     <import addon="xbmc.python" version="2.1.0"/>
   </requires>
@@ -270,8 +270,8 @@
   <extension point="xbmc.addon.metadata">
     <language>en</language>
     <platform>all</platform>
-    <summary lang="en">Manutenção do XBMC (Addon em Desenvolvimento)</summary>
-    <description lang="en">Comandos para a manutenção do XBMC</description>
+    <summary lang="en">Manutenção do KODI (Addon em Desenvolvimento)</summary>
+    <description lang="en">Comandos para a manutenção do KODI</description>
   </extension>
 </addon>
 

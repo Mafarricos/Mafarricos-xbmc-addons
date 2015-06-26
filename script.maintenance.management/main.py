@@ -14,7 +14,7 @@ artsfolder = '/resources/img/'
 mensagemok = xbmcgui.Dialog().ok
 mensagemyesno = xbmcgui.Dialog().yesno
 addonsfolder = addonfolder.replace(addon_id,'');
-packagesfolder = xbmc.translatePath(os.path.join('special://home/addons/packages', ''))
+packagesfolder = os.path.join(addonsfolder,'packages')
 userdatafolder = xbmc.translatePath(os.path.join('special://userdata','addon_data'))
 thumbnailsfolder = xbmc.translatePath('special://thumbnails')
 tempfolder = xbmc.translatePath('special://temp')
@@ -106,14 +106,14 @@ def cleanuserdata():
 	dir,files = xbmcvfs.listdir(userdatafolder)
 	for directories in dir:
 		if not 'service.openelec.settings' in directories:
-			if not xbmcvfs.exists(os.path.join(addonsfolder,directories)):
+			if not xbmcvfs.exists(os.path.join(addonsfolder,directories+'/')):
 				textmsg = textmsg+directories+'\n'
 				sizeMB = sizeMB + returnsize(os.path.join(userdatafolder,directories))
 	ok = mensagemyesno('Pastas a serem eliminadas do userdata:',textmsg+str(round(sizeMB,2))+' MB\nDeseja Continuar?')
 	if ok and textmsg:
 		for directories in dir:
 			if not 'service.openelec.settings' in directories:
-				if not xbmcvfs.exists(os.path.join(addonsfolder,directories)): shutil.rmtree(os.path.join(userdatafolder,directories))
+				if not xbmcvfs.exists(os.path.join(addonsfolder,directories+'/')): shutil.rmtree(os.path.join(userdatafolder,directories+'/'))
 		ok = mensagemok('Concluido','Operação Terminada')
 
 def cleansubtitlesdata():
