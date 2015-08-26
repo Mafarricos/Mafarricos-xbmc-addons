@@ -7,10 +7,10 @@
 {"prettyname":"ViralViralVideos","site":"http://www.viralviralvideos.com","frame":"true","enabled":"true","pagination":"/page/","starton":"1"}
 {"prettyname":"EpaLOL","site":"http://www.epalol.com","frame":"true","enabled":"true","pagination":"/page/","starton":"1"}
 {"prettyname":"oButecoDaNet","site":"http://obutecodanet.ig.com.br","frame":"true","enabled":"true","pagination":"/index.php/page/","starton":"1"}
-{"prettyname":"TaFixe","site":"http://www.tafixe.com","frame":"false","enabled":"true","startsection":"<div class=\"span6\">\\s+.+?<a href=\"","endsection":"\"","pagination":"/page/","starton":"1"}
-{"prettyname":"TaBrutal","site":"http://www.tabrutal.pt","frame":"false","enabled":"true","startsection":"<h4 class=\"entry-title\"><a href=\"","endsection":"\">","pagination":"/page/","starton":"0"}
+{"prettyname":"TaFixe","site":"http://www.tafixe.com/category/videos/","frame":"false","enabled":"true","startsection":"<div class=\"td_module_2 td_module_wrap td-animation-stack\" itemscope itemtype=\"http://schema.org/Article\">\\s+<div class=\"td-module-image\">\\s+<div class=\"td-module-thumb\"><a href=\"","endsection":"\"","pagination":"/page/","starton":"1"}
 {"prettyname":"Embrulha","site":"http://www.embrulha.com","frame":"false","enabled":"true","startsection":"<h2><a href=\\'","endsection":"/\\'","pagination":"/page/","starton":"1"}
 {"prettyname":"TugaVideos","site":"http://tugavideos.com","frame":"false","enabled":"true","startsection":"</div>\\s+<h2><a href=\"","endsection":"\"","pagination":"/page/","starton":"1"}
 {"prettyname":"loladatuga","site":"http://loladatuga.com","frame":"false","enabled":"true","startsection":"<div class=\"post-thumbnail\">\\s+<a href=\"","endsection":"\"","pagination":"/page/","starton":"1"}
-{"prettyname":"VamosLaPortugal","site":"http://www.vamoslaportugal.com/videos","frame":"false","enabled":"true","startsection":"<h2 class=\"title\">\\s+<a href=\"","endsection":"\"","pagination":"/page/","starton":"1"}
+{"prettyname":"VamosLaPortugal","site":"http://www.vamoslaportugal.com/videos","frame":"false","enabled":"true","startsection":"<h2><a href=\"","endsection":"\"","pagination":"/page/","starton":"1"}
 {"prettyname":"Break","site":"http://www.break.com","frame":"break","enabled":"true","pagination":"/content/GetContentTimeStreamByChannelIdAndFilterBy?channelId=1&filterBy=videos&pageNum=","starton":"1"}
+{"prettyname":"TaBrutal","site":"http://www.tabrutal.pt","frame":"false","enabled":"false","startsection":"<article class=\"latestPost excerpt.+?\" itemscope itemtype=\"http://schema.org/BlogPosting\">\\s+<a href=\"","endsection":"\"","pagination":"/page/","starton":"0"}

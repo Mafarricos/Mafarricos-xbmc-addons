@@ -74,6 +74,7 @@ def grablinks(mainURL,prettyname,sectionstart,sectionend,cachePath,mainsite=None
 	threads = []
 	results = []
 	for i in range(0, len(html_source_trunk)): 
+		if 'VamosLaPortugal' in prettyname: html_source_trunk[i] = 'http://www.vamoslaportugal.com' + html_source_trunk[i] 	
 		print "##funvideos-grablinks: "+html_source_trunk[i]
 		if mainsite: pageURL=html_source_trunk[i].replace(mainsite,'').replace('/','').replace('.','').encode('utf-8')
 		threads.append(threading.Thread(name=mainURL+str(i),target=grabiframes,args=(html_source_trunk[i],prettyname,cachePath,results,i+1,pageURL, )))	
@@ -120,7 +121,7 @@ def grabiframes(mainURL,prettyname,cachePath,results=None,index=None,pageURL=Non
 								else: list.append(resolver_iframe)
 								if pageURL and getSetting("cachesites") == 'true': basic.writefile(pagecache,'w',textR)
 						elif iframe.find('dailymotion') > -1:
-							textR,resolver_iframe = daily_resolver(iframe,prettyname,cachePath)
+							#textR,resolver_iframe = daily_resolver(iframe,prettyname,cachePath)
 							if resolver_iframe: 							
 								if index: results.append(resolver_iframe)
 								else: list.append(resolver_iframe)
@@ -202,12 +203,15 @@ def youtube_resolver(url,prettyname,cachePath):
 				try: title2 = title.decode('utf8').encode('ascii','xmlcharrefreplace')
 				except: title2 = title.encode('ascii','xmlcharrefreplace')
 				if title2 <> '': title = title2
-				dur = re.compile('"duration": "PT(\d+)M(\d+)S"').findall(data)
-				duration = dur[0]*60+dur[1]
+				dur = re.compile('"duration": "PT(.+?)M(.+?)S"').findall(data)
+				if dur: duration = float(dur[0][0])*60+float(dur[0][1])
+				else:
+					dur = re.compile('"duration": "PT(.+?)S"').findall(data)
+					if dur: duration = dur[0][0]				
 				thumbnail = re.compile('"high": {\s+"url": "(.+?)",').findall(data)
 				thumbnail = thumbnail[0]
-				jsontext= '{"prettyname":"'+prettyname+'","url":"plugin://plugin.video.youtube/?action=play_video&videoid=' + str(match[0])+'","title":"'+title+'","duration":"'+str(duration)+'","thumbnail":"'+thumbnail+'"}'
-				jsonloaded = json.loads('{"prettyname":"'+prettyname+'","url":"plugin://plugin.video.youtube/?action=play_video&videoid=' + str(match[0])+'","title":"'+title+'","duration":"'+str(duration)+'","thumbnail":"'+thumbnail+'"}', encoding="latin-1")
+				jsontext= '{"prettyname":"'+prettyname+'","url":"plugin://plugin.video.youtube/play/?video_id=' + str(match[0])+'","title":"'+title+'","duration":"'+str(duration)+'","thumbnail":"'+thumbnail+'"}'
+				jsonloaded = json.loads('{"prettyname":"'+prettyname+'","url":"plugin://plugin.video.youtube/play/?video_id=' + str(match[0])+'","title":"'+title+'","duration":"'+str(duration)+'","thumbnail":"'+thumbnail+'"}', encoding="latin-1")
 				if getSetting("cachesites") == 'true': basic.writefile(videocache,'w',jsontext)
 				return jsontext,jsonloaded
 			except BaseException as e:
@@ -226,6 +230,7 @@ def daily_resolver(url,prettyname,cachePath):
 		else:
 			try:
 				data=basic.open_url('https://api.dailymotion.com/video/' + str(match[0]) +'?fields=title,duration,thumbnail_url,description')
+				print data
 				parameters = json.loads(data)
 				title = ''
 				duration = ''
@@ -237,6 +242,8 @@ def daily_resolver(url,prettyname,cachePath):
 				if title2 <> '': title = title2				
 				duration = parameters['duration']
 				thumbnail = parameters['thumbnail_url']
+				r='http://www.dailymotion.com/cdn/H264-848x480/video/xp0eom.mp4?auth=1440776458-2562-1umhb8pc-b858c3372cbf5f56ce8a5e4cd2898bab'
+				#jsontext = '{"prettyname":"'+prettyname+'","url":"'+r+'","title":"'+title.encode('ascii','xmlcharrefreplace')+'","duration":"'+str(duration)+'","thumbnail":"'+thumbnail+'"}'
 				jsontext = '{"prettyname":"'+prettyname+'","url":"plugin://plugin.video.dailymotion_com/?mode=playVideo&url=' + str(match[0])+'","title":"'+title.encode('ascii','xmlcharrefreplace')+'","duration":"'+str(duration)+'","thumbnail":"'+thumbnail+'"}'
 				jsonloaded = json.loads(jsontext, encoding="utf-8")
 				if getSetting("cachesites") == 'true': basic.writefile(videocache,'w',jsontext.encode('utf8'))				
@@ -310,7 +317,7 @@ def send_email(name,url):
 	import smtplib
 	name = name.split(' [')[0]
 	if 'dailymotion' in url: url = url.replace('plugin://plugin.video.dailymotion_com/?mode=playVideo&url=','http://www.dailymotion.com/video/')
-	elif 'youtube' in url: url = url.replace('plugin://plugin.video.youtube/?action=play_video&videoid=','https://www.youtube.com/watch?v=')
+	elif 'youtube' in url: url = url.replace('plugin://plugin.video.youtube/play/?video_id=','https://www.youtube.com/watch?v=')
 	elif 'break' in url:
 		videoid = url.split('/')[7]
 		pageid = url.split('/')[8]
