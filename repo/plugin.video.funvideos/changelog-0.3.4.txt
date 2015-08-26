@@ -1,6 +1,8 @@
+Version 0.3.4
+- CollegeHumor added
+
 Version 0.3.3
 - Minor fixes, still have to fix dailymotion
-
 Version 0.3.2
 - Youtube API v3
 Version 0.3.1

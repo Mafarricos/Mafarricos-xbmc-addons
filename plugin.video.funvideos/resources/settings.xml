@@ -2,7 +2,7 @@
 <settings>
     <category label="General">
         <setting label="General" type="lsep" />
-        <setting id="cachesites" type="bool" label="Guardar Cache dos sites" default="true" />
+        <setting id="cachesite" type="bool" label="Guardar Cache dos sites" default="false" />
     </category>
     <category label="E-Mail">
 		<setting id="server" type="select" label="Servidor" values="Gmail|Hotmail" default="Gmail"/>

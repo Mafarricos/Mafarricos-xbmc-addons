@@ -17,9 +17,11 @@ cachePath			= os.path.join(dataPath,'cache')
 sitesfile 			= os.path.join(os.path.join(addonPath, 'resources'),'sites.txt')
 site9gagfile 		= os.path.join(cachePath,'_9gag.txt')
 sitecachefile 		= os.path.join(cachePath,'_cache.txt')
+getSetting          = xbmcaddon.Addon().getSetting
 
 if not os.path.exists(dataPath): os.makedirs(dataPath)
 if not os.path.exists(cachePath): os.makedirs(cachePath)
+if getSetting("cachesite") == 'false': basic.removecache(cachePath)
 
 def MAIN():
 	addDir('[COLOR yellow]Listar Videos[/COLOR]','videos',6,'',True,2,'','','')
