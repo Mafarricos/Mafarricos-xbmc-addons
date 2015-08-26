@@ -5,7 +5,7 @@
 
 import urllib2,re,threading,os,json,xbmcaddon,xbmcgui,xbmc
 from HTMLParser import HTMLParser
-import basic,ninegag,Break,vitaminl
+import basic,ninegag,Break,vitaminl,snotr,funnyordie
 
 addonName           = xbmcaddon.Addon().getAddonInfo("name")
 addonVersion        = xbmcaddon.Addon().getAddonInfo("version")
@@ -40,23 +40,31 @@ def getpages(id,sitesfile,site9gagfile,cachePath):
 			site = parameters['site']
 			frame = parameters['frame']
 			starton = int(parameters['starton'])
-			print '##funvideos-site: '+site+pageindex+str(id+starton)			
+			try: pagei = pageindex % (str(id+starton))
+			except: pagei = pageindex + str(id+starton)
+			print '##funvideos-site: '+site+pagei			
 			if 'true' in frame: 
-				list2 = grabiframes(site+pageindex+str(id+starton),prettyname,cachePath)
+				list2 = grabiframes(site+pagei,prettyname,cachePath)
 				if list2: list.extend(list2)
 			elif 'vit' in frame:
-				list2 = vitaminl.grab(site+pageindex+str(id+starton),prettyname,cachePath,getSetting("cachesite"))
+				list2 = vitaminl.grab(site+pagei,prettyname,cachePath,getSetting("cachesite"))
 				if list2: list.extend(list2)	
 			elif '9gag' in frame:
 				list2 = ninegag.grab(site+pageindex,prettyname,str(id+starton),cachePath,site9gagfile,getSetting("cachesite"))
 				if list2: list.extend(list2)
 			elif 'break' in frame:
-				list2 = Break.grab(site+pageindex+str(id+starton),prettyname,cachePath,getSetting("cachesite"))
-				if list2: list.extend(list2)				
+				list2 = Break.grab(site+pagei,prettyname,cachePath,getSetting("cachesite"))
+				if list2: list.extend(list2)
+			elif 'snotr' in frame:
+				list2 = snotr.grab(site+pagei,prettyname,cachePath,getSetting("cachesite"))
+				if list2: list.extend(list2)
+			elif 'funnyrd' in frame:
+				list2 = funnyordie.grab(site+pagei,prettyname,cachePath,getSetting("cachesite"))
+				if list2: list.extend(list2)
 			else:
 				startsection = parameters['startsection']
 				endsection = parameters['endsection']
-				list2 = grablinks(site+pageindex+str(id+starton),prettyname,startsection,endsection,cachePath,site)
+				list2 = grablinks(site+pagei,prettyname,startsection,endsection,cachePath,site)
 				if list2: list.extend(list2)
 	ins.close()
 	progress.close()
