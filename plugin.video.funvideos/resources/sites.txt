@@ -16,4 +16,5 @@
 {"prettyname":"VitaminL","site":"http://vitaminl.tv","frame":"vit","enabled":"true","pagination":"/new/%s","starton":"1"}
 {"prettyname":"Snotr","site":"http://www.snotr.com","frame":"snotr","enabled":"true","pagination":"/rss.json?perpage=20&page=%s","starton":"1"}
 {"prettyname":"Funnyordie","site":"http://www.funnyordie.com","frame":"funnyrd","enabled":"true","pagination":"/browse/videos/all/all/most_recent/all_time/%s","starton":"1"}
+{"prettyname":"Cracked","site":"http://www.cracked.com","frame":"false","enabled":"true","startsection":"<a class=linkImage href=\"","endsection":"\">","pagination":"/funny-videos-p%s.html","starton":"2"}
 {"prettyname":"TaBrutal","site":"http://www.tabrutal.pt","frame":"false","enabled":"false","startsection":"<article class=\"latestPost excerpt.+?\" itemscope itemtype=\"http://schema.org/BlogPosting\">\\s+<a href=\"","endsection":"\"","pagination":"/page/%s","starton":"0"}
