@@ -38,7 +38,7 @@ def grab(url,prettyname,id,cachePath,site9gagfile,cacheE):
 			pass
 		title = basic.cleanTitle(data['ogTitle'])	
 		videocache = os.path.join(cachePath,data['videoExternalId'])
-		jsontext = '{"prettyname":"'+prettyname+'","url":"plugin://plugin.video.youtube/?action=play_video&videoid=' +data['videoExternalId']+'","title":"'+title.encode('ascii','xmlcharrefreplace')+'","duration":"'+str(duration)+'","thumbnail":"'+data['thumbnail_360w']+'"}'
+		jsontext = '{"prettyname":"'+prettyname+'","url":"plugin://plugin.video.youtube/play/?video_id=' +data['videoExternalId']+'","title":"'+title.encode('ascii','xmlcharrefreplace')+'","duration":"'+str(duration)+'","thumbnail":"'+data['thumbnail_360w']+'"}'
 		jsonloaded = json.loads(jsontext, encoding="utf-8")
 		if cacheE == 'true' and not os.path.isfile(videocache): basic.writefile(videocache,'w',jsontext.encode('utf8'))
 		list.append(jsonloaded)

@@ -32,7 +32,7 @@ def grab(url,prettyname,cachePath,cacheE):
 				thumb = re.compile('"thumbUri": "(.+?)",', re.DOTALL).findall(content)				
 				finalUrl=""
 				if matchYT and matchYT[0]!="":
-					finalUrl = "plugin://plugin.video.youtube/?action=play_video&videoid=" + matchYT[0]
+					finalUrl = "plugin://plugin.video.youtube/play/?video_id=" + matchYT[0]
 					videocache2 = os.path.join(cachePath,str(matchYT[0]))	
 					if cacheE == 'true' and not os.path.isfile(videocache): 
 						jsontext = '{"prettyname":"'+prettyname+'","url":"'+finalUrl+'","title":"'+title+'","duration":"'+str(duration[0])+'","thumbnail":"'+thumb[0]+'"}'

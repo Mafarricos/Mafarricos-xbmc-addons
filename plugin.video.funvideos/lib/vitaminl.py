@@ -28,7 +28,7 @@ def grab(url,prettyname,cachePath,cacheE):
 			try: title2 = title.decode('utf8').encode('ascii','xmlcharrefreplace')
 			except: pass
 			if title2 <> '': title = title2
-			jsontext = '{"prettyname":"'+prettyname+'","url":"plugin://plugin.video.youtube/?action=play_video&videoid=' + str(id)+'","title":"'+title+'","duration":"'+str(duration)+'","thumbnail":"'+thumb+'"}'
+			jsontext = '{"prettyname":"'+prettyname+'","url":"plugin://plugin.video.youtube/play/?video_id=' + str(id)+'","title":"'+title+'","duration":"'+str(duration)+'","thumbnail":"'+thumb+'"}'
 			jsonloaded = json.loads(jsontext, encoding="utf-8")
 			if cacheE == 'true' and not os.path.isfile(videocache): basic.writefile(videocache,'w',jsontext.encode('utf8'))
 			list.append(jsonloaded)
