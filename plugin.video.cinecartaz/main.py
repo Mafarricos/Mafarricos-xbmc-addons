@@ -38,7 +38,7 @@ def list_trailers(url):
 		counttrailers = len(trailer)
 		for url,title,thumb in trailer:
 			thumb = thumb.replace('&amp;w=140&amp;h=190&amp;act=cropResize','')
-			addDir(title,mainURL+url.replace('/Filme/','/Trailer/'),3,thumb,False,counttrailers,searchmovie(mainURL+url,thumb))
+			addDir(title,mainURL+url.replace('/Filme/','/Trailer/'),3,thumb,False,counttrailers,searchmovie(mainURL+url.replace('/Trailer/','/Filme/'),thumb))
 	xbmcplugin.setContent(int(sys.argv[1]), 'movies')
 	if "confluence" in xbmc.getSkinDir(): xbmc.executebuiltin('Container.SetViewMode(500)')
 
