@@ -1,6 +1,12 @@
+Versão 1.0.0 - 2016.05.08
+Alteração da API youtube
+Retiraram-se para já outros sites, a base é o youtube
+Todo: Listar as playlists dos canais
+
+Versão 0.4.4 - 2014.08.28
+Alteração na API youtube para o kids youtube
 Versão 0.4.3 - 2014.06.27
 Removido a fonte mais.uol.com.br
-
 Versão 0.4.2 - 2014.02.18
 Suporte aos videos do site zapkolik.com 
 Versão 0.4.0 - 2014.01.31

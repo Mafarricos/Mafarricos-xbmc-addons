@@ -3,8 +3,7 @@
 # by Mafarricos
 # email: MafaStudios@gmail.com
 ##############BIBLIOTECAS A IMPORTAR E DEFINICOES####################
-
-import urllib,urllib2,re,xbmcplugin,xbmcgui,xbmc,sys,xbmcaddon,math
+import urllib,urllib2,re,xbmcplugin,xbmcgui,xbmc,sys,xbmcaddon,math,os,base64
 import socket
 from urllib2 import urlopen, URLError, HTTPError
 socket.setdefaulttimeout( 23 )  # timeout in seconds
@@ -13,30 +12,39 @@ addon_id = 'plugin.video.videosinfantis'
 selfAddon = xbmcaddon.Addon(id=addon_id)
 addonfolder = selfAddon.getAddonInfo('path')
 artfolder = '/resources/img/'
+key = base64.urlsafe_b64decode('QUl6YVN5Q2FfYVgySmxQZEEtSWtsQ1ZQOGRVek1fSE14cjNKajVr')
 user_agent = 'Mozilla/5.0 (Windows NT 6.1; Win64; x64; rv:10.0a1) Gecko/20111029 Firefox/10.0a1'
-#channels = ["BabyTVPortugues","TuTiTuTV","PandaEOsCaricasVEVO","XanaTocToc","juptube","PocoyoBrazil","jato6661","disneyportugal","Tugaanimado","PTDisney","LisseDisneyPT","dunuca","UCV-By_7ySjgss2k5SVFMPjg"]
+dataPath            = xbmc.translatePath(xbmcaddon.Addon().getAddonInfo("profile")).decode("utf-8")
+nextItemFile 		= os.path.join(dataPath,'next.txt')
+playlistFile 		= os.path.join(dataPath,'playlist.txt')
 
+if not os.path.exists(dataPath): os.makedirs(dataPath)
 ###################################################MENUS
 
 def CATEGORIESyou():
-		content = abrir_url("http://addons-xbmc-mafarricos.googlecode.com/svn/kidsyoutube/canal.txt")	
-		channels = re.findall(':Canal:(.+?):End:',content,re.DOTALL)
-		maxresults=15
-		startindex=1
+		content = abrir_url("https://raw.githubusercontent.com/Mafarricos/Mafarricos-xbmc-addons/master/files/canaisinfantis.txt")	
+		channels = re.findall(':Canal:.+?:(.+?):End:',content,re.DOTALL)
+		maxresults=50
+		startindex=''
 		addDir('[COLOR green]KIDS YOUTUBE[/COLOR]','','','http://digitalsherpa.com/wp-content/uploads/2013/04/social-media-marketing-tool.png',False,1,'',maxresults,startindex,'')		
 		addDir('[COLOR yellow]Inicio[/COLOR]','','','http://digitalsherpa.com/wp-content/uploads/2013/04/social-media-marketing-tool.png',True,1,'',maxresults,startindex,'')
 		numero_de_canais = len(channels)	
 		for channel in channels:
-			content = abrir_url('https://gdata.youtube.com/feeds/api/users/'+channel+'/uploads?v=2.1')
-			match = re.compile('<name>(.+?)</name>').findall(content)		
-			totalresults = re.compile('<openSearch:totalResults>(\d+)</openSearch:totalResults>').findall(content)				
-			addDir(match[0]+' [COLOR blue]('+totalresults[0]+' Videos)[/COLOR]',channel,16,addonfolder+artfolder+'iconKyou.png',True,numero_de_canais,'',maxresults,startindex,'')
-
+			try:
+				content = abrir_url('https://www.googleapis.com/youtube/v3/channels?part=snippet,statistics&id='+channel+'&key='+key)
+				match = re.compile('"title": "(.+?)",').findall(content)
+				picture = re.compile('high": {\s+"url": "(.+?)"').findall(content)			
+				try: totalresults = re.compile('"videoCount": "(\d+)"').findall(content)
+				except: totalresults = re.compile('"totalResults": "(\d+)"').findall(content)
+				addDir(match[0]+' [COLOR blue]('+totalresults[0]+' Videos)[/COLOR]',channel,16,picture[0],True,numero_de_canais,'',maxresults,startindex,'')
+			except: pass
 def MenuCreate(name,url,maxresults,startindex):
-		addDir('[COLOR green]'+name+'[/COLOR]',url,'',addonfolder+artfolder+'iconKyou.png',False,1,'',maxresults,startindex,'')			
-		addDir('[COLOR yellow]Inicio[/COLOR]',url,13,'http://digitalsherpa.com/wp-content/uploads/2013/04/social-media-marketing-tool.png',True,1,'',maxresults,startindex,'')	
-		addDir('[COLOR yellow]Todos[/COLOR]',url,14,'http://digitalsherpa.com/wp-content/uploads/2013/04/social-media-marketing-tool.png',True,1,'',maxresults,startindex,'')			
-		addDir('[COLOR yellow]Playlists[/COLOR]',url,17,'http://digitalsherpa.com/wp-content/uploads/2013/04/social-media-marketing-tool.png',True,1,'',maxresults,startindex,'')					
+		open(nextItemFile, 'w').close()
+		listchannel(name,url,maxresults,startindex)
+		#addDir('[COLOR green]'+name+'[/COLOR]',url,'',addonfolder+artfolder+'iconKyou.png',False,1,'',maxresults,startindex,'')			
+		#addDir('[COLOR yellow]Inicio[/COLOR]',url,13,'http://digitalsherpa.com/wp-content/uploads/2013/04/social-media-marketing-tool.png',True,1,'',maxresults,startindex,'')	
+		#addDir('[COLOR yellow]Todos[/COLOR]',url,14,'http://digitalsherpa.com/wp-content/uploads/2013/04/social-media-marketing-tool.png',True,1,'',maxresults,startindex,'')			
+		#addDir('[COLOR yellow]Playlists[/COLOR]',url,17,'http://digitalsherpa.com/wp-content/uploads/2013/04/social-media-marketing-tool.png',True,1,'',maxresults,startindex,'')					
 
 def playlistListing(name,url,maxresults,startindex):
 		content = abrir_url('https://gdata.youtube.com/feeds/api/users/'+url+'/playlists?max-results=50&start-index=1&v=2&orderby=published')
@@ -53,46 +61,62 @@ def playlistListing(name,url,maxresults,startindex):
 			img = re.findall('name=\'mqdefault\'/><media:thumbnail url=\'(.+?)\'',entries,re.DOTALL)				
 			if countHit[0]<>0: addDir(name[0]+' ('+countHit[0]+' Videos)',url[0],14,img[0],True,numeroentries,'',maxresults,startindex,'')						
 			
-def listchannel(name,url,maxresults,startindex):	
+def listchannel(name,url,maxresults,startindex):
+	nextItem = readoneline(nextItemFile)
+	open(playlistFile, 'w').close()
 	addDir('[COLOR yellow]Inicio[/COLOR]',url,13,'http://digitalsherpa.com/wp-content/uploads/2013/04/social-media-marketing-tool.png',True,1,'',maxresults,startindex,'')	
 	addDir('[COLOR yellow]Criar Playlist[/COLOR]',url,15,addonfolder+artfolder+'iconKyou.png',False,1,'',maxresults,startindex,'')
 	if 'playlist' in url:
-#		if maxresults == None: maxresults = 15
-#		if startindex == None: startindex = 1
 		url3 = url.replace("https://www.youtube.com/playlist?list=","")
 		content = abrir_url('https://gdata.youtube.com/feeds/api/playlists/'+url3+'?max-results='+str(maxresults)+'&start-index='+str(startindex)+'&v=2.1')	
-	else: content = abrir_url('https://gdata.youtube.com/feeds/api/users/'+url+'/uploads?v=2.1&max-results='+str(maxresults)+'&start-index='+str(startindex))
+	else: 
+		idvideo = ''
+		if nextItem == '': content1 = abrir_url('https://www.googleapis.com/youtube/v3/search?part=snippet&channelId='+url+'&maxResults='+str(maxresults)+'&key='+key)
+		else: content1 = abrir_url('https://www.googleapis.com/youtube/v3/search?part=snippet&channelId='+url+'&maxResults='+str(maxresults)+'&key=AIzaSyCa_aX2JlPdA-IklCVP8dUzM_HMxr3Jj5k&pageToken='+nextItem)
+		id_videos = re.findall('"videoId": "(.+?)"',content1,re.DOTALL)
+		for id_video in id_videos: idvideo = idvideo + id_video+','
+		idvideo = idvideo[:-1]
+		content = abrir_url('https://www.googleapis.com/youtube/v3/videos?part=snippet,contentDetails&id='+idvideo+'&key='+key)
 	content = replacecontent(content)	
-#	dateadded = '';
-#	genre ='';
-#	credits='';
-#	plot='';
-	#print "##content "+content
-	entry = re.compile('<entry(.+?)</entry>').findall(content)	
-	totalresults = re.compile('<openSearch:totalResults>(\d+)</openSearch:totalResults>').findall(content)
+	entry = re.compile('"kind": "youtube#video",(.+?)"projection":').findall(content)	
+	totalresults = re.compile('"totalResults": (\d+),').findall(content1)
+	nextPageToken = re.compile('"nextPageToken": "(.+?)",').findall(content1)
 	numero_de_videos = len(entry)
-	totalpages = int(math.ceil(float(totalresults[0])/float(maxresults)))	
+	totalpages = int(math.ceil(float(totalresults[0])/float(maxresults)))
 	for entries in entry:
-		duracao = re.findall('<yt:duration seconds=\'(\d+)\'/>',entries,re.DOTALL)
-		if not duracao: duracao[0] = '0'
-		titulo = re.findall('<title>(.+?)</title>',entries,re.DOTALL)
-		url2 = re.findall('<link rel=\'alternate\' type=\'text/html\' href=\'(.+?)\'/>',entries,re.DOTALL)
-		img = re.findall('name=\'mqdefault\'/><media:thumbnail url=\'(.+?)\'',entries,re.DOTALL)	
-		if not img: img[0]=''
-		plot = re.findall('<media:description type=\'plain\'>(.+?)</media:description>',entries,re.DOTALL)		
-		id_video = url2[0].replace("https://www.youtube.com/watch?v=","")
-		id_video = id_video.replace("&amp;feature=youtube_gdata","")
-		url2='plugin://plugin.video.youtube/?action=play_video&videoid='+id_video
+		titulo = re.findall('"title": "(.+?)",',entries,re.DOTALL)	
+		id_video = re.findall('"id": "(.+?)"',entries,re.DOTALL)
+		img = 'https://i.ytimg.com/vi/'+id_video[0]+'/hqdefault.jpg'		
+		plot = re.findall('"description": "(.+?)",',entries,re.DOTALL)		
+		url2='plugin://plugin.video.youtube/?action=play_video&videoid='+id_video[0]
 		if not plot: plotresume = ''
 		else: plotresume = plot[0].decode("utf-8")
 		informacao = { "Title": titulo[0] , "plot": plotresume}
-		addDir(titulo[0],url2,2,img[0],False,numero_de_videos,duracao[0],'','',informacao)
-	startindex = int(startindex)+int(maxresults)
-	pageno = (startindex - 1) / maxresults
-	if totalresults:
-		if int(totalresults[0]) > int(startindex): addDir('[COLOR yellow]('+str(pageno)+'/'+str(totalpages)+') Próxima >>[/COLOR]',url,14,addonfolder+artfolder+'iconKyou.png',True,1,'',maxresults,startindex,'')
-		else: addDir('[COLOR yellow]('+str(pageno)+'/'+str(totalpages)+')[/COLOR]',url,'',addonfolder+artfolder+'iconKyou.png',False,1,'',maxresults,startindex,'')
+		duration = returnduration(entries)
+		writefile(playlistFile,"a",'::'+titulo[0]+'::::'+id_video[0]+'::::'+str(duration)+'::\n') 
+		addDir(titulo[0],url2,2,img,False,numero_de_videos,duration,'','',informacao)
+	try: 
+		writefile(nextItemFile,"w",nextPageToken[0])
+		addDir('[COLOR yellow] Próxima >>[/COLOR]',url,14,addonfolder+artfolder+'iconKyou.png',True,1,'',maxresults,startindex,'')
+	except: pass
 
+def returnduration(entries):
+	try:
+		duration = 0
+		time = re.findall('"duration": "PT(\d+)M(\d+)S"', entries, re.DOTALL)
+		if time:
+			for min,sec in time: duration = int(min)*60+int(sec)
+		else:
+			time = re.findall('"duration": "PT(\d+)M"', entries, re.DOTALL)
+			if time: duration = int(time[0])*60
+			else:
+				time = re.findall('"duration": "PT(\d+)S"', entries, re.DOTALL)
+				if time: duration = time[0]
+	except: 
+		duration = 60
+		pass
+	return duration
+	
 def replacecontent(content):
 	content = content.replace("\n","")
 	content = content.replace("\t","")	
@@ -104,34 +128,14 @@ def playlistchannel(name,url,maxresults,startindex):
 	playlist.clear()	
 	progress = xbmcgui.DialogProgress()
 	progress.create('Videos Infantis', 'A Criar Playlist!')
-	if 'playlist' in url:
-		url3 = url.replace("https://www.youtube.com/playlist?list=","")
-		content = abrir_url('https://gdata.youtube.com/feeds/api/playlists/'+url3+'?max-results='+str(maxresults)+'&start-index='+str(startindex)+'&v=2.1')	
-	else: content = abrir_url('https://gdata.youtube.com/feeds/api/users/'+url+'/uploads?max-results='+str(maxresults)+'&start-index='+str(startindex)+'&v=2.1')	
-	content = replacecontent(content)
-	match = re.compile('<entry(.+?)</entry>').findall(content)
-	totalresults = re.compile('<openSearch:totalResults>(\d+)</openSearch:totalResults>').findall(content)	
-	vidsmissing = int(totalresults[0])-int(startindex)+1
-	if vidsmissing < maxresults: maxresults = vidsmissing
-	i=1
-	for entries in match:
-		titulo = re.findall('<title>(.+?)</title>',entries,re.DOTALL)
-		url2 = re.findall('<link rel=\'alternate\' type=\'text/html\' href=\'(.+?)\'/>',entries,re.DOTALL)
-		id_video = url2[0].replace("https://www.youtube.com/watch?v=","")
-		id_video = id_video.replace("&amp;feature=youtube_gdata","")
-		url2='plugin://plugin.video.youtube/?action=play_video&videoid='+id_video
-		listitem = xbmcgui.ListItem('[B][COLOR orange]' + titulo[0].decode("utf-8") + '[/COLOR][/B]', iconImage="DefaultVideo.png", thumbnailImage="DefaultVideo.png") 
+	content = readalllines(playlistFile)
+	for cont in content:
+		items = re.findall('::(.+?)::::(.+?)::::(\d+)::',cont,re.DOTALL)
+		titulo = items[0][0]
+		url2='plugin://plugin.video.youtube/?action=play_video&videoid='+items[0][1]		
+		listitem = xbmcgui.ListItem('[B][COLOR orange]' + titulo.decode("utf-8") + '[/COLOR][/B]', iconImage="DefaultVideo.png", thumbnailImage="DefaultVideo.png") 
 		listitem.setProperty('IsPlayable', 'true')			
 		playlist.add(url2, listitem)	
-		xbmc.sleep( 100 )
-		if progress.iscanceled():
-			playlist.clear()
-			break
-		percent = int( ( i / float(maxresults) ) * 100)
-		print 'percent',percent
-		message = "Video " + str(i) + " de " + str(maxresults)
-		progress.update( percent, "", message, "" )
-		i = i + 1
 	try:
 		progress.close()
 		xbmcPlayer = xbmc.Player(xbmc.PLAYER_CORE_AUTO)
@@ -140,6 +144,23 @@ def playlistchannel(name,url,maxresults,startindex):
 		pass
 		self.message("Couldn't play item.")
 
+def readoneline(file):
+	f = open(file,"r")
+	line = f.read()
+	f.close()
+	return line
+
+def readalllines(file):
+	f = open(file,"r")
+	lines = f.readlines()
+	f.close()
+	return lines
+
+def writefile(file,mode,string):
+	writes = open(file, mode)
+	writes.write(string)
+	writes.close()
+	
 def pesquisa(siteurl):
       keyb = xbmc.Keyboard('', 'Videos Infantis')
       keyb.doModal()
@@ -151,15 +172,29 @@ def pesquisa(siteurl):
             listar_videos(urlfinal,siteurl)
 			
 ######################################################FUNCOES JÁ FEITAS
-
-def abrir_url(url):
-	req = urllib2.Request(url)
-	req.add_header('User-Agent', user_agent)
-	response = urllib2.urlopen(req)
-	link=response.read()
-	response.close()
-	return link
 		
+def abrir_url(url,post=None):
+	if post == None: req = urllib2.Request(url)
+	else: req = urllib2.Request(url,post)
+	req.add_header('User-Agent', user_agent)
+	req.add_header('Accept', 'text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8')
+	try: 
+		response = urllib2.urlopen(req)
+		link=response.read()
+		response.close()
+		return link		
+	except BaseException as e: log(u"open_url ERROR: %s - %s" % (str(url),str(e).decode('ascii','ignore')))
+	except urllib2.HTTPError, e: log(u"open_url HTTPERROR: %s - %s" % (str(url),str(e.code)))
+	except urllib2.URLError, e: log(u"open_url URLERROR: %s - %s" % (str(url),str(e.reason)))
+	except httplib.HTTPException, e: log(u"open_url HTTPException: %s" % (str(url)))
+	
+def log(msg):
+	_log(__name__, msg)
+
+def _log(module, msg):
+	s = u"#[%s] - %s" % (module, msg)
+	xbmc.log(s.encode('utf-8'), level=xbmc.LOGDEBUG)
+	
 def addDir(name,url,mode,iconimage,pasta,total,duration,maxresults,startindex,informacao):
         u=sys.argv[0]+"?url="+urllib.quote_plus(url)+"&mode="+str(mode)+"&name="+urllib.quote_plus(name)+"&maxresults="+str(maxresults)+"&startindex="+str(startindex)
         ok=True
@@ -186,8 +221,7 @@ def get_params():
                 for i in range(len(pairsofparams)):
                         splitparams={}
                         splitparams=pairsofparams[i].split('=')
-                        if (len(splitparams))==2: param[splitparams[0]]=splitparams[1]
-                                
+                        if (len(splitparams))==2: param[splitparams[0]]=splitparams[1]                  
         return param
     
 params=get_params()

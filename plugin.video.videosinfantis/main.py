@@ -37,10 +37,11 @@ siteurl3 = 'http://canalpanda.pt/'
 #MENUS
 
 def CATEGORIES():
-	kidsyoutube.addDir('Kids Youtube',siteurl,13,addonfolder+artfolder+'iconKyou.png',True,1,'',maxresults,startindex,'')
-	videosinfantis.addDir('Videos Infantis',siteurl,4,addonfolder+artfolder+'iconVI.png',True)
-	ogatodasbotas.addDir('O Gato das Botas',siteurl2,5,addonfolder+artfolder+'icongato.png',True)	
-	canalpanda.addDir('CanalPanda.pt',siteurl3,12,addonfolder+artfolder+'iconpanda.png')
+	kidsyoutube.CATEGORIESyou()
+#	kidsyoutube.addDir('Kids Youtube',siteurl,13,addonfolder+artfolder+'iconKyou.png',True,1,'',maxresults,startindex,'')
+#	videosinfantis.addDir('Videos Infantis',siteurl,4,addonfolder+artfolder+'iconVI.png',True)
+#	ogatodasbotas.addDir('O Gato das Botas',siteurl2,5,addonfolder+artfolder+'icongato.png',True)	
+#	canalpanda.addDir('CanalPanda.pt',siteurl3,12,addonfolder+artfolder+'iconpanda.png')
 		
 ##################################################
 #FUNCOES
