@@ -18,6 +18,7 @@
 :Canal:Galinha Pintadinha:UCBAb_DK4GYZqZR9MFA7y2Xg:End:
 :Canal:tinyschool.tv:UCLZB_kaj1aF5VpQKP_rPd5w:End:
 :Canal:Lullaby:UC3KknIJZXRygH2pZ6MDtGbg:End:
+:Canal:Canal Baby Videos:UCJpT3nT7r0ujMOUuMxDt_5g:End:
 :Canal:O Mundo da Sara:UCjWl5e1rS5OdqoGrFVemIzg:End:
 :Canal:ChildrenVideos:UCV-By_7ySjgss2k5SVFMPjg:End:
 :Canal:Disney Portugal:UCYyXP66PerJXzohmkJN-mUA:End:
@@ -25,6 +26,7 @@
 :Canal:tugaanimado:UCSSQQBADxHRNF4gArWFUR8w:End:
 :Canal:Quatro Clipes:UCAs-2lnpsCfUPCYQDwroF9Q:End:
 :Canal:Ptkids:UCcGkffEgqxVrSnNddQjymqA:End:
+:Canal:Portugal Kids:UCUN9cbAiaTmNvkNM1tSptpw:End:
 :Canal:Lapins PT:UCG5QgAVlzRABhuucq9u0vwQ:End:
 :Canal:PTDisney:UCBXNpNL2F_6e7fKe9k4rDNw:End:
 :Canal:KinderSurprise:UC_V1C2x4I71CNttRyUlLLLQ:End:
