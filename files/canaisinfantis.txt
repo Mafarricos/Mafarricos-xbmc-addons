@@ -9,6 +9,7 @@
 :Canal:Panda e os Caricas:UCvw-R-r3p6Hc-yj1qyoPslQ:End:
 :Canal:Sonia Araujo:UCJZX1clkdpgEeweNmfvfvcQ:End:
 :Canal:Xana Toctoc:UC7lcxmvx59SLTGXAL2QxwLg:End:
+:Canal:Canções da Maria:UCMxhec20urvL0QunvO7jRSQ:End:
 :Canal:o recreio da anita:UCOE-fE41a39_oDSRrjY4jOA:End:
 :Canal:Bernard Bear:UClwZ3E1VMvySHEgOrkcpekw:End:
 :Canal:Suckers:UC8r8A6v4yXPEHj1oBlnDR0w:End:
@@ -22,7 +23,6 @@
 :Canal:Canal Baby Videos:UCJpT3nT7r0ujMOUuMxDt_5g:End:
 :Canal:Popota:UCVO7pv7oJ0rtquE04ApXdXA:End:
 :Canal:O Mundo da Sara:UCjWl5e1rS5OdqoGrFVemIzg:End:
-:Canal:Canções da Maria:UCMxhec20urvL0QunvO7jRSQ:End:
 :Canal:Avo Cantigas:UCCqe3u9RWPYfNZVaSGZfJYw:End:
 :Canal:ChildrenVideos:UCV-By_7ySjgss2k5SVFMPjg:End:
 :Canal:Disney Portugal:UCYyXP66PerJXzohmkJN-mUA:End:
