@@ -16,9 +16,9 @@ icon    = local.getAddonInfo('icon')
 base    = 'plugin://plugin.video.youtube/'
 
 fan01 = 'https://i.ytimg.com/vi/Sb4EwT6yoDE/maxresdefault.jpg'
-icon01 = 'http://img.fnac.com.br/Imagens/Produtos/354-647221-0-5-belos-contos-de-fada-para-meninos.jpg'
-icon02 = 'http://2.bp.blogspot.com/_7WgaK1xWlsc/SONRoeLP68I/AAAAAAAAARc/0nBqB050ugQ/s400/DARTACAOO.JPG'
-icon03 = 'http://static.fnac-static.com/multimedia/PT/images_produits/PT/ZoomPE/7/9/8/9789892309897.jpg'
+icon01 = 'http://static.fnac-static.com/multimedia/PT/images_produits/PT/ZoomPE/7/9/8/9789892309897.jpg'
+icon02 = 'http://www.bulhosa.pt/images/products/9789892313405.jpg'
+icon03 = 'http://www.animewebradio.it/awr1/data/img/uploads/HEIDI_SPECIAL.jpg'
 icon04 = 'http://vignette3.wikia.nocookie.net/pocoyoworld/images/2/2f/Pocoyo-Image-300x300_Pato_Elly_Loula_Sleepy_Bird.jpg'
 icon05 = 'http://www.leyaonline.com/fotos/produtos/500_9789892308722_noddy_joga_as_escondidas.jpg'
 icon06 = 'https://s-media-cache-ak0.pinimg.com/236x/9e/54/6f/9e546fcdcf39b9c77d4f059ee300a0eb.jpg'
@@ -26,7 +26,6 @@ icon07 = 'http://pumpkin.pt/article/12249/featured_large.png'
 icon08 = 'http://lh6.ggpht.com/U2HRHrr3p0Y0s-2L0rOtDArAOMs3IDm0P1DWRD19DWPjsCZoRQFFhxdmPIUK07v6mVee=w300'
 icon09 = 'http://static.fnac-static.com/multimedia/PT/images_produits/PT/ZoomPE/5/5/1/9789892702155.jpg'
 icon10 = 'http://www.childrens-rooms.co.uk/childrensrooms-web/v2/images/products/viewproduct_popup/5281.jpg'
-icon10a = 'http://www.animewebradio.it/awr1/data/img/uploads/HEIDI_SPECIAL.jpg'
 icon11 = 'http://static.fnac-static.com/multimedia/PT/images_produits/PT/ZoomPE/1/4/0/9789892315041.jpg'
 icon12 = 'http://static.fnac-static.com/multimedia/PT/images_produits/PT/ZoomPE/1/6/8/0602537176861.jpg'
 icon13 = 'http://static.fnac-static.com/multimedia/PT/images_produits/PT/ZoomPE/6/8/6/0602527851686.jpg'
@@ -40,6 +39,12 @@ icon18 = 'http://vignette4.wikia.nocookie.net/doblaje/images/a/aa/Jelly_Jamm.jpg
 icon19 = 'http://image.blingee.com/images18/content/output/000/000/000/768/724757491_332199.gif?4'
 icon20 = 'https://pbs.twimg.com/profile_images/500673266097606656/Qt6uwVZ0.jpeg'
 icon21 = 'https://f1.bcbits.com/img/a0145682558_10.jpg'
+icon22 = 'http://img.fnac.com.br/Imagens/Produtos/354-647221-0-5-belos-contos-de-fada-para-meninos.jpg'
+icon23 = 'http://2.bp.blogspot.com/_7WgaK1xWlsc/SONRoeLP68I/AAAAAAAAARc/0nBqB050ugQ/s400/DARTACAOO.JPG'
+icon24 = 'http://image.slidesharecdn.com/eraumavezohomem-pt0001-nasceaterra1995-150901134452-lva1-app6892/95/era-uma-vez-o-homem-nasce-a-terra-1995-2-638.jpg?cb=1441115162'
+icon25 = 'http://image.slidesharecdn.com/eraumavezocorpohumano-pt0002-apele-150828112451-lva1-app6892/95/era-uma-vez-o-corpo-humano-a-pele-2-638.jpg?cb=1440761174'
+icon26 = 'http://1.bp.blogspot.com/-PwpeifffzX0/UHlLJAIRp1I/AAAAAAAACX0/3qSdzoIQZCo/s1600/os_Inventores.jpg'
+icon27 = 'http://image.slidesharecdn.com/eraumavezoespaco-pt0001-oplanetaomega-150902161657-lva1-app6891/95/era-uma-vez-o-espaco-o-planeta-omega-1-638.jpg?cb=1441210669'
 
 
 def run():
@@ -53,17 +58,16 @@ def run():
 
 def main_list(params):
 	plugintools.log("jami ===> " + repr(params))
-	plugintools.add_item(title = "Contos Infantis [PT]", url = base + "channel/UCOre4lsfRMaC62bOHUjPp2Q/", thumbnail = icon01, fanart = fan01, folder = True)
-	plugintools.add_item(title = "Dartacão [PT]", url = base + "playlist/PLrH5HKiu5jUe8ZF8jwdtprpucMVEjRON5/", thumbnail = icon02, fanart = fan01, folder = True)	
-	plugintools.add_item(title = "Ruca [PT]", url = base + "playlist/PLQOUgVTEqh7mNhuwQpSEEqoarMbA74B9o/", thumbnail = icon03, fanart = fan01, folder = True)
+	plugintools.add_item(title = "Ruca - T01 a T13 [PT]", url = base + "playlist/PLQOUgVTEqh7mNhuwQpSEEqoarMbA74B9o/", thumbnail = icon01, fanart = fan01, folder = True)
+	plugintools.add_item(title = "Ruca - T12 a T23 [PT]", url = base + "playlist/PLQOUgVTEqh7kL-ornAt0OtJ-ODq3anUDy/", thumbnail = icon02, fanart = fan01, folder = True)
+	plugintools.add_item(title = "Heidi 3D [PT]", url = base + "playlist/PLnp6B7ujCv2A8aaaa-6niKGW-SoChr88d/", thumbnail = icon03, fanart = fan01, folder = True)	
 	plugintools.add_item(title = "Pocoyo [PT]", url = base + "user/childrenvideos/", thumbnail = icon04, fanart = fan01, folder = True)
 	plugintools.add_item(title = "Noddy [PT]", url = base + "channel/UCbJ3FpU6NZ4T4Ca_BxXtaGA/" , thumbnail = icon05, fanart = fan01, folder = True)	
 	plugintools.add_item(title = "Ovelha Choné [PT]", url = base + "playlist/PLYbNlr-XymEXbsyrLjyqoZRRFtGiFrGyf/"           , thumbnail = icon06, fanart = fan01, folder = True)	
-	plugintools.add_item(title = "Abelha Maia [PT]", url = base + "playlist/PLkodmAlL47W0kgZKcX7XJKd0CC6qknZVV/", thumbnail = icon07, fanart = fan01, folder = True)
+	plugintools.add_item(title = "Abelha Maia 3D [PT]", url = base + "playlist/PLTf5zA07OijMLjuAJGYQ_dT7s8fgo7kpN/", thumbnail = icon07, fanart = fan01, folder = True)
 	plugintools.add_item(title = "Herois da Cidade [PT]", url = base + "channel/UCnfjtca0KeZND5e27IO4INg/", thumbnail = icon08, fanart = fan01, folder = True)
 	plugintools.add_item(title = "Bob o Construtor [PT]", url = base + "playlist/PLrH5HKiu5jUd7KNHHylSmu_WvFZ1pyURq/", thumbnail = icon09, fanart = fan01, folder = True)
 	plugintools.add_item(title = "Thomas e Amigos [PT]", url = base + "playlist/PLZ-7k3FZDGmm5XODLaqSXX98OME6gk6Um/", thumbnail = icon10, fanart = fan01, folder = True)
-	plugintools.add_item(title = "Heidi 3D [PT]", url = base + "playlist/PLnp6B7ujCv2A8aaaa-6niKGW-SoChr88d/", thumbnail = icon10a, fanart = fan01, folder = True)
 	plugintools.add_item(title = "Vila Moleza [PT]", url = base + "playlist/PLrH5HKiu5jUeWGDGh3EYBvMQ-eU1CSy4J/", thumbnail = icon11, fanart = fan01, folder = True)
 	plugintools.add_item(title = "Panda e os Caricas [PT]", url = base + "channel/UCvw-R-r3p6Hc-yj1qyoPslQ/", thumbnail = icon12, fanart = fan01, folder = True)
 	plugintools.add_item(title = "Xana Toc Toc [PT]", url = base + "user/XanaTocTocVEVO/", thumbnail = icon13, fanart = fan01, folder = True)
@@ -77,6 +81,12 @@ def main_list(params):
 	plugintools.add_item(title = "Sonic X [BR]", url = base + "playlist/PLj0Fsa9q1GRCKN_i_-1zRTM0m9m-GW6E1/", thumbnail = icon19, fanart = fan01, folder = True)
 	plugintools.add_item(title = "Marvel x DC [BR]", url = base + "channel/UCBgLQ56vPMX58_5-oflQcTA/", thumbnail = icon20, fanart = fan01, folder = True)
 	plugintools.add_item(title = "Tartarugas Ninja [PT]", url = base + "playlist/PL12TUMahWFQR6XqoHTKm5-RvCSYy1EPg1/", thumbnail = icon21, fanart = fan01, folder = True)
+	plugintools.add_item(title = "Contos Infantis [PT]", url = base + "channel/UCOre4lsfRMaC62bOHUjPp2Q/", thumbnail = icon22, fanart = fan01, folder = True)
+	plugintools.add_item(title = "Dartacão [PT]", url = base + "playlist/PLrH5HKiu5jUe8ZF8jwdtprpucMVEjRON5/", thumbnail = icon23, fanart = fan01, folder = True)
+	plugintools.add_item(title = "Era uma vez: o Homem", url = base + "playlist/PLQOUgVTEqh7lC6rOH9nBCCouKUHz_MAvC/", thumbnail = icon24, fanart = fan01, folder = True)
+	plugintools.add_item(title = "Era uma vez: o Corpo", url = base + "playlist/PLQOUgVTEqh7lC6rOH9nBCCouKUHz_MAvC/", thumbnail = icon25, fanart = fan01, folder = True)
+	plugintools.add_item(title = "Era uma vez: Inventores", url = base + "playlist/PLQOUgVTEqh7lC6rOH9nBCCouKUHz_MAvC/", thumbnail = icon26, fanart = fan01, folder = True)
+	plugintools.add_item(title = "Era uma vez: o Espaço", url = base + "playlist/PLe3xGiBq_EhMMeiBXg5cW53JY_X41t1SR/", thumbnail = icon27, fanart = fan01, folder = True)
 	xbmcplugin.setContent(int(sys.argv[1]), 'movies')
 	xbmc.executebuiltin('Container.SetViewMode()')
 	
