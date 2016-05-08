@@ -41,4 +41,6 @@
 :Canal:PTDisney:UCBXNpNL2F_6e7fKe9k4rDNw:End:
 :Canal:Brincapanda:UC4QlOVpvGr_ZB6PVpCbR-8Q:End:
 :Canal:Pingu:UCM88mtSE0zRTn5ae4EbYcuw:End:
+:Canal:animacaoparatodos:UCLrX0-DOmf_qP3ixu-pvuhA:End:
+:Canal:pthinata:UCRicwrfi_lJU7KRXu9_kVGQ:End:
 :Canal:KinderSurprise:UC_V1C2x4I71CNttRyUlLLLQ:End:
