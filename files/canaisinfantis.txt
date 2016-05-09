@@ -39,6 +39,7 @@
 :Canal:Ptkids:UCcGkffEgqxVrSnNddQjymqA:End:
 :Canal:Portugal Kids:UCUN9cbAiaTmNvkNM1tSptpw:End:
 :Canal:Lapins PT:UCG5QgAVlzRABhuucq9u0vwQ:End:
+:Canal:Mundo animado PT:UCOre4lsfRMaC62bOHUjPp2Q:End:
 :Canal:PTDisney:UCBXNpNL2F_6e7fKe9k4rDNw:End:
 :Canal:Brincapanda:UC4QlOVpvGr_ZB6PVpCbR-8Q:End:
 :Canal:Pingu:UCM88mtSE0zRTn5ae4EbYcuw:End:
