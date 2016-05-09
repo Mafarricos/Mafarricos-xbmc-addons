@@ -17,17 +17,13 @@
 :Canal:Baby TV BR:UCeH032kNGfavcUeCr5yhKGw:End:
 :Canal:pocoyo:UC-fOVITgkSSmVp1rsJXg0lw:End:
 :Canal:Galinha Pintadinha:UCBAb_DK4GYZqZR9MFA7y2Xg:End:
-:Canal:Vidisco Kids:UCLvYm3vnjj1ehSW1YJ7KcQA:End:
 :Canal:Lemon PT:UCtZi_dZn3R_0WI0ghM4u_Bg:End:
 :Canal:tinyschool.tv:UCLZB_kaj1aF5VpQKP_rPd5w:End:
 :Canal:Lullaby:UC3KknIJZXRygH2pZ6MDtGbg:End:
 :Canal:Canal Baby Videos:UCJpT3nT7r0ujMOUuMxDt_5g:End:
 :Canal:Popota:UCVO7pv7oJ0rtquE04ApXdXA:End:
-:Canal:O Mundo da Sara:UCjWl5e1rS5OdqoGrFVemIzg:End:
-:Canal:Avo Cantigas:UCCqe3u9RWPYfNZVaSGZfJYw:End:
 :Canal:ChildrenVideos:UCV-By_7ySjgss2k5SVFMPjg:End:
 :Canal:ChildrenVideos:UC_7982ui3YrNex5aOJPYKkQ:End:
-:Canal:Joao Cunha:UCY-F_GllgBXGWi_Cw4-FHTg:End:
 :Canal:Joao Gonçalves:UC4_u1p8noHG1kzoRntQpqww:End:
 :Canal:Mumu e Pepe:UCsCUhweFewgODub0N6EPKsg:End:
 :Canal:Bonecos PT:UC6KzzAY7q4OAh1DL-xvLoqQ:End:
@@ -35,7 +31,6 @@
 :Canal:LisseDisneyPT:UC1NEniXOE20uieQnALyW9Pw:End:
 :Canal:tugaanimado:UCSSQQBADxHRNF4gArWFUR8w:End:
 :Canal:Quatro Clipes:UCAs-2lnpsCfUPCYQDwroF9Q:End:
-:Canal:noddy:UCbJ3FpU6NZ4T4Ca_BxXtaGA:End:
 :Canal:Ptkids:UCcGkffEgqxVrSnNddQjymqA:End:
 :Canal:Portugal Kids:UCUN9cbAiaTmNvkNM1tSptpw:End:
 :Canal:Lapins PT:UCG5QgAVlzRABhuucq9u0vwQ:End:
@@ -46,3 +41,8 @@
 :Canal:animacaoparatodos:UCLrX0-DOmf_qP3ixu-pvuhA:End:
 :Canal:pthinata:UCRicwrfi_lJU7KRXu9_kVGQ:End:
 :Canal:KinderSurprise:UC_V1C2x4I71CNttRyUlLLLQ:End:
+:Canal:Vidisco Kids:UCLvYm3vnjj1ehSW1YJ7KcQA:End:
+:Canal:noddy:UCbJ3FpU6NZ4T4Ca_BxXtaGA:End:
+:Canal:Joao Cunha:UCY-F_GllgBXGWi_Cw4-FHTg:End:
+:Canal:O Mundo da Sara:UCjWl5e1rS5OdqoGrFVemIzg:End:
+:Canal:Avo Cantigas:UCCqe3u9RWPYfNZVaSGZfJYw:End:
