@@ -18,7 +18,12 @@
 - Adicionadas todas as temporadas do Ruca
   Desenhos animados classicos passaram para o fim da lista
   Adicionadas 4 temporadas de " Era uma vez o Homem "  
-  [B]08/05/2016 - Versão 1.5[/B]
+[B]09/05/2016 - Versão 1.6[/B]
 - Playlists renovadas e por ordem 
   Ligeiro retoque no logo Jami
+  Adicionados mais desenhos animados em [PT], [BR] e indiferenciados.  
+[B]09/05/2016 - Versão 1.7[/B]
+- Playlists renovadas com apoio de abertura de canal Jami no Youtube 
+  Renovação e edição de todos os icones do addon
+  Predefinição de vista thumbernail
   Adicionados mais desenhos animados em [PT], [BR] e indiferenciados.  
