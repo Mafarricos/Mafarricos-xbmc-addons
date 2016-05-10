@@ -23,6 +23,7 @@
 :Canal:Lullaby:UC3KknIJZXRygH2pZ6MDtGbg:End:
 :Canal:Canal Baby Videos:UCJpT3nT7r0ujMOUuMxDt_5g:End:
 :Canal:Popota:UCVO7pv7oJ0rtquE04ApXdXA:End:
+:Canal:Simon's Cat:UCH6vXjt-BA7QHl0KnfL-7RQ:End:
 :Canal:ChildrenVideos:UCV-By_7ySjgss2k5SVFMPjg:End:
 :Canal:ChildrenVideos:UC_7982ui3YrNex5aOJPYKkQ:End:
 :Canal:Joao Gonçalves:UC4_u1p8noHG1kzoRntQpqww:End:
@@ -42,6 +43,7 @@
 :Canal:animacaoparatodos:UCLrX0-DOmf_qP3ixu-pvuhA:End:
 :Canal:pthinata:UCRicwrfi_lJU7KRXu9_kVGQ:End:
 :Canal:KinderSurprise:UC_V1C2x4I71CNttRyUlLLLQ:End:
+:Canal:CGBros:UC-1rx8j9Ggp8mp4uD0ZdEIA:End:
 :Canal:Vidisco Kids:UCLvYm3vnjj1ehSW1YJ7KcQA:End:
 :Canal:noddy:UCbJ3FpU6NZ4T4Ca_BxXtaGA:End:
 :Canal:Joao Cunha:UCY-F_GllgBXGWi_Cw4-FHTg:End:
